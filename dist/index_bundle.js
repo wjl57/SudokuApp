@@ -60,7 +60,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	_reactDom2.default.render(_react2.default.createElement(_greeting2.default, { name: "World" }), document.body);
+	_reactDom2.default.render(_react2.default.createElement(_greeting2.default, { name: "World" }), document.getElementById('content'));
 
 /***/ },
 /* 1 */
@@ -19729,7 +19729,7 @@
 	      { className: "greeting" },
 	      "Hello, ",
 	      this.props.name,
-	      "!"
+	      "?!"
 	    );
 	  }
 	});

@@ -7,7 +7,13 @@ var config = {
       path: path.resolve(__dirname, 'dist'),
       filename: 'index_bundle.js'
     },
-    plugins: [new HtmlWebpackPlugin()],
+    plugins: [
+      new HtmlWebpackPlugin({
+        title: 'Custom template',
+        template: 'my-index.html', // Load a custom template 
+        inject: 'body' // Inject all scripts into the body
+      })
+    ],
     module: {
         loaders: [{
             test: /\.jsx?$/,
