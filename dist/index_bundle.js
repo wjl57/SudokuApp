@@ -50,13 +50,17 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _greeting = __webpack_require__(158);
+	var _reactDom = __webpack_require__(158);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var _greeting = __webpack_require__(159);
 
 	var _greeting2 = _interopRequireDefault(_greeting);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	ReactDOM.render(_react2.default.createElement(_greeting2.default, { name: "World" }), document.body);
+	_reactDom2.default.render(_react2.default.createElement(_greeting2.default, { name: "World" }), document.body);
 
 /***/ },
 /* 1 */
@@ -19694,6 +19698,14 @@
 
 /***/ },
 /* 158 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	module.exports = __webpack_require__(3);
+
+/***/ },
+/* 159 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
