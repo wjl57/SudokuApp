@@ -1,0 +1,18 @@
+{
+  "name": "sudoku-app",
+  "version": "1.0.0",
+  "description": "A Sudoku app that solves puzzles like a human",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Will Lee",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-loader": "^6.2.0",
+    "webpack": "^1.12.9"
+  },
+  "dependencies": {
+    "react": "^0.14.5"
+  }
+}
