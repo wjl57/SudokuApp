@@ -58,9 +58,18 @@
 
 	var _greeting2 = _interopRequireDefault(_greeting);
 
+	var _sudokuCell = __webpack_require__(160);
+
+	var _sudokuCell2 = _interopRequireDefault(_sudokuCell);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	_reactDom2.default.render(_react2.default.createElement(_greeting2.default, { name: "World" }), document.getElementById('content'));
+	// ReactDOM.render(
+	//   <Greeting name="Worlds"/>,
+	//   document.getElementById('sudokucell')
+	// );
+	_reactDom2.default.render(_react2.default.createElement(_sudokuCell2.default, { y: 0, x: 7, val: 8 }), document.getElementById('sudokucell'));
 
 /***/ },
 /* 1 */
@@ -19733,6 +19742,91 @@
 	    );
 	  }
 	});
+
+/***/ },
+/* 160 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var all_possibilities = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+	var g;
+	exports.default = _react2.default.createClass({
+	  displayName: "sudoku-cell",
+
+	  getInitialState: function getInitialState() {
+	    var val;
+	    var possibilities;
+	    if (this.props.val === null) {
+	      val = null;
+	      possibilities = JSON.parse(JSON.stringify(all_possibilities));
+	    } else {
+	      val = this.set_val(this.props.val);
+	    }
+	    var block_num = this.loc_to_block_num(this.props.y, this.props.x);
+	    return {
+	      y: this.props.y,
+	      x: this.props.x,
+	      block_num: block_num,
+	      name: "c" + this.props.y + this.props.x + block_num,
+	      val: this.val,
+	      possibilities: this.possibilities
+	    };
+	  },
+
+	  render: function render() {
+	    g = this.state;
+	    return _react2.default.createElement(
+	      "div",
+	      { className: "SudokuCell" },
+	      this.state.name
+	    );
+	  },
+
+	  loc_to_block_num: function loc_to_block_num(y, x) {
+	    return Math.floor(x / 3) + Math.floor(y / 3) * 3;
+	  },
+	  remove_candidate: function remove_candidate(candidate) {
+	    this.possibilities.delete(candidate);
+	  },
+	  set_val: function set_val(val) {
+	    this.val = val;
+	    // this.possibilities = new Set([val]);
+	    this.possibilities = new Set();
+	    this.possibilities.add(val);
+	  }
+	});
+
+	// class sudoku-cell {
+	//   constructor(y, x) {
+	//     this.y = y;
+	//     this.x = x;
+	//     this.block_num = loc_to_block_num(y, x);
+	//   }
+	// }
+
+	// export class Token {
+	//   constructor(p) {
+	//     this.type = p.type
+	//     this.value = p.value
+	//     this.start = p.start
+	//     this.end = p.end
+	//     if (p.options.locations)
+	//       this.loc = new SourceLocation(p, p.startLoc, p.endLoc)
+	//     if (p.options.ranges)
+	//       this.range = [p.start, p.end]
+	//   }
+	// }
 
 /***/ }
 /******/ ]);
