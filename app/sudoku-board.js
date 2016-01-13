@@ -16,9 +16,15 @@ class SudokuCell {
     }
   }
 
+  remove_candidate(candidate) {
+    this.possibilities.delete(candidate);
+  }
+
   set_val(val) {
     this.val = val;
-    this.possibilities = new Set([val]);
+    // this.possibilities = new Set([val]);
+    this.possibilities = new Set();
+    this.possibilities.add(val);
   }
 
   loc_to_block_num(y, x) {
@@ -52,6 +58,49 @@ class SudokuBoard {
     } else {
 
     }
+  }
+
+  set_val_in_board(y, x, val) {
+    var cell_name = this.board[y][x];
+    this.set_val_in_board_by_cell_name(cell_name, val);
+  }
+
+  set_val_in_board_by_cell_name(cell_name, val) {
+    var cell = this.cells_dict[cell_name];
+    cell.set_val(val);
+  }
+
+  validate_board() {
+    // illegal_cells contains a list with the names of the cells that fail sudoku rules
+    function validate_group(cell_list, illegal_cells) {
+      var filled_candidates = new Set();
+      for (var i = 0; i < cell_list.length; i++) {
+        var cell = this.cells_dict[cell_list[i]];
+        if (cell.val !== null) {
+          if (filled_candidates.has(cell.val)) {
+            illegal_cells.push(cell.name);
+          } else {
+            filled_candidates.add(cell.val);
+          }
+        }
+      }
+      return illegal_cells;
+    }
+    var illegal_cells = [];
+    for (var y = 0; y < this.y_cell_list.length; y++) {
+      var cell_list = this.y_cell_list[y];
+      illegal_cells = validate_group(cell_list, illegal_cells);
+    }
+    for (var x = 0; y < this.x_cell_list.length; x++) {
+      var cell_list = this.x_cell_list[x];
+      illegal_cells = validate_group(cell_list, illegal_cells);
+    }
+    for (var block_num = 0; block_num < this.block_cell_list.length; block_num++) {
+      var cell_list = this.block_cell_list[block_num];
+      illegal_cells = validate_group(cell_list, illegal_cells);
+    }
+    return illegal_cells;
+
   }
 
 
