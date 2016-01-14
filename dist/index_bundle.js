@@ -62,14 +62,23 @@
 
 	var _sudokuCell2 = _interopRequireDefault(_sudokuCell);
 
+	var _sudokuBoard = __webpack_require__(161);
+
+	var _sudokuBoard2 = _interopRequireDefault(_sudokuBoard);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	_reactDom2.default.render(_react2.default.createElement(_greeting2.default, { name: "World" }), document.getElementById('content'));
 
-	for (var i = 0; i < 3; i++) {
-	  _reactDom2.default.render(_react2.default.createElement(_sudokuCell2.default, { y: 0, x: 7, block: 2, name: "c0" + i.toString() + "2", val: i + 4 }), document.getElementById('sudokucell' + i));
-	}
+	_reactDom2.default.render(_react2.default.createElement(_sudokuBoard2.default, null), document.getElementById('sudokuboard'));
 
+	// for (var i = 0; i < 3; i++) {
+	//   ReactDOM.render(
+	//     <SudokuCell y={0} x={7} block={2} name={"c0" + i.toString() + "2"} val={i+4}/>,
+	//     document.getElementById('sudokucell' + i)
+	//   );
+	// }
+	//
 	_reactDom2.default.render(_react2.default.createElement(_sudokuCell2.default, { y: 0, x: 7, block: 2, name: "c072" }), document.getElementById('sudokucell'));
 
 /***/ },
@@ -19790,21 +19799,7 @@
 	    return _react2.default.createElement(
 	      "div",
 	      null,
-	      _react2.default.createElement(
-	        "div",
-	        null,
-	        this.props.name
-	      ),
-	      _react2.default.createElement(
-	        "div",
-	        null,
-	        this.state.val
-	      ),
-	      _react2.default.createElement(
-	        "div",
-	        null,
-	        Array.from(this.state.possibilities)
-	      )
+	      this.props.name + " " + this.state.val + " " + Array.from(this.state.possibilities)
 	    )
 	    //   {this.props.name} {this.state.val} {this.state.possibilities}
 	    // </div>
@@ -19819,6 +19814,102 @@
 	    // this.possibilities = new Set([val]);
 	    this.possibilities = new Set();
 	    this.possibilities.add(val);
+	  }
+	});
+
+/***/ },
+/* 161 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _sudokuCell = __webpack_require__(160);
+
+	var _sudokuCell2 = _interopRequireDefault(_sudokuCell);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _react2.default.createClass({
+	  displayName: "sudoku-board",
+
+	  getInitialState: function getInitialState() {
+	    var board_state = [];
+	    var block_num;
+	    var name;
+	    var val;
+	    var possibilities;
+	    var cell_state;
+
+	    for (var y = 0; y < 9; y++) {
+	      board_state.push([]);
+	      for (var x = 0; x < 9; x++) {
+	        cell_state = {};
+	        block_num = this.loc_to_block_num(y, x);
+	        name = "c" + y + x + block_num;
+	        val = null; // this.props.board[y][x];
+	        if (val) {
+	          possibilities = new Set([val]);
+	        } else {
+	          possibilities = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+	        }
+	        cell_state["block_num"] = block_num;
+	        cell_state["name"] = name;
+	        cell_state["val"] = val;
+	        cell_state["possibilities"] = possibilities;
+	        board_state[y].push(cell_state);
+	      }
+	    }
+	    console.log(board_state);
+	    return { "board_state": board_state };
+	  },
+
+	  render: function render() {
+	    var rows = [];
+	    var cell_state;
+	    for (var y = 0; y < 9; y++) {
+	      var tds = [];
+	      for (var x = 0; x < 9; x++) {
+	        cell_state = this.state.board_state[y][x];
+	        tds.push(_react2.default.createElement(
+	          "td",
+	          null,
+	          _react2.default.createElement(_sudokuCell2.default, { y: cell_state.y, x: cell_state.x, block: cell_state.block_num, name: cell_state.name })
+	        ));
+	      }
+	      var tr = _react2.default.createElement("tr", null, tds);
+	      rows.push(tr);
+	    }
+	    return _react2.default.createElement(
+	      "div",
+	      null,
+	      _react2.default.createElement(
+	        "table",
+	        null,
+	        _react2.default.createElement(
+	          "tbody",
+	          null,
+	          rows
+	        )
+	      ),
+	      "// ",
+	      this.state.name,
+	      " ",
+	      this.state.val,
+	      " ",
+	      this.state.possibilities
+	    );
+	  },
+
+	  loc_to_block_num: function loc_to_block_num(y, x) {
+	    return Math.floor(x / 3) + Math.floor(y / 3) * 3;
 	  }
 	});
 

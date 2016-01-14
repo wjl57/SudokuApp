@@ -28,11 +28,7 @@ export default React.createClass({
     console.log("possibilities " + Array.from(this.state.possibilities));
 
     return (
-      <div>
-        <div>{this.props.name}</div>
-        <div>{this.state.val}</div>
-        <div>{Array.from(this.state.possibilities)}</div>
-      </div>
+      <div>{this.props.name + " " + this.state.val + " " + Array.from(this.state.possibilities)}</div>
       //   {this.props.name} {this.state.val} {this.state.possibilities}
       // </div>
     );
