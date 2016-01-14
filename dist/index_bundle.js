@@ -65,11 +65,12 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	_reactDom2.default.render(_react2.default.createElement(_greeting2.default, { name: "World" }), document.getElementById('content'));
-	// ReactDOM.render(
-	//   <Greeting name="Worlds"/>,
-	//   document.getElementById('sudokucell')
-	// );
-	_reactDom2.default.render(_react2.default.createElement(_sudokuCell2.default, { y: 0, x: 7, val: 8 }), document.getElementById('sudokucell'));
+
+	for (var i = 0; i < 3; i++) {
+	  _reactDom2.default.render(_react2.default.createElement(_sudokuCell2.default, { y: 0, x: 7, block: 2, name: "c0" + i.toString() + "2", val: i + 4 }), document.getElementById('sudokucell' + i));
+	}
+
+	_reactDom2.default.render(_react2.default.createElement(_sudokuCell2.default, { y: 0, x: 7, block: 2, name: "c072" }), document.getElementById('sudokucell'));
 
 /***/ },
 /* 1 */
@@ -19759,43 +19760,57 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var all_possibilities = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
-	var g;
 	exports.default = _react2.default.createClass({
 	  displayName: "sudoku-cell",
 
 	  getInitialState: function getInitialState() {
 	    var val;
 	    var possibilities;
-	    if (this.props.val === null) {
-	      val = null;
-	      possibilities = JSON.parse(JSON.stringify(all_possibilities));
+	    if (this.props.val) {
+	      val = this.props.val;
+	      possibilities = new Set();
+	      possibilities.add(val);
 	    } else {
-	      val = this.set_val(this.props.val);
+	      val = null;
+	      possibilities = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 	    }
-	    var block_num = this.loc_to_block_num(this.props.y, this.props.x);
+	    console.log("VAL " + val);
+	    console.log("POS " + Array.from(possibilities));
 	    return {
-	      y: this.props.y,
-	      x: this.props.x,
-	      block_num: block_num,
-	      name: "c" + this.props.y + this.props.x + block_num,
-	      val: this.val,
-	      possibilities: this.possibilities
+	      val: val,
+	      possibilities: possibilities
 	    };
 	  },
 
 	  render: function render() {
-	    g = this.state;
+	    console.log("name " + this.props.name);
+	    console.log("val " + this.state.val);
+	    console.log("possibilities " + Array.from(this.state.possibilities));
+
 	    return _react2.default.createElement(
 	      "div",
-	      { className: "SudokuCell" },
-	      this.state.name
-	    );
+	      null,
+	      _react2.default.createElement(
+	        "div",
+	        null,
+	        this.props.name
+	      ),
+	      _react2.default.createElement(
+	        "div",
+	        null,
+	        this.state.val
+	      ),
+	      _react2.default.createElement(
+	        "div",
+	        null,
+	        Array.from(this.state.possibilities)
+	      )
+	    )
+	    //   {this.props.name} {this.state.val} {this.state.possibilities}
+	    // </div>
+	    ;
 	  },
 
-	  loc_to_block_num: function loc_to_block_num(y, x) {
-	    return Math.floor(x / 3) + Math.floor(y / 3) * 3;
-	  },
 	  remove_candidate: function remove_candidate(candidate) {
 	    this.possibilities.delete(candidate);
 	  },
@@ -19806,27 +19821,6 @@
 	    this.possibilities.add(val);
 	  }
 	});
-
-	// class sudoku-cell {
-	//   constructor(y, x) {
-	//     this.y = y;
-	//     this.x = x;
-	//     this.block_num = loc_to_block_num(y, x);
-	//   }
-	// }
-
-	// export class Token {
-	//   constructor(p) {
-	//     this.type = p.type
-	//     this.value = p.value
-	//     this.start = p.start
-	//     this.end = p.end
-	//     if (p.options.locations)
-	//       this.loc = new SourceLocation(p, p.startLoc, p.endLoc)
-	//     if (p.options.ranges)
-	//       this.range = [p.start, p.end]
-	//   }
-	// }
 
 /***/ }
 /******/ ]);
