@@ -19854,8 +19854,10 @@
 	        val = this.props.board[y][x];
 	        if (val) {
 	          possibilities = new Set([val]);
+	          cell_state["mutable"] = false;
 	        } else {
 	          possibilities = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+	          cell_state["mutable"] = true;
 	        }
 	        cell_state["block_num"] = block_num;
 	        cell_state["name"] = name;
