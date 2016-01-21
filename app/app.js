@@ -26,15 +26,3 @@ ReactDOM.render(
   <SudokuBoard board={board}/>,
   document.getElementById('sudokuboard')
 );
-
-// for (var i = 0; i < 3; i++) {
-//   ReactDOM.render(
-//     <SudokuCell y={0} x={7} block={2} name={"c0" + i.toString() + "2"} val={i+4}/>,
-//     document.getElementById('sudokucell' + i)
-//   );
-// }
-//
-ReactDOM.render(
-  <SudokuCell y={0} x={7} block={2} name={"c072"}/>,
-  document.getElementById('sudokucell')
-);

@@ -49,7 +49,9 @@ export default React.createClass({
           y: cell_state.y,
           x: cell_state.x,
           block: cell_state.block_num,
-          name: cell_state.name
+          name: cell_state.name,
+          possibilities: cell_state.possibilities,
+          val: cell_state.val
         }
         tds.push(
           <td>

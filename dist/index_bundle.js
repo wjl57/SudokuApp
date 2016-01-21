@@ -74,15 +74,6 @@
 
 	_reactDom2.default.render(_react2.default.createElement(_sudokuBoard2.default, { board: board }), document.getElementById('sudokuboard'));
 
-	// for (var i = 0; i < 3; i++) {
-	//   ReactDOM.render(
-	//     <SudokuCell y={0} x={7} block={2} name={"c0" + i.toString() + "2"} val={i+4}/>,
-	//     document.getElementById('sudokucell' + i)
-	//   );
-	// }
-	//
-	_reactDom2.default.render(_react2.default.createElement(_sudokuCell2.default, { y: 0, x: 7, block: 2, name: "c072" }), document.getElementById('sudokucell'));
-
 /***/ },
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
@@ -19774,32 +19765,30 @@
 	exports.default = _react2.default.createClass({
 	  displayName: "sudoku-cell",
 
-	  getInitialState: function getInitialState() {
-	    var val;
-	    var possibilities;
-	    if (this.props.val) {
-	      val = this.props.val;
-	      possibilities = new Set();
-	      possibilities.add(val);
-	    } else {
-	      val = null;
-	      possibilities = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
-	    }
-	    return {
-	      val: val,
-	      possibilities: possibilities
-	    };
-	  },
+	  // getInitialState: function() {
+	  //   var val;
+	  //   var possibilities;
+	  //   if (this.props.val) {
+	  //     val = this.props.val;
+	  //     possibilities = new Set();
+	  //     possibilities.add(val);
+	  //   } else {
+	  //     val = null;
+	  //     possibilities = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+	  //   }
+	  //   return {
+	  //     val: val,
+	  //     possibilities: possibilities
+	  //   };
+	  // },
 
 	  render: function render() {
+	    var val = this.props.val;
 	    return _react2.default.createElement(
 	      "div",
 	      null,
-	      this.props.name + " " + this.state.val + " " + Array.from(this.state.possibilities)
-	    )
-	    //   {this.props.name} {this.state.val} {this.state.possibilities}
-	    // </div>
-	    ;
+	      val ? val : Array.from(this.props.possibilities)
+	    );
 	  },
 
 	  remove_candidate: function remove_candidate(candidate) {
@@ -19807,7 +19796,6 @@
 	  },
 	  set_val: function set_val(val) {
 	    this.val = val;
-	    // this.possibilities = new Set([val]);
 	    this.possibilities = new Set();
 	    this.possibilities.add(val);
 	  }
@@ -19881,7 +19869,9 @@
 	          y: cell_state.y,
 	          x: cell_state.x,
 	          block: cell_state.block_num,
-	          name: cell_state.name
+	          name: cell_state.name,
+	          possibilities: cell_state.possibilities,
+	          val: cell_state.val
 	        };
 	        tds.push(_react2.default.createElement(
 	          "td",
