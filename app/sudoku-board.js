@@ -90,6 +90,12 @@ export default React.createClass({
 
   remove_candidate_callback: function(y, x, candidate) {
     console.log("REM candidate: " + y + " " + x + " " + candidate);
+    var newBoardState = this.state.board_state;
+    newBoardState[y][x].possibilities.delete(candidate);
+    this.setState({board_state: newBoardState});
+
+    console.log(Array.from(newBoardState[y][x].possibilities));
+
   },
 
   add_candidate_callback: function(y, x, candidate) {
