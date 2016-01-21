@@ -48,18 +48,18 @@ export default React.createClass({
       var tds = [];
       for (var x = 0; x < 9; x++) {
         cell_state = this.state.board_state[y][x];
-        self = this;
-        var remove_candidate_callback = function(candidate) {
-          self.remove_candidate_callback(cell_state.y, cell_state.x, candidate);
-        }
+
         var cell_props = {
-          y: cell_state.y,
-          x: cell_state.x,
+          y: y,
+          x: x,
           block: cell_state.block,
           name: cell_state.name,
           possibilities: cell_state.possibilities,
           val: cell_state.val,
-          remove_candidate: remove_candidate_callback
+          remove_candidate_callback: this.remove_candidate_callback,
+          add_candidate_callback: this.add_candidate_callback,
+          set_val_callback: this.set_val_callback,
+          on_click_callback: this.on_click_callback
         }
         tds.push(
           <td>
@@ -85,9 +85,21 @@ export default React.createClass({
     return Math.floor(x/3) + Math.floor(y/3)*3;
   },
 
+  set_val_callback: function(y, x, candidate) {
+    console.log("SET val " + y + " " + x + " " + candidate);
+  },
+
   remove_candidate_callback: function(y, x, candidate) {
-    console.log(y + " " + x + " " + candidate);
-    // console.log(JSON.stringify(this.state.board_state[y][x]);
-    // this.state.board_state[y][x].possibilities.delete(candidate);
+    console.log("REM candidate " + y + " " + x + " " + candidate);
+  },
+
+  add_candidate_callback: function(y, x, candidate) {
+    console.log("ADD candidate " + y + " " + x + " " + candidate);
+  },
+
+  on_click_callback: function(y, x, set_val_callback, remove_candidate_callback, add_candidate_callback) {
+    set_val_callback(4);
+    remove_candidate_callback(5);
+    add_candidate_callback(6);
   }
 });
