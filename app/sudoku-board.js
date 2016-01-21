@@ -2,9 +2,10 @@
 
 import React from "react";
 import SudokuCell from "./sudoku-cell";
-
+window.m;
 export default React.createClass({
   getInitialState: function() {
+    window.m = this;
     console.log("B " + JSON.stringify(this.props.board));
     var board_state = [];
     var block_num;
@@ -27,7 +28,9 @@ export default React.createClass({
           possibilities = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
           cell_state["mutable"] = true;
         }
-        cell_state["block_num"] = block_num;
+        cell_state["y"] = y;
+        cell_state["x"] = x;
+        cell_state["block"] = block_num;
         cell_state["name"] = name;
         cell_state["val"] = val;
         cell_state["possibilities"] = possibilities;
@@ -45,13 +48,18 @@ export default React.createClass({
       var tds = [];
       for (var x = 0; x < 9; x++) {
         cell_state = this.state.board_state[y][x];
+        self = this;
+        var remove_candidate_callback = function(candidate) {
+          self.remove_candidate_callback(cell_state.y, cell_state.x, candidate);
+        }
         var cell_props = {
           y: cell_state.y,
           x: cell_state.x,
-          block: cell_state.block_num,
+          block: cell_state.block,
           name: cell_state.name,
           possibilities: cell_state.possibilities,
-          val: cell_state.val
+          val: cell_state.val,
+          remove_candidate: remove_candidate_callback
         }
         tds.push(
           <td>
@@ -73,7 +81,13 @@ export default React.createClass({
     );
   },
 
-  loc_to_block_num(y, x) {
+  loc_to_block_num: function(y, x) {
     return Math.floor(x/3) + Math.floor(y/3)*3;
   },
+
+  remove_candidate_callback: function(y, x, candidate) {
+    console.log(y + " " + x + " " + candidate);
+    // console.log(JSON.stringify(this.state.board_state[y][x]);
+    // this.state.board_state[y][x].possibilities.delete(candidate);
+  }
 });

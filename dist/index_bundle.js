@@ -19762,27 +19762,12 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	window.g;
 	exports.default = _react2.default.createClass({
 	  displayName: "sudoku-cell",
 
-	  // getInitialState: function() {
-	  //   var val;
-	  //   var possibilities;
-	  //   if (this.props.val) {
-	  //     val = this.props.val;
-	  //     possibilities = new Set();
-	  //     possibilities.add(val);
-	  //   } else {
-	  //     val = null;
-	  //     possibilities = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
-	  //   }
-	  //   return {
-	  //     val: val,
-	  //     possibilities: possibilities
-	  //   };
-	  // },
-
 	  render: function render() {
+	    window.g = this;
 	    var val = this.props.val;
 	    return _react2.default.createElement(
 	      "div",
@@ -19792,7 +19777,7 @@
 	  },
 
 	  remove_candidate: function remove_candidate(candidate) {
-	    this.possibilities.delete(candidate);
+	    this.props.remove_candidate(candidate);
 	  },
 	  set_val: function set_val(val) {
 	    this.val = val;
@@ -19821,10 +19806,12 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	window.m;
 	exports.default = _react2.default.createClass({
 	  displayName: "sudoku-board",
 
 	  getInitialState: function getInitialState() {
+	    window.m = this;
 	    console.log("B " + JSON.stringify(this.props.board));
 	    var board_state = [];
 	    var block_num;
@@ -19847,7 +19834,9 @@
 	          possibilities = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 	          cell_state["mutable"] = true;
 	        }
-	        cell_state["block_num"] = block_num;
+	        cell_state["y"] = y;
+	        cell_state["x"] = x;
+	        cell_state["block"] = block_num;
 	        cell_state["name"] = name;
 	        cell_state["val"] = val;
 	        cell_state["possibilities"] = possibilities;
@@ -19865,13 +19854,18 @@
 	      var tds = [];
 	      for (var x = 0; x < 9; x++) {
 	        cell_state = this.state.board_state[y][x];
+	        self = this;
+	        var remove_candidate_callback = function remove_candidate_callback(candidate) {
+	          self.remove_candidate_callback(cell_state.y, cell_state.x, candidate);
+	        };
 	        var cell_props = {
 	          y: cell_state.y,
 	          x: cell_state.x,
-	          block: cell_state.block_num,
+	          block: cell_state.block,
 	          name: cell_state.name,
 	          possibilities: cell_state.possibilities,
-	          val: cell_state.val
+	          val: cell_state.val,
+	          remove_candidate: remove_candidate_callback
 	        };
 	        tds.push(_react2.default.createElement(
 	          "td",
@@ -19899,6 +19893,12 @@
 
 	  loc_to_block_num: function loc_to_block_num(y, x) {
 	    return Math.floor(x / 3) + Math.floor(y / 3) * 3;
+	  },
+
+	  remove_candidate_callback: function remove_candidate_callback(y, x, candidate) {
+	    console.log(y + " " + x + " " + candidate);
+	    // console.log(JSON.stringify(this.state.board_state[y][x]);
+	    // this.state.board_state[y][x].possibilities.delete(candidate);
 	  }
 	});
 
