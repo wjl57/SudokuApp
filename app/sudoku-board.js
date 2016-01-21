@@ -5,6 +5,7 @@ import SudokuCell from "./sudoku-cell";
 
 export default React.createClass({
   getInitialState: function() {
+    console.log("B " + JSON.stringify(this.props.board));
     var board_state = [];
     var block_num;
     var name;
@@ -18,7 +19,7 @@ export default React.createClass({
         cell_state = {};
         block_num = this.loc_to_block_num(y, x);
         name = "c" + y + x + block_num;
-        val = null; // this.props.board[y][x];
+        val = this.props.board[y][x];
         if (val) {
           possibilities = new Set([val]);
         } else {
@@ -31,7 +32,7 @@ export default React.createClass({
         board_state[y].push(cell_state);
       }
     }
-    console.log(board_state);
+    // console.log(board_state);
     return {"board_state": board_state};
   },
 
@@ -42,7 +43,17 @@ export default React.createClass({
       var tds = [];
       for (var x = 0; x < 9; x++) {
         cell_state = this.state.board_state[y][x];
-        tds.push(<td><SudokuCell y={cell_state.y} x={cell_state.x} block={cell_state.block_num} name={cell_state.name}/></td>);
+        var cell_props = {
+          y: cell_state.y,
+          x: cell_state.x,
+          block: cell_state.block_num,
+          name: cell_state.name
+        }
+        tds.push(
+          <td>
+            <SudokuCell {...cell_props}/>
+          </td>
+        );
       }
       var tr = React.createElement("tr", null, tds);
       rows.push(tr);
@@ -54,7 +65,6 @@ export default React.createClass({
           {rows}
         </tbody>
         </table>
-        // {this.state.name} {this.state.val} {this.state.possibilities}
       </div>
     );
   },

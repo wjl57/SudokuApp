@@ -14,8 +14,6 @@ export default React.createClass({
       val = null;
       possibilities = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
     }
-    console.log("VAL " + val);
-    console.log("POS " + Array.from(possibilities));
     return {
       val: val,
       possibilities: possibilities
@@ -23,10 +21,6 @@ export default React.createClass({
   },
 
   render: function() {
-    console.log("name " + this.props.name);
-    console.log("val " + this.state.val);
-    console.log("possibilities " + Array.from(this.state.possibilities));
-
     return (
       <div>{this.props.name + " " + this.state.val + " " + Array.from(this.state.possibilities)}</div>
       //   {this.props.name} {this.state.val} {this.state.possibilities}

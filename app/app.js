@@ -10,8 +10,20 @@ ReactDOM.render(
   document.getElementById('content')
 );
 
+var board = [
+    [4, null, 2, null, 3, 1, 7, 6, null],
+    [null, 6, null, null, 8, 7, null, null, null],
+    [null, null, null, null, 4, null, 1, null, null],
+    [8, 9, null, null, null, 2, 6, null, 3],
+    [3, null, 5, null, null, null, 4, null, 1],
+    [1, null, 6, 3, null, null, null, 8, 5],
+    [null, null, 8, null, 9, null, null, null, null],
+    [null, null, null, 4, 2, null, null, 5, null],
+    [null, 4, 9, 7, 5, null, 3, null, 6]
+];
+
 ReactDOM.render(
-  <SudokuBoard />,
+  <SudokuBoard board={board}/>,
   document.getElementById('sudokuboard')
 );
 

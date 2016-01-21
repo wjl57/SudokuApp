@@ -70,7 +70,9 @@
 
 	_reactDom2.default.render(_react2.default.createElement(_greeting2.default, { name: "World" }), document.getElementById('content'));
 
-	_reactDom2.default.render(_react2.default.createElement(_sudokuBoard2.default, null), document.getElementById('sudokuboard'));
+	var board = [[4, null, 2, null, 3, 1, 7, 6, null], [null, 6, null, null, 8, 7, null, null, null], [null, null, null, null, 4, null, 1, null, null], [8, 9, null, null, null, 2, 6, null, 3], [3, null, 5, null, null, null, 4, null, 1], [1, null, 6, 3, null, null, null, 8, 5], [null, null, 8, null, 9, null, null, null, null], [null, null, null, 4, 2, null, null, 5, null], [null, 4, 9, 7, 5, null, 3, null, 6]];
+
+	_reactDom2.default.render(_react2.default.createElement(_sudokuBoard2.default, { board: board }), document.getElementById('sudokuboard'));
 
 	// for (var i = 0; i < 3; i++) {
 	//   ReactDOM.render(
@@ -19783,8 +19785,6 @@
 	      val = null;
 	      possibilities = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 	    }
-	    console.log("VAL " + val);
-	    console.log("POS " + Array.from(possibilities));
 	    return {
 	      val: val,
 	      possibilities: possibilities
@@ -19792,10 +19792,6 @@
 	  },
 
 	  render: function render() {
-	    console.log("name " + this.props.name);
-	    console.log("val " + this.state.val);
-	    console.log("possibilities " + Array.from(this.state.possibilities));
-
 	    return _react2.default.createElement(
 	      "div",
 	      null,
@@ -19841,6 +19837,7 @@
 	  displayName: "sudoku-board",
 
 	  getInitialState: function getInitialState() {
+	    console.log("B " + JSON.stringify(this.props.board));
 	    var board_state = [];
 	    var block_num;
 	    var name;
@@ -19854,7 +19851,7 @@
 	        cell_state = {};
 	        block_num = this.loc_to_block_num(y, x);
 	        name = "c" + y + x + block_num;
-	        val = null; // this.props.board[y][x];
+	        val = this.props.board[y][x];
 	        if (val) {
 	          possibilities = new Set([val]);
 	        } else {
@@ -19867,7 +19864,7 @@
 	        board_state[y].push(cell_state);
 	      }
 	    }
-	    console.log(board_state);
+	    // console.log(board_state);
 	    return { "board_state": board_state };
 	  },
 
@@ -19878,10 +19875,16 @@
 	      var tds = [];
 	      for (var x = 0; x < 9; x++) {
 	        cell_state = this.state.board_state[y][x];
+	        var cell_props = {
+	          y: cell_state.y,
+	          x: cell_state.x,
+	          block: cell_state.block_num,
+	          name: cell_state.name
+	        };
 	        tds.push(_react2.default.createElement(
 	          "td",
 	          null,
-	          _react2.default.createElement(_sudokuCell2.default, { y: cell_state.y, x: cell_state.x, block: cell_state.block_num, name: cell_state.name })
+	          _react2.default.createElement(_sudokuCell2.default, cell_props)
 	        ));
 	      }
 	      var tr = _react2.default.createElement("tr", null, tds);
@@ -19898,13 +19901,7 @@
 	          null,
 	          rows
 	        )
-	      ),
-	      "// ",
-	      this.state.name,
-	      " ",
-	      this.state.val,
-	      " ",
-	      this.state.possibilities
+	      )
 	    );
 	  },
 
