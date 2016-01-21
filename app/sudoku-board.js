@@ -37,7 +37,6 @@ export default React.createClass({
         board_state[y].push(cell_state);
       }
     }
-    // console.log(board_state);
     return {"board_state": board_state};
   },
 
@@ -86,15 +85,15 @@ export default React.createClass({
   },
 
   set_val_callback: function(y, x, candidate) {
-    console.log("SET val " + y + " " + x + " " + candidate);
+    console.log("SET val: " + y + " " + x + " " + candidate);
   },
 
   remove_candidate_callback: function(y, x, candidate) {
-    console.log("REM candidate " + y + " " + x + " " + candidate);
+    console.log("REM candidate: " + y + " " + x + " " + candidate);
   },
 
   add_candidate_callback: function(y, x, candidate) {
-    console.log("ADD candidate " + y + " " + x + " " + candidate);
+    console.log("ADD candidate: " + y + " " + x + " " + candidate);
   },
 
   on_click_callback: function(y, x, set_val_callback, remove_candidate_callback, add_candidate_callback) {
