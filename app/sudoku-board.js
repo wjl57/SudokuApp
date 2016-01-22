@@ -37,7 +37,12 @@ export default React.createClass({
         board_state[y].push(cell_state);
       }
     }
-    return {"board_state": board_state};
+
+    var candidate = 5;
+    return {
+      "board_state": board_state,
+      "candidate": candidate
+    };
   },
 
   render: function() {
@@ -93,18 +98,23 @@ export default React.createClass({
     var newBoardState = this.state.board_state;
     newBoardState[y][x].possibilities.delete(candidate);
     this.setState({board_state: newBoardState});
-
-    console.log(Array.from(newBoardState[y][x].possibilities));
-
+    // console.log(Array.from(newBoardState[y][x].possibilities));
   },
 
   add_candidate_callback: function(y, x, candidate) {
     console.log("ADD candidate: " + y + " " + x + " " + candidate);
+    var newBoardState = this.state.board_state;
+    newBoardState[y][x].possibilities.add(candidate);
+    this.setState({board_state: newBoardState});
   },
 
   on_click_callback: function(y, x, set_val_callback, remove_candidate_callback, add_candidate_callback) {
-    set_val_callback(4);
-    remove_candidate_callback(5);
-    add_candidate_callback(6);
+    if (this.state.board_state[y][x].possibilities.has(this.state.candidate)) {
+      remove_candidate_callback(this.state.candidate);
+    } else {
+      add_candidate_callback(this.state.candidate);
+    }
+    // set_val_callback(4);
+
   }
 });
