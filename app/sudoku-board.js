@@ -25,7 +25,8 @@ export default React.createClass({
           possibilities = new Set([val]);
           cell_state["mutable"] = false;
         } else {
-          possibilities = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+          // possibilities = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+          possibilities = new Set([]);
           cell_state["mutable"] = true;
         }
         cell_state["y"] = y;
@@ -109,7 +110,13 @@ export default React.createClass({
   },
 
   on_click_callback: function(y, x, set_val_callback, remove_candidate_callback, add_candidate_callback) {
-    if (this.state.board_state[y][x].possibilities.has(this.state.candidate)) {
+    console.log("clicked");
+    var cell_state = this.state.board_state[y][x];
+    // If the cell isn't mutable, don't do anything
+    if (!cell_state.mutable)
+      return;
+    console.log("POS " + Array.from(cell_state.possibilities));
+    if (cell_state.possibilities.has(this.state.candidate)) {
       remove_candidate_callback(this.state.candidate);
     } else {
       add_candidate_callback(this.state.candidate);

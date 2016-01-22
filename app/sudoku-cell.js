@@ -6,8 +6,16 @@ export default React.createClass({
   render: function() {
     window.g = this;
     var val = this.props.val;
+    var itemToRender;
+    if (val) {
+      itemToRender = val;
+    } else {
+      // "\u00a0" is a non-breaking space
+      itemToRender = (this.props.possibilities.size != 0) ?  Array.from(this.props.possibilities) : "\u00a0";
+    }
+
     return (
-      <div onClick={this.on_click}>{val ? val : Array.from(this.props.possibilities)}</div>
+      <div onClick={this.on_click}>{itemToRender}</div>
     );
   },
 
