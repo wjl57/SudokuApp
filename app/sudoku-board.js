@@ -3,6 +3,7 @@
 import React from "react";
 import SudokuCell from "./sudoku-cell";
 window.m;
+
 export default React.createClass({
   getInitialState: function() {
     window.m = this;
@@ -42,7 +43,8 @@ export default React.createClass({
     var candidate = 5;
     return {
       "board_state": board_state,
-      "candidate": candidate
+      "candidate": candidate,
+      "toggledKey": false
     };
   },
 
@@ -76,7 +78,7 @@ export default React.createClass({
       rows.push(tr);
     }
     return (
-      <div>
+      <div id="sudoku-board" tabIndex="1" onKeyDown={this.handleKeyDown}>
         <table>
         <tbody>
           {rows}
@@ -122,6 +124,31 @@ export default React.createClass({
       add_candidate_callback(this.state.candidate);
     }
     // set_val_callback(4);
+  },
 
+  handleKeyDown: function(e) {
+    switch(e.which) {
+      case 65:
+        console.log("Pressed A");
+        break;
+      case 49:
+        console.log("Pressed 1");
+        break;
+      case 50:
+        console.log("Pressed 2");
+        break;
+      case 51:
+        console.log("Pressed 3");
+        break;
+    }
+    console.log(e.type, e.which, e.timeStamp);
+    this.setState({toggledKey: !this.state.toggledKey});
+    console.log("I just pressed it!");
+    console.log("I just pressed it again!");
+  },
+
+  sayHello() {
+    alert("hello!");
   }
+
 });
