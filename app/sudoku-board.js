@@ -77,8 +77,11 @@ export default React.createClass({
       var tr = React.createElement("tr", null, tds);
       rows.push(tr);
     }
+    var style = {
+      outline: "none"
+    }
     return (
-      <div id="sudoku-board" tabIndex="1" onKeyDown={this.handleKeyDown}>
+      <div id="sudoku-board" tabIndex="1" style={style} onKeyDown={this.handleKeyDown}>
         <table>
         <tbody>
           {rows}
