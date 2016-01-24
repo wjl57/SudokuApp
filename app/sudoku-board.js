@@ -40,7 +40,7 @@ export default React.createClass({
       }
     }
 
-    var candidate = 5;
+    var candidate = 1;
     return {
       "board_state": board_state,
       "candidate": candidate,
@@ -51,6 +51,7 @@ export default React.createClass({
   render: function() {
     var rows = [];
     var cell_state;
+
     for (var y = 0; y < 9; y++) {
       var tds = [];
       for (var x = 0; x < 9; x++) {
@@ -67,22 +68,67 @@ export default React.createClass({
           add_candidate_callback: this.add_candidate_callback,
           set_val_callback: this.set_val_callback,
           on_click_callback: this.on_click_callback
+        };
+
+        var tdStyle = {
+          height: "1.4em",
+          width: "1.4em",
+          textAlign: "center",
+          padding: 0
+        };
+        switch(x % 3) {
+          case 0:
+            tdStyle.borderLeft = "solid medium";
+            tdStyle.borderRight = "solid thin";
+            break;
+          case 1:
+            tdStyle.borderLeft = "solid thin";
+            tdStyle.borderRight = "solid thin";
+            break;
+          case 2:
+            tdStyle.borderLeft = "solid thin";
+            tdStyle.borderRight = "solid medium";
+            break;
         }
+
+        //  style={tdStyle}
         tds.push(
-          <td>
+          <td style={tdStyle}>
             <SudokuCell {...cell_props}/>
           </td>
         );
       }
-      var tr = React.createElement("tr", null, tds);
+
+      var trStyle = {};
+      switch(y % 3) {
+        case 0:
+          trStyle.borderTop = "solid medium";
+          trStyle.borderBottom = "solid thin";
+          break;
+        case 1:
+          trStyle.borderTop = "solid thin";
+          trStyle.borderBottom = "solid thin";
+          break;
+        case 2:
+          trStyle.borderTop = "solid thin";
+          trStyle.borderBottom = "solid medium";
+          break;
+      }
+      var tr = React.createElement("tr", {style: trStyle}, tds);
       rows.push(tr);
     }
     var style = {
       outline: "none"
-    }
+    };
+    var tableStyle = {
+      borderCollapse: "collapse"
+    };
+    // var rowStyle = {
+    //   nthOfType:
+    // };
     return (
       <div id="sudoku-board" tabIndex="1" style={style} onKeyDown={this.handleKeyDown}>
-        <table>
+        <table style={tableStyle}>
         <tbody>
           {rows}
         </tbody>
@@ -104,7 +150,6 @@ export default React.createClass({
     var newBoardState = this.state.board_state;
     newBoardState[y][x].possibilities.delete(candidate);
     this.setState({board_state: newBoardState});
-    // console.log(Array.from(newBoardState[y][x].possibilities));
   },
 
   add_candidate_callback: function(y, x, candidate) {
@@ -115,12 +160,10 @@ export default React.createClass({
   },
 
   on_click_callback: function(y, x, set_val_callback, remove_candidate_callback, add_candidate_callback) {
-    console.log("clicked");
     var cell_state = this.state.board_state[y][x];
     // If the cell isn't mutable, don't do anything
     if (!cell_state.mutable)
       return;
-    console.log("POS " + Array.from(cell_state.possibilities));
     if (cell_state.possibilities.has(this.state.candidate)) {
       remove_candidate_callback(this.state.candidate);
     } else {
@@ -130,28 +173,15 @@ export default React.createClass({
   },
 
   handleKeyDown: function(e) {
-    switch(e.which) {
-      case 65:
-        console.log("Pressed A");
-        break;
-      case 49:
-        console.log("Pressed 1");
-        break;
-      case 50:
-        console.log("Pressed 2");
-        break;
-      case 51:
-        console.log("Pressed 3");
-        break;
+    var key = e.which;
+    if (key == 65) {
+      setState({toggledKey: !this.state.toggledKey});
     }
-    console.log(e.type, e.which, e.timeStamp);
-    this.setState({toggledKey: !this.state.toggledKey});
-    console.log("I just pressed it!");
-    console.log("I just pressed it again!");
-  },
+    if (49 <= key && key <= 57) {
+      var candidate = key-48;
+      this.setState({candidate: candidate});
+    }
 
-  sayHello() {
-    alert("hello!");
   }
 
 });
