@@ -74,24 +74,11 @@ export default React.createClass({
           height: "1.4em",
           width: "1.4em",
           textAlign: "center",
-          padding: 0
+          padding: 0,
+          borderLeft: (x % 3 == 0) ? "solid medium" : "solid thin",
+          borderRight: (x % 3 == 2) ? "solid medium" : "solid thin"
         };
-        switch(x % 3) {
-          case 0:
-            tdStyle.borderLeft = "solid medium";
-            tdStyle.borderRight = "solid thin";
-            break;
-          case 1:
-            tdStyle.borderLeft = "solid thin";
-            tdStyle.borderRight = "solid thin";
-            break;
-          case 2:
-            tdStyle.borderLeft = "solid thin";
-            tdStyle.borderRight = "solid medium";
-            break;
-        }
 
-        //  style={tdStyle}
         tds.push(
           <td style={tdStyle}>
             <SudokuCell {...cell_props}/>
@@ -99,35 +86,23 @@ export default React.createClass({
         );
       }
 
-      var trStyle = {};
-      switch(y % 3) {
-        case 0:
-          trStyle.borderTop = "solid medium";
-          trStyle.borderBottom = "solid thin";
-          break;
-        case 1:
-          trStyle.borderTop = "solid thin";
-          trStyle.borderBottom = "solid thin";
-          break;
-        case 2:
-          trStyle.borderTop = "solid thin";
-          trStyle.borderBottom = "solid medium";
-          break;
-      }
-      var tr = React.createElement("tr", {style: trStyle}, tds);
-      rows.push(tr);
+      var trStyle = {
+        borderTop: (y % 3 == 0) ? "solid medium" : "solid thin",
+        borderBottom: (y % 3 == 2) ? "solid medium" : "solid thin"
+      };
+      rows.push(<tr style={trStyle}>{tds}</tr>);
     }
-    var style = {
-      outline: "none"
-    };
+
+    var boardProps = {
+      style: {outline: "none"},
+      tabIndex: 1,
+      onKeyDown: this.handleKeyDown
+    }
     var tableStyle = {
       borderCollapse: "collapse"
     };
-    // var rowStyle = {
-    //   nthOfType:
-    // };
     return (
-      <div id="sudoku-board" tabIndex="1" style={style} onKeyDown={this.handleKeyDown}>
+      <div id="sudoku-board" {...boardProps}>
         <table style={tableStyle}>
         <tbody>
           {rows}
