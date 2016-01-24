@@ -71,10 +71,11 @@ export default React.createClass({
         };
 
         var tdStyle = {
-          height: "1.4em",
-          width: "1.4em",
+          position: "relative",
+          width: "10vmin",
+          height: "10vmin",
           textAlign: "center",
-          padding: 0,
+          // paddingBottom: "10%",
           borderLeft: (x % 3 == 0) ? "solid medium" : "solid thin",
           borderRight: (x % 3 == 2) ? "solid medium" : "solid thin"
         };
@@ -99,7 +100,9 @@ export default React.createClass({
       onKeyDown: this.handleKeyDown
     }
     var tableStyle = {
-      borderCollapse: "collapse"
+      borderCollapse: "collapse",
+      width: "90%",
+      tableLayout: "fixed"
     };
     return (
       <div id="sudoku-board" {...boardProps}>
