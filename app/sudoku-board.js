@@ -64,9 +64,11 @@ export default React.createClass({
           name: cellState.name,
           possibilities: cellState.possibilities,
           val: cellState.val,
-          removeCandidateCallback: this.removeCandidateCallback,
-          addCandidateCallback: this.addCandidateCallback,
-          setValCallback: this.setValCallback,
+          possibilityCallback: this.possibilityCallback,
+          valCallback: this.valCallback,
+          // removeCandidateCallback: this.removeCandidateCallback,
+          // addCandidateCallback: this.addCandidateCallback,
+          // setValCallback: this.setValCallback,
           onClickCallback: this.onClickCallback
         };
 
@@ -119,35 +121,34 @@ export default React.createClass({
     return Math.floor(x/3) + Math.floor(y/3)*3;
   },
 
-  setValCallback: function(y, x, candidate) {
+  possibilityCallback: function(y, x, candidate) {
+    var newBoardState = this.state.boardState;
+    var cellState = this.state.boardState[y][x];
+    if (cellState.possibilities.has(candidate)) {
+      newBoardState[y][x].possibilities.delete(candidate);
+    } else {
+      newBoardState[y][x].possibilities.add(candidate);
+    }
+    this.setState({boardState: newBoardState});
+  },
+
+  valCallback: function(y, x, candidiate) {
     console.log("SET val: " + y + " " + x + " " + candidate);
   },
 
-  removeCandidateCallback: function(y, x, candidate) {
-    console.log("REM candidate: " + y + " " + x + " " + candidate);
-    var newBoardState = this.state.boardState;
-    newBoardState[y][x].possibilities.delete(candidate);
-    this.setState({boardState: newBoardState});
-  },
 
-  addCandidateCallback: function(y, x, candidate) {
-    console.log("ADD candidate: " + y + " " + x + " " + candidate);
-    var newBoardState = this.state.boardState;
-    newBoardState[y][x].possibilities.add(candidate);
-    this.setState({boardState: newBoardState});
-  },
-
-  onClickCallback: function(y, x, setValCallback, removeCandidateCallback, addCandidateCallback) {
+  onClickCallback: function(y, x, valCallback, possibilityCallback) {
     var cellState = this.state.boardState[y][x];
     // If the cell isn't mutable, don't do anything
     if (!cellState.mutable)
       return;
-    if (cellState.possibilities.has(this.state.candidate)) {
-      removeCandidateCallback(this.state.candidate);
+
+    var candidate = this.state.candidate;
+    if (this.state.toggledKey) {
+      valCallback(candidate);
     } else {
-      addCandidateCallback(this.state.candidate);
+      possibilityCallback(candidate);
     }
-    // setValCallback(4);
   },
 
   handleKeyDown: function(e) {
@@ -156,7 +157,7 @@ export default React.createClass({
     if (key == 65) {
       this.setState({toggledKey: !this.state.toggledKey});
     }
-    if (49 <= key && key <= 57) {
+    if (48 <= key && key <= 57) {
       var candidate = key-48;
       this.setState({candidate: candidate});
     }

@@ -19,21 +19,17 @@ export default React.createClass({
     );
   },
 
-  setVal: function(candidate) {
-    this.props.setValCallback(self.props.y, self.props.x, candidate);
+  valCallback: function(candidate) {
+    this.props.valCallback(self.props.y, self.props.x, candidate);
   },
 
-  removeCandidate: function(candidate) {
-    this.props.removeCandidateCallback(self.props.y, self.props.x, candidate);
-  },
-
-  addCandidate: function(candidate) {
-    this.props.addCandidateCallback(self.props.y, self.props.x, candidate);
+  possibilityCallback: function(candidate) {
+    this.props.possibilityCallback(self.props.y, self.props.x, candidate);
   },
 
   onClick: function() {
     self = this;
     this.props.onClickCallback(self.props.y, self.props.x,
-      self.setVal, self.removeCandidate, self.addCandidate);
+      self.valCallback, self.possibilityCallback);
   }
 });
