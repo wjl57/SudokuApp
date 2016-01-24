@@ -8,41 +8,41 @@ export default React.createClass({
   getInitialState: function() {
     window.m = this;
     console.log("B " + JSON.stringify(this.props.board));
-    var board_state = [];
-    var block_num;
+    var boardState = [];
+    var blockNum;
     var name;
     var val;
     var possibilities;
-    var cell_state;
+    var cellState;
 
     for (var y = 0; y < 9; y++) {
-      board_state.push([]);
+      boardState.push([]);
       for (var x = 0; x < 9; x++) {
-        cell_state = {};
-        block_num = this.loc_to_block_num(y, x);
-        name = "c" + y + x + block_num;
+        cellState = {};
+        blockNum = this.locToBlockNum(y, x);
+        name = "c" + y + x + blockNum;
         val = this.props.board[y][x];
         if (val) {
           possibilities = new Set([val]);
-          cell_state["mutable"] = false;
+          cellState["mutable"] = false;
         } else {
           // possibilities = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
           possibilities = new Set([]);
-          cell_state["mutable"] = true;
+          cellState["mutable"] = true;
         }
-        cell_state["y"] = y;
-        cell_state["x"] = x;
-        cell_state["block"] = block_num;
-        cell_state["name"] = name;
-        cell_state["val"] = val;
-        cell_state["possibilities"] = possibilities;
-        board_state[y].push(cell_state);
+        cellState["y"] = y;
+        cellState["x"] = x;
+        cellState["block"] = blockNum;
+        cellState["name"] = name;
+        cellState["val"] = val;
+        cellState["possibilities"] = possibilities;
+        boardState[y].push(cellState);
       }
     }
 
     var candidate = 1;
     return {
-      "board_state": board_state,
+      "boardState": boardState,
       "candidate": candidate,
       "toggledKey": false
     };
@@ -50,24 +50,24 @@ export default React.createClass({
 
   render: function() {
     var rows = [];
-    var cell_state;
+    var cellState;
 
     for (var y = 0; y < 9; y++) {
       var tds = [];
       for (var x = 0; x < 9; x++) {
-        cell_state = this.state.board_state[y][x];
+        cellState = this.state.boardState[y][x];
 
-        var cell_props = {
+        var cellProps = {
           y: y,
           x: x,
-          block: cell_state.block,
-          name: cell_state.name,
-          possibilities: cell_state.possibilities,
-          val: cell_state.val,
-          remove_candidate_callback: this.remove_candidate_callback,
-          add_candidate_callback: this.add_candidate_callback,
-          set_val_callback: this.set_val_callback,
-          on_click_callback: this.on_click_callback
+          block: cellState.block,
+          name: cellState.name,
+          possibilities: cellState.possibilities,
+          val: cellState.val,
+          removeCandidateCallback: this.removeCandidateCallback,
+          addCandidateCallback: this.addCandidateCallback,
+          setValCallback: this.setValCallback,
+          onClickCallback: this.onClickCallback
         };
 
         var tdStyle = {
@@ -81,7 +81,7 @@ export default React.createClass({
 
         tds.push(
           <td style={tdStyle}>
-            <SudokuCell {...cell_props}/>
+            <SudokuCell {...cellProps}/>
           </td>
         );
       }
@@ -112,45 +112,46 @@ export default React.createClass({
     );
   },
 
-  loc_to_block_num: function(y, x) {
+  locToBlockNum: function(y, x) {
     return Math.floor(x/3) + Math.floor(y/3)*3;
   },
 
-  set_val_callback: function(y, x, candidate) {
+  setValCallback: function(y, x, candidate) {
     console.log("SET val: " + y + " " + x + " " + candidate);
   },
 
-  remove_candidate_callback: function(y, x, candidate) {
+  removeCandidateCallback: function(y, x, candidate) {
     console.log("REM candidate: " + y + " " + x + " " + candidate);
-    var newBoardState = this.state.board_state;
+    var newBoardState = this.state.boardState;
     newBoardState[y][x].possibilities.delete(candidate);
-    this.setState({board_state: newBoardState});
+    this.setState({boardState: newBoardState});
   },
 
-  add_candidate_callback: function(y, x, candidate) {
+  addCandidateCallback: function(y, x, candidate) {
     console.log("ADD candidate: " + y + " " + x + " " + candidate);
-    var newBoardState = this.state.board_state;
+    var newBoardState = this.state.boardState;
     newBoardState[y][x].possibilities.add(candidate);
-    this.setState({board_state: newBoardState});
+    this.setState({boardState: newBoardState});
   },
 
-  on_click_callback: function(y, x, set_val_callback, remove_candidate_callback, add_candidate_callback) {
-    var cell_state = this.state.board_state[y][x];
+  onClickCallback: function(y, x, setValCallback, removeCandidateCallback, addCandidateCallback) {
+    var cellState = this.state.boardState[y][x];
     // If the cell isn't mutable, don't do anything
-    if (!cell_state.mutable)
+    if (!cellState.mutable)
       return;
-    if (cell_state.possibilities.has(this.state.candidate)) {
-      remove_candidate_callback(this.state.candidate);
+    if (cellState.possibilities.has(this.state.candidate)) {
+      removeCandidateCallback(this.state.candidate);
     } else {
-      add_candidate_callback(this.state.candidate);
+      addCandidateCallback(this.state.candidate);
     }
-    // set_val_callback(4);
+    // setValCallback(4);
   },
 
   handleKeyDown: function(e) {
     var key = e.which;
+    console.log("KEY" + key);
     if (key == 65) {
-      setState({toggledKey: !this.state.toggledKey});
+      this.setState({toggledKey: !this.state.toggledKey});
     }
     if (49 <= key && key <= 57) {
       var candidate = key-48;

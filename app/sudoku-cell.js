@@ -15,25 +15,25 @@ export default React.createClass({
     }
 
     return (
-      <div onClick={this.on_click}>{itemToRender}</div>
+      <div onClick={this.onClick}>{itemToRender}</div>
     );
   },
 
-  set_val: function(candidate) {
-    this.props.set_val_callback(self.props.y, self.props.x, candidate);
+  setVal: function(candidate) {
+    this.props.setValCallback(self.props.y, self.props.x, candidate);
   },
 
-  remove_candidate: function(candidate) {
-    this.props.remove_candidate_callback(self.props.y, self.props.x, candidate);
+  removeCandidate: function(candidate) {
+    this.props.removeCandidateCallback(self.props.y, self.props.x, candidate);
   },
 
-  add_candidate: function(candidate) {
-    this.props.add_candidate_callback(self.props.y, self.props.x, candidate);
+  addCandidate: function(candidate) {
+    this.props.addCandidateCallback(self.props.y, self.props.x, candidate);
   },
 
-  on_click: function() {
+  onClick: function() {
     self = this;
-    this.props.on_click_callback(self.props.y, self.props.x,
-      self.set_val, self.remove_candidate, self.add_candidate);
+    this.props.onClickCallback(self.props.y, self.props.x,
+      self.setVal, self.removeCandidate, self.addCandidate);
   }
 });
