@@ -77,7 +77,6 @@ export default React.createClass({
           width: "10vmin",
           height: "10vmin",
           textAlign: "center",
-          // paddingBottom: "10%",
           borderLeft: (x % 3 == 0) ? "solid medium" : "solid thin",
           borderRight: (x % 3 == 2) ? "solid medium" : "solid thin"
         };
@@ -103,7 +102,8 @@ export default React.createClass({
     }
     var tableStyle = {
       borderCollapse: "collapse",
-      width: "90%",
+      width: "90vmin",
+      height: "90vmin",
       tableLayout: "fixed"
     };
     return (
