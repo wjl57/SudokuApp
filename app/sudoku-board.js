@@ -96,14 +96,19 @@ export default React.createClass({
     }
 
     var boardProps = {
-      style: {outline: "none"},
+      style: {
+        outline: "none",
+        fontFamily: "Roboto Mono"
+      },
       tabIndex: 1,
       onKeyDown: this.handleKeyDown
     }
     var tableStyle = {
       borderCollapse: "collapse",
       width: "90vmin",
+      maxWidth: "600px",
       height: "90vmin",
+      maxHeight: "600px",
       tableLayout: "fixed"
     };
     return (

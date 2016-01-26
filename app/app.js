@@ -26,3 +26,9 @@ ReactDOM.render(
   <SudokuBoard board={board}/>,
   document.getElementById('sudokuboard')
 );
+
+var ps = new Set([1,3,4,5,7,9]);
+ReactDOM.render(
+  <SudokuCell possibilities={ps}/>,
+  document.getElementById('sudokucell')
+);
