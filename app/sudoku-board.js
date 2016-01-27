@@ -75,10 +75,14 @@ export default React.createClass({
         var tdStyle = {
           position: "relative",
           width: "10vmin",
+          maxWidth: "20px",
           height: "10vmin",
+          maxHeight: "20px",
           textAlign: "center",
           borderLeft: (x % 3 == 0) ? "solid medium" : "solid thin",
-          borderRight: (x % 3 == 2) ? "solid medium" : "solid thin"
+          borderRight: (x % 3 == 2) ? "solid medium" : "solid thin",
+          padding: 0,
+          margin: 0
         };
 
         tds.push(

@@ -14,7 +14,9 @@ export default React.createClass({
       // itemToRender = (this.props.possibilities.size != 0) ?  Array.from(this.props.possibilities) : "\u00a0";
 
       var tdStyle = {
-        textAlign: "center"
+        textAlign: "center",
+        fontSize: "0.5em",
+        color: "#a0a0a0"
       };
       itemToRender = [];
       var ps = this.props.possibilities;
