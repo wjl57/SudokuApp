@@ -9,6 +9,11 @@ export default React.createClass({
     var itemToRender;
     if (val) {
       itemToRender = val;
+      return (
+        <div onClick={this.onClick}>
+          {itemToRender}
+        </div>
+      );
     } else {
       // "\u00a0" is a non-breaking space
       // itemToRender = (this.props.possibilities.size != 0) ?  Array.from(this.props.possibilities) : "\u00a0";
@@ -16,7 +21,12 @@ export default React.createClass({
       var tdStyle = {
         textAlign: "center",
         fontSize: "0.5em",
-        color: "#a0a0a0"
+        color: "#a0a0a0",
+        height: "100%"
+      };
+      var trStyle = {
+        verticalAlign: "middle",
+        width: "100%"
       };
       itemToRender = [];
       var ps = this.props.possibilities;
@@ -27,7 +37,7 @@ export default React.createClass({
           var item = (ps && ps.has(candidate)) ? candidate : "\u00a0";
           tds.push(<td style={tdStyle}>{item}</td>)
         }
-        itemToRender.push(<tr>{tds}</tr>);
+        itemToRender.push(<tr style={trStyle}>{tds}</tr>);
       }
       // console.log("render " + itemToRender);
     }
@@ -37,7 +47,9 @@ export default React.createClass({
       width: "100%",
       height: "100%",
       border: 0,
-      borderCollapse: "collapse"
+      borderCollapse: "none",
+      padding: 0,
+      margin: 0
     };
     return (
       <div onClick={this.onClick}>

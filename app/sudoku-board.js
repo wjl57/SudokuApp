@@ -66,9 +66,6 @@ export default React.createClass({
           val: cellState.val,
           possibilityCallback: this.possibilityCallback,
           valCallback: this.valCallback,
-          // removeCandidateCallback: this.removeCandidateCallback,
-          // addCandidateCallback: this.addCandidateCallback,
-          // setValCallback: this.setValCallback,
           onClickCallback: this.onClickCallback
         };
 
@@ -79,6 +76,7 @@ export default React.createClass({
           height: "10vmin",
           maxHeight: "20px",
           textAlign: "center",
+          fontSize: "1em",
           borderLeft: (x % 3 == 0) ? "solid medium" : "solid thin",
           borderRight: (x % 3 == 2) ? "solid medium" : "solid thin",
           padding: 0,
@@ -94,7 +92,8 @@ export default React.createClass({
 
       var trStyle = {
         borderTop: (y % 3 == 0) ? "solid medium" : "solid thin",
-        borderBottom: (y % 3 == 2) ? "solid medium" : "solid thin"
+        borderBottom: (y % 3 == 2) ? "solid medium" : "solid thin",
+        verticalAlign: "middle"
       };
       rows.push(<tr style={trStyle}>{tds}</tr>);
     }
@@ -111,9 +110,12 @@ export default React.createClass({
       borderCollapse: "collapse",
       width: "90vmin",
       maxWidth: "600px",
+      minWidth: "400px",
       height: "90vmin",
       maxHeight: "600px",
-      tableLayout: "fixed"
+      minHeight: "400px",
+      tableLayout: "fixed",
+      verticalAlign: "middle"
     };
     return (
       <div id="sudoku-board" {...boardProps}>
@@ -141,7 +143,15 @@ export default React.createClass({
     this.setState({boardState: newBoardState});
   },
 
-  valCallback: function(y, x, candidiate) {
+  valCallback: function(y, x, candidate) {
+    var newBoardState = this.state.boardState;
+    var cellState = this.state.boardState[y][x];
+    if (cellState.val !== candidate) {
+      newBoardState[y][x].val = candidate;
+    } else {
+      newBoardState[y][x].val = null;
+    }
+    this.setState({boardState: newBoardState});
     console.log("SET val: " + y + " " + x + " " + candidate);
   },
 
