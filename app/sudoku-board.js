@@ -132,12 +132,15 @@ export default React.createClass({
       verticalAlign: "middle"
     };
     return (
-      <div id="sudoku-board" {...boardProps}>
-        <table style={tableStyle}>
-        <tbody>
-          {rows}
-        </tbody>
-        </table>
+      <div>
+        <div id="sudoku-board" {...boardProps}>
+          <table style={tableStyle}>
+          <tbody>
+            {rows}
+          </tbody>
+          </table>
+        </div>
+        <button onClick={this.calcPossibilities}>Calculate Possibilities</button>
       </div>
     );
   },
@@ -194,7 +197,46 @@ export default React.createClass({
       var candidate = key-48;
       this.setState({candidate: candidate});
     }
+  },
 
-  }
+  calcPossibilities: function() {
+    var newBoardState = this.state.boardState;
+    for (var y=0; y<9; y++) {
+      for (var x=0; x<9; x++) {
+        var possibilities = new Set([1,2,3,4,5,6,7,8,9]);
+        newBoardState[y][x].possibilities = possibilities;
+      }
+    }
+
+    var eliminatePosInCells = function(cells) {
+      var ps = new Set();
+      for (var k=0; k<cells.length; k++) {
+        var cellInfo = cells[k];
+        var cell = newBoardState[cellInfo.y][cellInfo.x];
+        var val = cell.val;
+        if (!ps.has(val)) {
+          ps.add(val);
+          cells.forEach(function(cell) {
+            newBoardState[cell.y][cell.x].possibilities.delete(val);
+          })
+        }
+      }
+    }
+
+    for (var y=0; y<9; y++) {
+      var cells = this.state.rowCells[y];
+      eliminatePosInCells(cells);
+    }
+    for (var x=0; x<9; x++) {
+      var cells = this.state.colCells[x];
+      eliminatePosInCells(cells);
+    }
+    for (var block=0; block<9; block++) {
+      var cells = this.state.blockCells[block];
+      eliminatePosInCells(cells);
+    }
+
+    this.setState({boardState: newBoardState})
+  },
 
 });
