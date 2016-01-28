@@ -261,8 +261,23 @@ export default React.createClass({
     return invalidCells;
   },
 
-  setAllInvalidCells: function() {
+ setValidityForCells: function(cells, isInvalid, newBoardState) {
+    for (var i=0; i<cells.length; i++) {
+      var y = cells[i].y;
+      var x = cells[i].x;
+      newBoardState[y][x].invalid = isInvalid;
+    }
+    // return newBoardState;
+  },
+
+  recalcAllValidity: function() {
     var newBoardState = this.state.boardState;
+
+    for (var y=0; y<9; y++) {
+      for (var x=0; x<9; x++) {
+        newBoardState[y][x].invalid = false;
+      }
+    }
 
     var allInvalidCells = new Set();
     for (var y=0; y<9; y++) {
@@ -284,12 +299,7 @@ export default React.createClass({
       });
     }
     var invalidCellArray = Array.from(allInvalidCells);
-
-    for (var y=0; y<9; y++) {
-      for (var x=0; x<9; x++) {
-        newBoardState[y][x].invalid = false;
-      }
-    }
+    console.log("INVALID " + JSON.stringify(Array.from(allInvalidCells)));
 
     for (var i=0; i<invalidCellArray.length; i++) {
       var y = invalidCellArray[i].y;
@@ -297,7 +307,25 @@ export default React.createClass({
       newBoardState[y][x].invalid = true;
     }
     this.setState({boardState: newBoardState});
-    console.log("INVALID " + JSON.stringify(Array.from(allInvalidCells)));
+  },
+
+  recalcNeighboringValidity: function(y, x) {
+    var newBoardState = this.state.boardState;
+    var cell = newBoardState[y][x];
+    var allInvalidCells = new Set();
+    var yCells = this.state.rowCells[cell.y];
+    var xCells = this.state.colCells[cell.x];
+    var blockCells = this.state.blockCells[cell.block];
+
+    this.setValidityForCells(yCells, false, newBoardState);
+    this.setValidityForCells(xCells, false, newBoardState);
+    this.setValidityForCells(blockCells, false, newBoardState);
+
+    this.setValidityForCells(Array.from(this.getInvalidCells(yCells)), true, newBoardState);
+    this.setValidityForCells(Array.from(this.getInvalidCells(xCells)), true, newBoardState);
+    this.setValidityForCells(Array.from(this.getInvalidCells(blockCells)), true, newBoardState);
+
+    this.setState({boardState: newBoardState});
   }
 
 });
