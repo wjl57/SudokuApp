@@ -76,6 +76,7 @@ export default React.createClass({
           x: x,
           block: cellState.block,
           name: cellState.name,
+          mutable: cellState.mutable,
           possibilities: cellState.possibilities,
           val: cellState.val,
           possibilityCallback: this.possibilityCallback,
@@ -209,17 +210,13 @@ export default React.createClass({
     }
 
     var eliminatePosInCells = function(cells) {
-      var ps = new Set();
       for (var k=0; k<cells.length; k++) {
         var cellInfo = cells[k];
         var cell = newBoardState[cellInfo.y][cellInfo.x];
         var val = cell.val;
-        if (!ps.has(val)) {
-          ps.add(val);
-          cells.forEach(function(cell) {
-            newBoardState[cell.y][cell.x].possibilities.delete(val);
-          })
-        }
+        cells.forEach(function(cell) {
+          newBoardState[cell.y][cell.x].possibilities.delete(val);
+        })
       }
     }
 
@@ -236,7 +233,71 @@ export default React.createClass({
       eliminatePosInCells(cells);
     }
 
-    this.setState({boardState: newBoardState})
+    this.setState({boardState: newBoardState});
   },
+
+  getInvalidCells: function(cells) {
+    var invalidCells = new Set();
+    var candidateDict = {};
+    for (var k=0; k<cells.length; k++) {
+      var cellInfo = cells[k];
+      var cell = this.state.boardState[cellInfo.y][cellInfo.x];
+      var val = cell.val;
+      if (val !== null) {
+        if (!(candidateDict.hasOwnProperty(val))) {
+          candidateDict[val] = [];
+        }
+        candidateDict[val].push(cellInfo);
+      }
+    }
+    for (var val in candidateDict) {
+      var len = candidateDict[val].length
+      if (len > 1) {
+        for (var i=0; i<len; i++) {
+          invalidCells.add(candidateDict[val][i]);
+        }
+      }
+    }
+    return invalidCells;
+  },
+
+  setAllInvalidCells: function() {
+    var newBoardState = this.state.boardState;
+
+    var allInvalidCells = new Set();
+    for (var y=0; y<9; y++) {
+      var cells = this.state.rowCells[y];
+      this.getInvalidCells(cells).forEach(function(cellInfo) {
+        allInvalidCells.add(cellInfo);
+      });
+    }
+    for (var x=0; x<9; x++) {
+      var cells = this.state.colCells[x];
+      this.getInvalidCells(cells).forEach(function(cellInfo) {
+        allInvalidCells.add(cellInfo);
+      });
+    }
+    for (var block=0; block<9; block++) {
+      var cells = this.state.blockCells[block];
+      this.getInvalidCells(cells).forEach(function(cellInfo) {
+        allInvalidCells.add(cellInfo);
+      });
+    }
+    var invalidCellArray = Array.from(allInvalidCells);
+
+    for (var y=0; y<9; y++) {
+      for (var x=0; x<9; x++) {
+        newBoardState[y][x].invalid = false;
+      }
+    }
+
+    for (var i=0; i<invalidCellArray.length; i++) {
+      var y = invalidCellArray[i].y;
+      var x = invalidCellArray[i].x;
+      newBoardState[y][x].invalid = true;
+    }
+    this.setState({boardState: newBoardState});
+    console.log("INVALID " + JSON.stringify(Array.from(allInvalidCells)));
+  }
 
 });
