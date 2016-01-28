@@ -15,9 +15,6 @@ export default React.createClass({
         </div>
       );
     } else {
-      // "\u00a0" is a non-breaking space
-      // itemToRender = (this.props.possibilities.size != 0) ?  Array.from(this.props.possibilities) : "\u00a0";
-
       var tdStyle = {
         textAlign: "center",
         fontSize: "0.5em",
@@ -39,7 +36,6 @@ export default React.createClass({
         }
         itemToRender.push(<tr style={trStyle}>{tds}</tr>);
       }
-      // console.log("render " + itemToRender);
     }
 
     var tableStyle = {

@@ -14,6 +14,9 @@ export default React.createClass({
     var val;
     var possibilities;
     var cellState;
+    var rowCells = [[],[],[],[],[],[],[],[],[]];
+    var colCells = [[],[],[],[],[],[],[],[],[]];
+    var blockCells = [[],[],[],[],[],[],[],[],[]];
 
     for (var y = 0; y < 9; y++) {
       boardState.push([]);
@@ -26,7 +29,6 @@ export default React.createClass({
           possibilities = new Set([val]);
           cellState["mutable"] = false;
         } else {
-          // possibilities = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
           possibilities = new Set([]);
           cellState["mutable"] = true;
         }
@@ -37,6 +39,15 @@ export default React.createClass({
         cellState["val"] = val;
         cellState["possibilities"] = possibilities;
         boardState[y].push(cellState);
+        var cellInfo = {
+          "name": name,
+          "y": y,
+          "x": x,
+          "block": blockNum
+        };
+        rowCells[y].push(cellInfo);
+        colCells[x].push(cellInfo);
+        blockCells[blockNum].push(cellInfo);
       }
     }
 
@@ -44,7 +55,10 @@ export default React.createClass({
     return {
       "boardState": boardState,
       "candidate": candidate,
-      "toggledKey": false
+      "toggledKey": false,
+      "rowCells": rowCells,
+      "colCells": colCells,
+      "blockCells": blockCells
     };
   },
 
