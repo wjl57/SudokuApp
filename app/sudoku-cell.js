@@ -9,11 +9,19 @@ export default React.createClass({
     var itemToRender;
     if (val) {
       itemToRender = val;
-      var itemStyle = {};
+      var itemStyle = {
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      };
       if (this.props.mutable) {
         itemStyle.color = "blue";
       } else {
         itemStyle.fontWeight = "bold";
+      }
+      if (this.props.invalid) {
+        itemStyle.backgroundColor = "red";
       }
       return (
         <div onClick={this.onClick} style={itemStyle}>

@@ -62,6 +62,10 @@ export default React.createClass({
     };
   },
 
+  componentDidMount: function() {
+    this.recalcValidity();
+  },
+
   render: function() {
     var rows = [];
     var cellState;
@@ -79,6 +83,7 @@ export default React.createClass({
           mutable: cellState.mutable,
           possibilities: cellState.possibilities,
           val: cellState.val,
+          invalid: cellState.invalid,
           possibilityCallback: this.possibilityCallback,
           valCallback: this.valCallback,
           onClickCallback: this.onClickCallback
@@ -171,6 +176,8 @@ export default React.createClass({
     }
     this.setState({boardState: newBoardState});
     console.log("SET val: " + y + " " + x + " " + candidate);
+
+    this.recalcValidity();
   },
 
 
@@ -261,7 +268,7 @@ export default React.createClass({
     return invalidCells;
   },
 
- setValidityForCells: function(cells, isInvalid, newBoardState) {
+  setValidityForCells: function(cells, isInvalid, newBoardState) {
     for (var i=0; i<cells.length; i++) {
       var y = cells[i].y;
       var x = cells[i].x;
@@ -270,7 +277,7 @@ export default React.createClass({
     // return newBoardState;
   },
 
-  recalcAllValidity: function() {
+  recalcValidity: function() {
     var newBoardState = this.state.boardState;
 
     for (var y=0; y<9; y++) {
@@ -282,48 +289,16 @@ export default React.createClass({
     var allInvalidCells = new Set();
     for (var y=0; y<9; y++) {
       var cells = this.state.rowCells[y];
-      this.getInvalidCells(cells).forEach(function(cellInfo) {
-        allInvalidCells.add(cellInfo);
-      });
+      this.setValidityForCells(Array.from(this.getInvalidCells(cells)), true, newBoardState);
     }
     for (var x=0; x<9; x++) {
       var cells = this.state.colCells[x];
-      this.getInvalidCells(cells).forEach(function(cellInfo) {
-        allInvalidCells.add(cellInfo);
-      });
+      this.setValidityForCells(Array.from(this.getInvalidCells(cells)), true, newBoardState);
     }
     for (var block=0; block<9; block++) {
       var cells = this.state.blockCells[block];
-      this.getInvalidCells(cells).forEach(function(cellInfo) {
-        allInvalidCells.add(cellInfo);
-      });
+      this.setValidityForCells(Array.from(this.getInvalidCells(cells)), true, newBoardState);
     }
-    var invalidCellArray = Array.from(allInvalidCells);
-    console.log("INVALID " + JSON.stringify(Array.from(allInvalidCells)));
-
-    for (var i=0; i<invalidCellArray.length; i++) {
-      var y = invalidCellArray[i].y;
-      var x = invalidCellArray[i].x;
-      newBoardState[y][x].invalid = true;
-    }
-    this.setState({boardState: newBoardState});
-  },
-
-  recalcNeighboringValidity: function(y, x) {
-    var newBoardState = this.state.boardState;
-    var cell = newBoardState[y][x];
-    var allInvalidCells = new Set();
-    var yCells = this.state.rowCells[cell.y];
-    var xCells = this.state.colCells[cell.x];
-    var blockCells = this.state.blockCells[cell.block];
-
-    this.setValidityForCells(yCells, false, newBoardState);
-    this.setValidityForCells(xCells, false, newBoardState);
-    this.setValidityForCells(blockCells, false, newBoardState);
-
-    this.setValidityForCells(Array.from(this.getInvalidCells(yCells)), true, newBoardState);
-    this.setValidityForCells(Array.from(this.getInvalidCells(xCells)), true, newBoardState);
-    this.setValidityForCells(Array.from(this.getInvalidCells(blockCells)), true, newBoardState);
 
     this.setState({boardState: newBoardState});
   }
