@@ -7,7 +7,6 @@ window.m;
 export default React.createClass({
   getInitialState: function() {
     window.m = this;
-    console.log("B " + JSON.stringify(this.props.board));
     var boardState = [];
     var blockNum;
     var name;
@@ -19,6 +18,7 @@ export default React.createClass({
     var blockCells = [[],[],[],[],[],[],[],[],[]];
 
     for (var y = 0; y < 9; y++) {
+      boardState.push([]);
       for (var x = 0; x < 9; x++) {
         blockNum = this.locToBlockNum(y, x);
         var cellInfo = {
@@ -30,29 +30,14 @@ export default React.createClass({
         rowCells[y].push(cellInfo);
         colCells[x].push(cellInfo);
         blockCells[blockNum].push(cellInfo);
-      }
-    }
 
-    for (var y = 0; y < 9; y++) {
-      boardState.push([]);
-      for (var x = 0; x < 9; x++) {
-        cellState = {};
-        blockNum = this.locToBlockNum(y, x);
-        name = "c" + y + x + blockNum;
-        val = this.props.board[y][x];
-        if (val) {
-          possibilities = new Set([val]);
-          cellState["mutable"] = false;
-        } else {
-          possibilities = new Set([]);
-          cellState["mutable"] = true;
-        }
-        cellState["y"] = y;
-        cellState["x"] = x;
-        cellState["block"] = blockNum;
-        cellState["name"] = name;
-        cellState["val"] = val;
-        cellState["possibilities"] = possibilities;
+        // Set initial state.boardState
+        var cellState = JSON.parse(JSON.stringify(cellInfo));
+        cellState.invalid = false;
+        cellState.mutable = true;
+        cellState.value = null;
+        cellState.possibilities = new Set();
+
         boardState[y].push(cellState);
       }
     }
@@ -61,14 +46,55 @@ export default React.createClass({
     return {
       "boardState": boardState,
       "candidate": candidate,
-      "toggledKey": false,
+      "toggledKey": true,
       "rowCells": rowCells,
       "colCells": colCells,
-      "blockCells": blockCells
+      "blockCells": blockCells,
+      "freeEdit": true,
+      "cleanBoardState": this.stringifyBoardState(boardState)
     };
   },
 
-  initializeNewBoard(board) {
+  stringifyBoardState: function(boardState) {
+    var possibilities = [];
+    for (var y=0; y<9; y++) {
+      possibilities.push([]);
+      for (var x=0; x<9; x++) {
+        var arrayPossibilities = Array.from(boardState[y][x].possibilities);
+        possibilities[y].push(arrayPossibilities);
+      }
+    }
+    var newBoardState = JSON.parse(JSON.stringify(boardState));
+    for (var y=0; y<9; y++) {
+      for (var x=0; x<9; x++) {
+        newBoardState[y][x].possibilities = possibilities[y][x];
+      }
+    }
+    return newBoardState;
+  },
+
+  loadStringifiedBoardState: function(boardState) {
+    var newBoardState = JSON.parse(JSON.stringify(boardState));
+    for (var y=0; y<9; y++) {
+      for (var x=0; x<9; x++) {
+        newBoardState[y][x].possibilities = new Set(newBoardState[y][x].possibilities);
+      }
+    }
+    return newBoardState;
+  },
+
+  clearBoard: function() {
+    console.log("Clearing board");
+    var newBoardState = this.loadStringifiedBoardState(this.state.cleanBoardState);
+    this.setState({
+      "boardState": newBoardState,
+      "freeEdit": true,
+      "toggledKey": true
+    });
+  },
+
+  loadNewBoard: function(board) {
+    console.log("Loading new board");
     var boardState = [];
     var blockNum;
     var name;
@@ -102,15 +128,11 @@ export default React.createClass({
         boardState[y].push(cellState);
       }
     }
-
     this.setState({
       "boardState": boardState,
+      "freeEdit": false
     });
 
-    this.recalcValidity();
-  },
-
-  componentDidMount: function() {
     this.recalcValidity();
   },
 
@@ -129,8 +151,8 @@ export default React.createClass({
           block: cellState.block,
           name: cellState.name,
           mutable: cellState.mutable,
-          possibilities: cellState.possibilities,
-          val: cellState.val,
+          possibilities: cellState.possibilities ? cellState.possibilities : new Set(),
+          val: cellState.val ? cellState.val : null,
           invalid: cellState.invalid,
           possibilityCallback: this.possibilityCallback,
           valCallback: this.valCallback,
@@ -195,6 +217,7 @@ export default React.createClass({
           </table>
         </div>
         <button onClick={this.calcPossibilities}>Calculate Possibilities</button>
+        <button onClick={this.clearBoard}>Clear Board</button>
       </div>
     );
   },
@@ -229,12 +252,18 @@ export default React.createClass({
 
 
   onClickCallback: function(y, x, valCallback, possibilityCallback) {
+    console.log("Clicked " + y + " " + x + " " + this.state.freeEdit);
+    var candidate = this.state.candidate;
+    if (this.state.freeEdit) {
+      valCallback(candidate);
+      return;
+    }
+
     var cellState = this.state.boardState[y][x];
     // If the cell isn't mutable, don't do anything
     if (!cellState.mutable)
       return;
 
-    var candidate = this.state.candidate;
     if (this.state.toggledKey) {
       valCallback(candidate);
     } else {
@@ -321,7 +350,6 @@ export default React.createClass({
       var x = cells[i].x;
       newBoardState[y][x].invalid = isInvalid;
     }
-    // return newBoardState;
   },
 
   recalcValidity: function() {
@@ -333,7 +361,6 @@ export default React.createClass({
       }
     }
 
-    var allInvalidCells = new Set();
     for (var y=0; y<9; y++) {
       var cells = this.state.rowCells[y];
       this.setValidityForCells(Array.from(this.getInvalidCells(cells)), true, newBoardState);
