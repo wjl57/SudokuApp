@@ -19,6 +19,21 @@ export default React.createClass({
     var blockCells = [[],[],[],[],[],[],[],[],[]];
 
     for (var y = 0; y < 9; y++) {
+      for (var x = 0; x < 9; x++) {
+        blockNum = this.locToBlockNum(y, x);
+        var cellInfo = {
+          "name": name,
+          "y": y,
+          "x": x,
+          "block": blockNum
+        };
+        rowCells[y].push(cellInfo);
+        colCells[x].push(cellInfo);
+        blockCells[blockNum].push(cellInfo);
+      }
+    }
+
+    for (var y = 0; y < 9; y++) {
       boardState.push([]);
       for (var x = 0; x < 9; x++) {
         cellState = {};
@@ -39,15 +54,6 @@ export default React.createClass({
         cellState["val"] = val;
         cellState["possibilities"] = possibilities;
         boardState[y].push(cellState);
-        var cellInfo = {
-          "name": name,
-          "y": y,
-          "x": x,
-          "block": blockNum
-        };
-        rowCells[y].push(cellInfo);
-        colCells[x].push(cellInfo);
-        blockCells[blockNum].push(cellInfo);
       }
     }
 
@@ -60,6 +66,48 @@ export default React.createClass({
       "colCells": colCells,
       "blockCells": blockCells
     };
+  },
+
+  initializeNewBoard(board) {
+    var boardState = [];
+    var blockNum;
+    var name;
+    var val;
+    var possibilities;
+    var cellState;
+    var rowCells = [[],[],[],[],[],[],[],[],[]];
+    var colCells = [[],[],[],[],[],[],[],[],[]];
+    var blockCells = [[],[],[],[],[],[],[],[],[]];
+
+    for (var y = 0; y < 9; y++) {
+      boardState.push([]);
+      for (var x = 0; x < 9; x++) {
+        cellState = {};
+        blockNum = this.locToBlockNum(y, x);
+        name = "c" + y + x + blockNum;
+        val = board[y][x];
+        if (val) {
+          possibilities = new Set([val]);
+          cellState["mutable"] = false;
+        } else {
+          possibilities = new Set([]);
+          cellState["mutable"] = true;
+        }
+        cellState["y"] = y;
+        cellState["x"] = x;
+        cellState["block"] = blockNum;
+        cellState["name"] = name;
+        cellState["val"] = val;
+        cellState["possibilities"] = possibilities;
+        boardState[y].push(cellState);
+      }
+    }
+
+    this.setState({
+      "boardState": boardState,
+    });
+
+    this.recalcValidity();
   },
 
   componentDidMount: function() {
@@ -175,7 +223,6 @@ export default React.createClass({
       newBoardState[y][x].val = null;
     }
     this.setState({boardState: newBoardState});
-    console.log("SET val: " + y + " " + x + " " + candidate);
 
     this.recalcValidity();
   },
