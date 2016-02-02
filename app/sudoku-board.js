@@ -35,7 +35,7 @@ export default React.createClass({
         var cellState = JSON.parse(JSON.stringify(cellInfo));
         cellState.invalid = false;
         cellState.mutable = true;
-        cellState.value = null;
+        cellState.val = null;
         cellState.possibilities = new Set();
 
         boardState[y].push(cellState);
@@ -51,7 +51,9 @@ export default React.createClass({
       "colCells": colCells,
       "blockCells": blockCells,
       "freeEdit": true,
-      "cleanBoardState": this.stringifyBoardState(boardState)
+      "cleanBoardState": this.stringifyBoardState(boardState),
+      savedBoardStates: {},
+      savedFreeEdits: []
     };
   },
 
@@ -73,24 +75,48 @@ export default React.createClass({
     return newBoardState;
   },
 
-  loadStringifiedBoardState: function(boardState) {
+  loadStringifiedBoardState: function(boardState, freeEdit) {
     var newBoardState = JSON.parse(JSON.stringify(boardState));
     for (var y=0; y<9; y++) {
       for (var x=0; x<9; x++) {
         newBoardState[y][x].possibilities = new Set(newBoardState[y][x].possibilities);
       }
     }
-    return newBoardState;
+    this.setState({
+      "boardState": newBoardState,
+      "freeEdit": freeEdit
+    });
   },
 
   clearBoard: function() {
     console.log("Clearing board");
-    var newBoardState = this.loadStringifiedBoardState(this.state.cleanBoardState);
-    this.setState({
-      "boardState": newBoardState,
-      "freeEdit": true,
-      "toggledKey": true
-    });
+    var newBoardState = this.loadStringifiedBoardState(this.state.cleanBoardState, true);
+  },
+
+  saveBoardState: function(num) {
+    self = this;
+    return function() {
+      // console.log("Saving " + JSON.stringify(self.state.boardState));
+      var boardStateToSave = self.stringifyBoardState(self.state.boardState);
+      var savedBoardStates = self.state.savedBoardStates;
+      savedBoardStates[num] = boardStateToSave;
+      var savedFreeEdits = self.state.savedFreeEdits;
+      savedFreeEdits[num] = self.state.freeEdit;
+      self.setState({
+        "savedBoardStates": savedBoardStates,
+        "savedFreeEdits": savedFreeEdits
+      });
+    };
+  },
+
+  loadBoardState: function(num) {
+    self = this;
+    return function() {
+      var savedBoardState = self.state.savedBoardStates[num];
+      console.log(JSON.stringify(savedBoardState));
+      var freeEdit = self.state.savedFreeEdits[num];
+      var boardState = self.loadStringifiedBoardState(savedBoardState, freeEdit);
+    };
   },
 
   loadNewBoard: function(board) {
@@ -200,10 +226,10 @@ export default React.createClass({
       borderCollapse: "collapse",
       width: "90vmin",
       maxWidth: "600px",
-      minWidth: "400px",
+      minWidth: "460px",
       height: "90vmin",
       maxHeight: "600px",
-      minHeight: "400px",
+      minHeight: "460px",
       tableLayout: "fixed",
       verticalAlign: "middle"
     };
@@ -218,6 +244,10 @@ export default React.createClass({
         </div>
         <button onClick={this.calcPossibilities}>Calculate Possibilities</button>
         <button onClick={this.clearBoard}>Clear Board</button>
+        <button onClick={this.saveBoardState(1)}>Save #1</button>
+        <button onClick={this.saveBoardState(2)}>Save #2</button>
+        <button onClick={this.loadBoardState(1)}>Load #1</button>
+        <button onClick={this.loadBoardState(2)}>Load #2</button>
       </div>
     );
   },
