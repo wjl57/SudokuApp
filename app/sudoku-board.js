@@ -2,6 +2,9 @@
 
 import React from "react";
 import SudokuCell from "./sudoku-cell";
+import SudokuControl from "./sudoku-control";
+import SudokuToggleControl from "./sudoku-toggle";
+
 window.m;
 
 export default React.createClass({
@@ -187,10 +190,10 @@ export default React.createClass({
 
         var tdStyle = {
           position: "relative",
-          width: "10vmin",
-          maxWidth: "20px",
-          height: "10vmin",
-          maxHeight: "20px",
+          width: "9vmin",
+          maxWidth: "18px",
+          height: "9vmin",
+          maxHeight: "18px",
           textAlign: "center",
           fontSize: "1em",
           borderLeft: (x % 3 == 0) ? "solid medium" : "solid thin",
@@ -214,6 +217,21 @@ export default React.createClass({
       rows.push(<tr style={trStyle}>{tds}</tr>);
     }
 
+    var controls = [];
+    for (var candidate=1; candidate<=9; candidate++) {
+      var controlProps = {
+        currentVal: this.state.candidate,
+        defaultVal: candidate,
+        onControlCallback: this.onControlCallback
+      };
+      controls.push(<td><SudokuControl {...controlProps} /></td>);
+    }
+    var toggleControlProps = {
+      toggledKey: this.state.toggledKey,
+      toggleCallback: this.onToggleCallback
+    }
+    controls.push(<td><SudokuToggleControl {...toggleControlProps} /></td>);
+
     var boardProps = {
       style: {
         outline: "none",
@@ -224,14 +242,27 @@ export default React.createClass({
     }
     var tableStyle = {
       borderCollapse: "collapse",
-      width: "90vmin",
-      maxWidth: "600px",
+      width: "81vmin",
+      maxWidth: "540px",
       minWidth: "460px",
-      height: "90vmin",
-      maxHeight: "600px",
+      height: "81vmin",
+      maxHeight: "540px",
       minHeight: "460px",
       tableLayout: "fixed",
       verticalAlign: "middle"
+    };
+    var controlTableStyle = {
+      borderCollapse: "collapse",
+      width: "75vmin",
+      maxWidth: "450px",
+      minWidth: "345px",
+      height: "7.5vmin",
+      maxHeight: "60px",
+      minHeight: "46px",
+      tableLayout: "fixed",
+      verticalAlign: "middle",
+      fontFamily: "Roboto Mono",
+      border: "solid medium"
     };
     return (
       <div>
@@ -248,6 +279,13 @@ export default React.createClass({
         <button onClick={this.saveBoardState(2)}>Save #2</button>
         <button onClick={this.loadBoardState(1)}>Load #1</button>
         <button onClick={this.loadBoardState(2)}>Load #2</button>
+        <div>
+          <table style={controlTableStyle}>
+            <tbody>
+              <tr>{controls}</tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   },
@@ -305,12 +343,20 @@ export default React.createClass({
     var key = e.which;
     console.log("KEY" + key);
     if (key == 65) {
-      this.setState({toggledKey: !this.state.toggledKey});
+      this.onToggleCallback();
     }
-    if (48 <= key && key <= 57) {
+    if (48 < key && key <= 57) {
       var candidate = key-48;
-      this.setState({candidate: candidate});
+      this.onControlCallback(candidate);
     }
+  },
+
+  onToggleCallback: function() {
+    this.setState({toggledKey: !this.state.toggledKey});
+  },
+
+  onControlCallback: function(candidate) {
+    this.setState({candidate: candidate});
   },
 
   calcPossibilities: function() {
