@@ -93,13 +93,18 @@ export default React.createClass({
 
   clearBoard: function() {
     console.log("Clearing board");
-    var newBoardState = this.loadStringifiedBoardState(this.state.cleanBoardState, true);
+    this.loadStringifiedBoardState(this.state.cleanBoardState, true);
+  },
+
+  restartPuzzle: function() {
+    console.log("Restarting puzzle");
+    this.loadBoardState(0)();
   },
 
   saveBoardState: function(num) {
     self = this;
     return function() {
-      // console.log("Saving " + JSON.stringify(self.state.boardState));
+      console.log("Saving board");
       var boardStateToSave = self.stringifyBoardState(self.state.boardState);
       var savedBoardStates = self.state.savedBoardStates;
       savedBoardStates[num] = boardStateToSave;
@@ -116,6 +121,10 @@ export default React.createClass({
     self = this;
     return function() {
       var savedBoardState = self.state.savedBoardStates[num];
+      if (savedBoardState == null) {
+        console.log("No puzzle was saved to that slot yet");
+        return;
+      }
       console.log(JSON.stringify(savedBoardState));
       var freeEdit = self.state.savedFreeEdits[num];
       var boardState = self.loadStringifiedBoardState(savedBoardState, freeEdit);
@@ -161,8 +170,23 @@ export default React.createClass({
       "boardState": boardState,
       "freeEdit": false
     });
+  },
 
-    this.recalcValidity();
+  startPuzzle: function() {
+    console.log("Starting puzzle");
+    var newBoardState = this.state.boardState;
+    for (var y = 0; y < 9; y++) {
+      for (var x = 0; x < 9; x++) {
+        if (newBoardState[y][x].val != null) {
+          newBoardState[y][x].mutable = false;
+        }
+      }
+    }
+    this.saveBoardState(0)();
+    this.setState({
+      boardState: newBoardState,
+      freeEdit: false
+    });
   },
 
   render: function() {
@@ -226,11 +250,11 @@ export default React.createClass({
       };
       controls.push(<td><SudokuControl {...controlProps} /></td>);
     }
-    var toggleControlProps = {
+    var togglePenControlProps = {
       toggledKey: this.state.toggledKey,
-      toggleCallback: this.onToggleCallback
+      toggleCallback: this.onTogglePenCallback
     }
-    controls.push(<td><SudokuToggleControl {...toggleControlProps} /></td>);
+    controls.push(<td><SudokuToggleControl {...togglePenControlProps} /></td>);
 
     var boardProps = {
       style: {
@@ -275,6 +299,8 @@ export default React.createClass({
         </div>
         <button onClick={this.calcPossibilities}>Calculate Possibilities</button>
         <button onClick={this.clearBoard}>Clear Board</button>
+        <button onClick={this.startPuzzle}>Start</button>
+        <button onClick={this.restartPuzzle}>Restart</button>
         <button onClick={this.saveBoardState(1)}>Save #1</button>
         <button onClick={this.saveBoardState(2)}>Save #2</button>
         <button onClick={this.loadBoardState(1)}>Load #1</button>
@@ -343,7 +369,7 @@ export default React.createClass({
     var key = e.which;
     console.log("KEY" + key);
     if (key == 65) {
-      this.onToggleCallback();
+      this.onTogglePenCallback();
     }
     if (48 < key && key <= 57) {
       var candidate = key-48;
@@ -351,8 +377,9 @@ export default React.createClass({
     }
   },
 
-  onToggleCallback: function() {
-    this.setState({toggledKey: !this.state.toggledKey});
+  onTogglePenCallback: function() {
+    if (!this.state.freeEdit)
+      this.setState({toggledKey: !this.state.toggledKey});
   },
 
   onControlCallback: function(candidate) {
