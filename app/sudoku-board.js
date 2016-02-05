@@ -250,11 +250,12 @@ export default React.createClass({
       };
       controls.push(<td><SudokuControl {...controlProps} /></td>);
     }
-    var togglePenControlProps = {
+    var togglePenProps = {
+      text: "Pen",
       toggledKey: this.state.toggledKey,
       toggleCallback: this.onTogglePenCallback
     }
-    controls.push(<td><SudokuToggleControl {...togglePenControlProps} /></td>);
+    controls.push(<td><SudokuToggleControl {...togglePenProps} /></td>);
 
     var boardProps = {
       style: {

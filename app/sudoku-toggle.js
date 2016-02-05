@@ -15,7 +15,7 @@ export default React.createClass({
     }
     return (
       <div style={controlStyle} onClick={this.props.toggleCallback}>
-        {"Pen"}
+        {this.props.text}
       </div>
     );
   }
