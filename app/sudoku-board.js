@@ -244,18 +244,21 @@ export default React.createClass({
     var controls = [];
     for (var candidate=1; candidate<=9; candidate++) {
       var controlProps = {
+        text: candidate,
         currentVal: this.state.candidate,
         defaultVal: candidate,
-        onControlCallback: this.onControlCallback
+        onCallback: this.onControlCallback
       };
       controls.push(<td><SudokuControl {...controlProps} /></td>);
     }
     var togglePenProps = {
       text: "Pen",
-      toggledKey: this.state.toggledKey,
-      toggleCallback: this.onTogglePenCallback
+      currentVal: this.state.toggledKey,
+      defaultVal: true,
+      onCallback: this.onTogglePenCallback
     }
-    controls.push(<td><SudokuToggleControl {...togglePenProps} /></td>);
+    // this.onTogglePenCallback has an extra param but it does not matter
+    controls.push(<td><SudokuControl {...togglePenProps} /></td>);
 
     var boardProps = {
       style: {

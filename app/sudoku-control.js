@@ -15,12 +15,12 @@ export default React.createClass({
     }
     return (
       <div style={controlStyle} onClick={this.onClick}>
-        {this.props.defaultVal}
+        {this.props.text}
       </div>
     );
   },
 
   onClick: function() {
-    this.props.onControlCallback(this.props.defaultVal);
+    this.props.onCallback(this.props.defaultVal);
   }
 });
