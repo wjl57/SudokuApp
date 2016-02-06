@@ -13,7 +13,8 @@ export default React.createClass({
         height: "100%",
         display: "flex",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        fontSize: "1.5em",
       };
       if (this.props.mutable) {
         itemStyle.color = "#1287A8";

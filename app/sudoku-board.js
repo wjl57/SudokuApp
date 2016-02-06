@@ -106,10 +106,6 @@ export default React.createClass({
       }
     }
 
-    // this.setState({
-    //   boardState: newBoardState,
-    //   freeEdit: false
-    // });
     this.saveBoardState(0, newBoardState, false)();
   },
 
@@ -187,9 +183,10 @@ export default React.createClass({
         boardState[y].push(cellState);
       }
     }
+
+    this.saveBoardState(0, boardState, false)();
     this.setState({
       "boardState": boardState,
-      "freeEdit": false
     });
   },
 
@@ -310,7 +307,7 @@ export default React.createClass({
     }
     // this.onTogglePenCallback has an extra param but it does not matter
     controls.push(<td style={controlTdStyle}><SudokuControl {...togglePenProps} /></td>);
-    
+
     return (
       <div>
         <div id="sudoku-board" {...boardProps}>
