@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import Greeting from "./greeting";
-import SudokuCell from "./sudoku-cell";
 import SudokuBoard from "./sudoku-board";
 
 
@@ -25,10 +24,4 @@ var board = [
 ReactDOM.render(
   <SudokuBoard board={board}/>,
   document.getElementById('sudokuboard')
-);
-
-var ps = new Set([1,3,4,5,7,9]);
-ReactDOM.render(
-  <SudokuCell possibilities={ps}/>,
-  document.getElementById('sudokucell')
 );
