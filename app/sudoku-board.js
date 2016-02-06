@@ -245,27 +245,6 @@ export default React.createClass({
       rows.push(<tr style={trStyle}>{tds}</tr>);
     }
 
-    var controls = [];
-    for (var candidate=1; candidate<=9; candidate++) {
-      var controlProps = {
-        text: candidate,
-        currentVal: this.state.candidate,
-        defaultVal: candidate,
-        onCallback: this.onControlCallback,
-        color: "#ECD078"
-      };
-      controls.push(<td><SudokuControl {...controlProps} /></td>);
-    }
-    var togglePenProps = {
-      text: "Pen",
-      currentVal: this.state.toggledKey,
-      defaultVal: true,
-      onCallback: this.onTogglePenCallback,
-      color: "#D95B43"
-    }
-    // this.onTogglePenCallback has an extra param but it does not matter
-    controls.push(<td><SudokuControl {...togglePenProps} /></td>);
-
     var boardProps = {
       style: {
         outline: "none",
@@ -296,8 +275,42 @@ export default React.createClass({
       tableLayout: "fixed",
       verticalAlign: "middle",
       fontFamily: "Roboto Mono",
-      border: "solid medium"
+      border: "solid medium",
+      margin: 0,
+      padding: 0
     };
+    var controlTrStyle = {
+      height: "100%",
+      margin: 0,
+      padding: 0
+    }
+
+    var controls = [];
+    var controlTdStyle = {
+      height: "100%",
+      margin: 0,
+      padding: 0
+    }
+    for (var candidate=1; candidate<=9; candidate++) {
+      var controlProps = {
+        text: candidate,
+        currentVal: this.state.candidate,
+        defaultVal: candidate,
+        onCallback: this.onControlCallback,
+        color: "#ECD078"
+      };
+      controls.push(<td style={controlTdStyle}><SudokuControl {...controlProps} /></td>);
+    }
+    var togglePenProps = {
+      text: "Pen",
+      currentVal: this.state.toggledKey,
+      defaultVal: true,
+      onCallback: this.onTogglePenCallback,
+      color: "#D95B43"
+    }
+    // this.onTogglePenCallback has an extra param but it does not matter
+    controls.push(<td style={controlTdStyle}><SudokuControl {...togglePenProps} /></td>);
+    
     return (
       <div>
         <div id="sudoku-board" {...boardProps}>
@@ -318,7 +331,7 @@ export default React.createClass({
         <div>
           <table style={controlTableStyle}>
             <tbody>
-              <tr>{controls}</tr>
+              <tr style={controlTrStyle}>{controls}</tr>
             </tbody>
           </table>
         </div>
