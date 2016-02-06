@@ -251,7 +251,8 @@ export default React.createClass({
         text: candidate,
         currentVal: this.state.candidate,
         defaultVal: candidate,
-        onCallback: this.onControlCallback
+        onCallback: this.onControlCallback,
+        color: "#ECD078"
       };
       controls.push(<td><SudokuControl {...controlProps} /></td>);
     }
@@ -259,7 +260,8 @@ export default React.createClass({
       text: "Pen",
       currentVal: this.state.toggledKey,
       defaultVal: true,
-      onCallback: this.onTogglePenCallback
+      onCallback: this.onTogglePenCallback,
+      color: "#D95B43"
     }
     // this.onTogglePenCallback has an extra param but it does not matter
     controls.push(<td><SudokuControl {...togglePenProps} /></td>);

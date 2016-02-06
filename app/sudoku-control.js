@@ -11,7 +11,7 @@ export default React.createClass({
       justifyContent: "center"
     };
     if (this.props.defaultVal === currentVal) {
-        controlStyle.backgroundColor = "orange";
+        controlStyle.backgroundColor = this.props.color;
     }
     return (
       <div style={controlStyle} onClick={this.onClick}>

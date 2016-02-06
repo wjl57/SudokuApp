@@ -16,12 +16,12 @@ export default React.createClass({
         justifyContent: "center"
       };
       if (this.props.mutable) {
-        itemStyle.color = "blue";
+        itemStyle.color = "#67917A";
       } else {
         itemStyle.fontWeight = "bold";
       }
       if (this.props.invalid) {
-        itemStyle.backgroundColor = "red";
+        itemStyle.backgroundColor = "#E33258";
       }
       return (
         <div onClick={this.onClick} style={itemStyle}>
