@@ -3,7 +3,6 @@
 import React from "react";
 import SudokuCell from "./sudoku-cell";
 import SudokuControl from "./sudoku-control";
-import SudokuToggleControl from "./sudoku-toggle";
 
 window.m;
 
@@ -96,23 +95,46 @@ export default React.createClass({
     this.loadStringifiedBoardState(this.state.cleanBoardState, true);
   },
 
+  startPuzzle: function() {
+    console.log("Starting puzzle");
+    var newBoardState = this.state.boardState;
+    for (var y = 0; y < 9; y++) {
+      for (var x = 0; x < 9; x++) {
+        if (newBoardState[y][x].val != null) {
+          newBoardState[y][x].mutable = false;
+        }
+      }
+    }
+
+    // this.setState({
+    //   boardState: newBoardState,
+    //   freeEdit: false
+    // });
+    this.saveBoardState(0, newBoardState, false)();
+  },
+
   restartPuzzle: function() {
     console.log("Restarting puzzle");
     this.loadBoardState(0)();
   },
 
-  saveBoardState: function(num) {
+  saveBoardState: function(num, newBoardState, newFreeEdit) {
     self = this;
     return function() {
-      console.log("Saving board");
-      var boardStateToSave = self.stringifyBoardState(self.state.boardState);
+      console.log("Saving board " + num);
+      var boardStateToSave = (newBoardState === undefined)
+        ? self.stringifyBoardState(self.state.boardState)
+        : self.stringifyBoardState(newBoardState);
       var savedBoardStates = self.state.savedBoardStates;
       savedBoardStates[num] = boardStateToSave;
+
+      var freeEdit = (newFreeEdit === undefined) ? self.state.freeEdit : newFreeEdit;
       var savedFreeEdits = self.state.savedFreeEdits;
-      savedFreeEdits[num] = self.state.freeEdit;
+      savedFreeEdits[num] = freeEdit;
       self.setState({
         "savedBoardStates": savedBoardStates,
-        "savedFreeEdits": savedFreeEdits
+        "savedFreeEdits": savedFreeEdits,
+        "freeEdit": freeEdit
       });
     };
   },
@@ -125,7 +147,6 @@ export default React.createClass({
         console.log("No puzzle was saved to that slot yet");
         return;
       }
-      console.log(JSON.stringify(savedBoardState));
       var freeEdit = self.state.savedFreeEdits[num];
       var boardState = self.loadStringifiedBoardState(savedBoardState, freeEdit);
     };
@@ -169,23 +190,6 @@ export default React.createClass({
     this.setState({
       "boardState": boardState,
       "freeEdit": false
-    });
-  },
-
-  startPuzzle: function() {
-    console.log("Starting puzzle");
-    var newBoardState = this.state.boardState;
-    for (var y = 0; y < 9; y++) {
-      for (var x = 0; x < 9; x++) {
-        if (newBoardState[y][x].val != null) {
-          newBoardState[y][x].mutable = false;
-        }
-      }
-    }
-    this.saveBoardState(0)();
-    this.setState({
-      boardState: newBoardState,
-      freeEdit: false
     });
   },
 
@@ -433,7 +437,7 @@ export default React.createClass({
       var cellInfo = cells[k];
       var cell = this.state.boardState[cellInfo.y][cellInfo.x];
       var val = cell.val;
-      if (val !== null) {
+      if (val != null) {
         if (!(candidateDict.hasOwnProperty(val))) {
           candidateDict[val] = [];
         }
