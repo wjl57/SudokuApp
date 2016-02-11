@@ -8,7 +8,8 @@ export default React.createClass({
       height: "100%",
       display: "flex",
       alignItems: "center",
-      justifyContent: "center"
+      justifyContent: "center",
+      border: "solid thin"
     };
     if (this.props.defaultVal === currentVal) {
         controlStyle.backgroundColor = this.props.color;

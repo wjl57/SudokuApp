@@ -14,7 +14,7 @@ export default React.createClass({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        fontSize: "1.5em",
+        fontSize: "1.5em"
       };
       if (this.props.mutable) {
         itemStyle.color = "#1287A8";

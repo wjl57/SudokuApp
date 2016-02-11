@@ -190,6 +190,19 @@ export default React.createClass({
     });
   },
 
+  generateNewPuzzle: function() {
+    self = this;
+    fetch('/api/newPuzzle', {
+    	method: 'get'
+    }).then(function(response) {
+    	return response.json();
+    }).then(function(resp) {
+      self.loadNewBoard(resp.puzzle);
+    }).catch(function(err) {
+      console.log("Error loading new board");
+    });
+  },
+
   render: function() {
     var rows = [];
     var cellState;
@@ -317,6 +330,7 @@ export default React.createClass({
           </tbody>
           </table>
         </div>
+        <button onClick={this.generateNewPuzzle}>New Puzzle</button>
         <button onClick={this.calcPossibilities}>Calculate Possibilities</button>
         <button onClick={this.clearBoard}>Clear Board</button>
         <button onClick={this.startPuzzle}>Start</button>

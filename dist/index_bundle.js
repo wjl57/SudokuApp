@@ -19966,6 +19966,19 @@
 	    });
 	  },
 
+	  generateNewPuzzle: function generateNewPuzzle() {
+	    self = this;
+	    fetch('/api/newPuzzle', {
+	      method: 'get'
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (resp) {
+	      self.loadNewBoard(resp.puzzle);
+	    }).catch(function (err) {
+	      console.log("Error loading new board");
+	    });
+	  },
+
 	  render: function render() {
 	    var rows = [];
 	    var cellState;
@@ -20111,6 +20124,11 @@
 	            rows
 	          )
 	        )
+	      ),
+	      _react2.default.createElement(
+	        "button",
+	        { onClick: this.generateNewPuzzle },
+	        "New Puzzle"
 	      ),
 	      _react2.default.createElement(
 	        "button",
@@ -20476,7 +20494,8 @@
 	      height: "100%",
 	      display: "flex",
 	      alignItems: "center",
-	      justifyContent: "center"
+	      justifyContent: "center",
+	      border: "solid thin"
 	    };
 	    if (this.props.defaultVal === currentVal) {
 	      controlStyle.backgroundColor = this.props.color;
