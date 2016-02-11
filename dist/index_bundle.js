@@ -58,7 +58,7 @@
 
 	var _greeting2 = _interopRequireDefault(_greeting);
 
-	var _sudokuBoard = __webpack_require__(161);
+	var _sudokuBoard = __webpack_require__(160);
 
 	var _sudokuBoard2 = _interopRequireDefault(_sudokuBoard);
 
@@ -927,7 +927,7 @@
 
 	'use strict';
 
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	var toArray = __webpack_require__(12);
 
@@ -1019,7 +1019,7 @@
 
 	'use strict';
 
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	var invariant = __webpack_require__(13);
 
@@ -3653,7 +3653,7 @@
 
 	'use strict';
 
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	var EventPluginRegistry = __webpack_require__(32);
 	var EventPluginUtils = __webpack_require__(33);
@@ -4772,7 +4772,7 @@
 
 	'use strict';
 
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	var ReactCurrentOwner = __webpack_require__(5);
 
@@ -6969,7 +6969,7 @@
 	 */
 	'use strict';
 
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	function isNode(object) {
 	  return !!(object && (typeof Node === 'function' ? object instanceof Node : (typeof object === 'undefined' ? 'undefined' : _typeof(object)) === 'object' && typeof object.nodeType === 'number' && typeof object.nodeName === 'string'));
@@ -6995,7 +6995,7 @@
 
 	'use strict';
 
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	var ReactCompositeComponent = __webpack_require__(63);
 	var ReactEmptyComponent = __webpack_require__(68);
@@ -7114,7 +7114,7 @@
 
 	'use strict';
 
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	var ReactComponentEnvironment = __webpack_require__(64);
 	var ReactCurrentOwner = __webpack_require__(5);
@@ -7943,7 +7943,7 @@
 	 * @protected
 	 */
 
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	function shouldUpdateReactComponent(prevElement, nextElement) {
 	  var prevEmpty = prevElement === null || prevElement === false;
@@ -8610,7 +8610,7 @@
 
 	'use strict';
 
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	var EventConstants = __webpack_require__(30);
 	var EventPropagators = __webpack_require__(73);
@@ -9355,6 +9355,7 @@
 	 */
 	var EventInterface = {
 	  type: null,
+	  target: null,
 	  // currentTarget is set when dispatching; no use in copying it here
 	  currentTarget: emptyFunction.thatReturnsNull,
 	  eventPhase: null,
@@ -9388,8 +9389,6 @@
 	  this.dispatchConfig = dispatchConfig;
 	  this.dispatchMarker = dispatchMarker;
 	  this.nativeEvent = nativeEvent;
-	  this.target = nativeEventTarget;
-	  this.currentTarget = nativeEventTarget;
 
 	  var Interface = this.constructor.Interface;
 	  for (var propName in Interface) {
@@ -9400,7 +9399,11 @@
 	    if (normalize) {
 	      this[propName] = normalize(nativeEvent);
 	    } else {
-	      this[propName] = nativeEvent[propName];
+	      if (propName === 'target') {
+	        this.target = nativeEventTarget;
+	      } else {
+	        this[propName] = nativeEvent[propName];
+	      }
 	    }
 	  }
 
@@ -10803,7 +10806,7 @@
 
 	'use strict';
 
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	var AutoFocusUtils = __webpack_require__(94);
 	var CSSPropertyOperations = __webpack_require__(96);
@@ -11135,7 +11138,7 @@
 
 	var VALID_TAG_REGEX = /^[a-zA-Z][a-zA-Z:_\.\-\d]*$/; // Simplified subset
 	var validatedTagCache = {};
-	var hasOwnProperty = ({}).hasOwnProperty;
+	var hasOwnProperty = {}.hasOwnProperty;
 
 	function validateDangerousTag(tag) {
 	  if (!hasOwnProperty.call(validatedTagCache, tag)) {
@@ -12784,7 +12787,7 @@
 
 	'use strict';
 
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	var ReactElement = __webpack_require__(42);
 	var ReactPropTypeLocationNames = __webpack_require__(66);
@@ -13259,7 +13262,10 @@
 	      }
 	    });
 
-	    nativeProps.children = content;
+	    if (content) {
+	      nativeProps.children = content;
+	    }
+
 	    return nativeProps;
 	  }
 
@@ -13472,7 +13478,7 @@
 
 	'use strict';
 
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	var ReactCurrentOwner = __webpack_require__(5);
 	var ReactElement = __webpack_require__(42);
@@ -14668,7 +14674,7 @@
 
 	'use strict';
 
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	var hasOwnProperty = Object.prototype.hasOwnProperty;
 
@@ -15116,7 +15122,7 @@
 
 	'use strict';
 
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	var ReactComponent = __webpack_require__(123);
 	var ReactElement = __webpack_require__(42);
@@ -15895,7 +15901,7 @@
 
 	'use strict';
 
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	var ReactNoopUpdateQueue = __webpack_require__(124);
 
@@ -16729,15 +16735,21 @@
 	 * @typechecks
 	 */
 
+	/* eslint-disable fb-www/typeof-undefined */
+
 	/**
 	 * Same as document.activeElement but wraps in a try-catch block. In IE it is
 	 * not safe to call document.activeElement if there is nothing focused.
 	 *
-	 * The activeElement will be null only if the document body is not yet defined.
+	 * The activeElement will be null only if the document or document body is not
+	 * yet defined.
 	 */
-	"use strict";
+	'use strict';
 
 	function getActiveElement() /*?DOMElement*/{
+	  if (typeof document === 'undefined') {
+	    return null;
+	  }
 	  try {
 	    return document.activeElement || document.body;
 	  } catch (e) {
@@ -18224,7 +18236,7 @@
 
 	'use strict';
 
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	var DOMProperty = __webpack_require__(23);
 	var ReactDefaultPerfAnalysis = __webpack_require__(143);
@@ -18740,7 +18752,7 @@
 
 	'use strict';
 
-	module.exports = '0.14.5';
+	module.exports = '0.14.7';
 
 /***/ },
 /* 147 */
@@ -19290,7 +19302,7 @@
 
 	'use strict';
 
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	var ReactElement = __webpack_require__(42);
 	var ReactPropTypeLocations = __webpack_require__(65);
@@ -19748,122 +19760,6 @@
 
 	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	window.g;
-	exports.default = _react2.default.createClass({
-	  displayName: "sudoku-cell",
-
-	  render: function render() {
-	    window.g = this;
-	    var val = this.props.val;
-	    var itemToRender;
-	    if (val) {
-	      itemToRender = val;
-	      var itemStyle = {
-	        height: "100%",
-	        display: "flex",
-	        alignItems: "center",
-	        justifyContent: "center",
-	        fontSize: "1.5em"
-	      };
-	      if (this.props.mutable) {
-	        itemStyle.color = "#1287A8";
-	      } else {
-	        itemStyle.fontWeight = "bold";
-	      }
-	      if (this.props.invalid) {
-	        itemStyle.backgroundColor = "#C02F1D";
-	      }
-	      return _react2.default.createElement(
-	        "div",
-	        { onClick: this.onClick, style: itemStyle },
-	        itemToRender
-	      );
-	    } else {
-	      var tdStyle = {
-	        textAlign: "center",
-	        fontSize: "0.5em",
-	        color: "#a0a0a0",
-	        height: "100%"
-	      };
-	      var trStyle = {
-	        verticalAlign: "middle",
-	        width: "100%"
-	      };
-	      itemToRender = [];
-	      var ps = this.props.possibilities;
-	      for (var j = 0; j < 3; j++) {
-	        var tds = [];
-	        for (var i = 0; i < 3; i++) {
-	          var candidate = 3 * j + i + 1;
-	          var item = ps && ps.has(candidate) ? candidate : " ";
-	          tds.push(_react2.default.createElement(
-	            "td",
-	            { style: tdStyle },
-	            item
-	          ));
-	        }
-	        itemToRender.push(_react2.default.createElement(
-	          "tr",
-	          { style: trStyle },
-	          tds
-	        ));
-	      }
-	    }
-
-	    var tableStyle = {
-	      // display: "block",
-	      width: "100%",
-	      height: "100%",
-	      border: 0,
-	      borderCollapse: "none",
-	      padding: 0,
-	      margin: 0
-	    };
-	    return _react2.default.createElement(
-	      "div",
-	      { onClick: this.onClick },
-	      _react2.default.createElement(
-	        "table",
-	        { style: tableStyle },
-	        _react2.default.createElement(
-	          "tbody",
-	          null,
-	          itemToRender
-	        )
-	      )
-	    );
-	  },
-
-	  valCallback: function valCallback(candidate) {
-	    this.props.valCallback(self.props.y, self.props.x, candidate);
-	  },
-
-	  possibilityCallback: function possibilityCallback(candidate) {
-	    this.props.possibilityCallback(self.props.y, self.props.x, candidate);
-	  },
-
-	  onClick: function onClick() {
-	    self = this;
-	    this.props.onClickCallback(self.props.y, self.props.x, self.valCallback, self.possibilityCallback);
-	  }
-	});
-
-/***/ },
-/* 161 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	Object.defineProperty(exports, "__esModule", {
@@ -19874,7 +19770,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _sudokuCell = __webpack_require__(160);
+	var _sudokuCell = __webpack_require__(161);
 
 	var _sudokuCell2 = _interopRequireDefault(_sudokuCell);
 
@@ -20437,6 +20333,122 @@
 	    this.setState({ boardState: newBoardState });
 	  }
 
+	});
+
+/***/ },
+/* 161 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	window.g;
+	exports.default = _react2.default.createClass({
+	  displayName: "sudoku-cell",
+
+	  render: function render() {
+	    window.g = this;
+	    var val = this.props.val;
+	    var itemToRender;
+	    if (val) {
+	      itemToRender = val;
+	      var itemStyle = {
+	        height: "100%",
+	        display: "flex",
+	        alignItems: "center",
+	        justifyContent: "center",
+	        fontSize: "1.5em"
+	      };
+	      if (this.props.mutable) {
+	        itemStyle.color = "#1287A8";
+	      } else {
+	        itemStyle.fontWeight = "bold";
+	      }
+	      if (this.props.invalid) {
+	        itemStyle.backgroundColor = "#C02F1D";
+	      }
+	      return _react2.default.createElement(
+	        "div",
+	        { onClick: this.onClick, style: itemStyle },
+	        itemToRender
+	      );
+	    } else {
+	      var tdStyle = {
+	        textAlign: "center",
+	        fontSize: "0.5em",
+	        color: "#a0a0a0",
+	        height: "100%"
+	      };
+	      var trStyle = {
+	        verticalAlign: "middle",
+	        width: "100%"
+	      };
+	      itemToRender = [];
+	      var ps = this.props.possibilities;
+	      for (var j = 0; j < 3; j++) {
+	        var tds = [];
+	        for (var i = 0; i < 3; i++) {
+	          var candidate = 3 * j + i + 1;
+	          var item = ps && ps.has(candidate) ? candidate : " ";
+	          tds.push(_react2.default.createElement(
+	            "td",
+	            { style: tdStyle },
+	            item
+	          ));
+	        }
+	        itemToRender.push(_react2.default.createElement(
+	          "tr",
+	          { style: trStyle },
+	          tds
+	        ));
+	      }
+	    }
+
+	    var tableStyle = {
+	      // display: "block",
+	      width: "100%",
+	      height: "100%",
+	      border: 0,
+	      borderCollapse: "none",
+	      padding: 0,
+	      margin: 0
+	    };
+	    return _react2.default.createElement(
+	      "div",
+	      { onClick: this.onClick },
+	      _react2.default.createElement(
+	        "table",
+	        { style: tableStyle },
+	        _react2.default.createElement(
+	          "tbody",
+	          null,
+	          itemToRender
+	        )
+	      )
+	    );
+	  },
+
+	  valCallback: function valCallback(candidate) {
+	    this.props.valCallback(self.props.y, self.props.x, candidate);
+	  },
+
+	  possibilityCallback: function possibilityCallback(candidate) {
+	    this.props.possibilityCallback(self.props.y, self.props.x, candidate);
+	  },
+
+	  onClick: function onClick() {
+	    self = this;
+	    this.props.onClickCallback(self.props.y, self.props.x, self.valCallback, self.possibilityCallback);
+	  }
 	});
 
 /***/ },
