@@ -193,7 +193,7 @@ export default React.createClass({
   generateNewPuzzle: function() {
     self = this;
     fetch('/api/newPuzzle', {
-    	method: 'get'
+    	method: 'post'
     }).then(function(response) {
     	return response.json();
     }).then(function(resp) {
