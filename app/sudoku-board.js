@@ -3,6 +3,7 @@
 import React from "react";
 import SudokuCell from "./sudoku-cell";
 import SudokuControl from "./sudoku-control";
+import SudokuTitle from "./sudoku-title";
 
 window.m;
 
@@ -54,8 +55,10 @@ export default React.createClass({
       "blockCells": blockCells,
       "freeEdit": true,
       "cleanBoardState": this.stringifyBoardState(boardState),
+      "puzzleNum": 0,
+      "level": 0,
       savedBoardStates: {},
-      savedFreeEdits: []
+      savedMetadata: []
     };
   },
 
@@ -77,7 +80,7 @@ export default React.createClass({
     return newBoardState;
   },
 
-  loadStringifiedBoardState: function(boardState, freeEdit) {
+  loadStringifiedBoardState: function(boardState, metadata) {
     var newBoardState = JSON.parse(JSON.stringify(boardState));
     for (var y=0; y<9; y++) {
       for (var x=0; x<9; x++) {
@@ -86,7 +89,9 @@ export default React.createClass({
     }
     this.setState({
       "boardState": newBoardState,
-      "freeEdit": freeEdit
+      "freeEdit": metadata["freeEdit"],
+      "puzzleNum": metadata["puzzleNum"],
+      "level": metadata["level"]
     });
   },
 
@@ -125,11 +130,16 @@ export default React.createClass({
       savedBoardStates[num] = boardStateToSave;
 
       var freeEdit = (newFreeEdit === undefined) ? self.state.freeEdit : newFreeEdit;
-      var savedFreeEdits = self.state.savedFreeEdits;
-      savedFreeEdits[num] = freeEdit;
+      var savedMetadata = self.state.savedMetadata;
+      var metadata = {
+        "freeEdit": self.state.freeEdit,
+        "puzzleNum": self.state.puzzleNum,
+        "level": self.state.level
+      };
+      savedMetadata[num] = metadata;
       self.setState({
         "savedBoardStates": savedBoardStates,
-        "savedFreeEdits": savedFreeEdits,
+        "savedMetadata": savedMetadata,
         "freeEdit": freeEdit
       });
     };
@@ -143,8 +153,8 @@ export default React.createClass({
         console.log("No puzzle was saved to that slot yet");
         return;
       }
-      var freeEdit = self.state.savedFreeEdits[num];
-      var boardState = self.loadStringifiedBoardState(savedBoardState, freeEdit);
+      var metadata = self.state.savedMetadata[num];
+      var boardState = self.loadStringifiedBoardState(savedBoardState, metadata);
     };
   },
 
@@ -203,8 +213,9 @@ export default React.createClass({
     }).then(function(response) {
     	return response.json();
     }).then(function(resp) {
-      self.loadNewBoard(resp.puzzle);
       self.setState({"puzzleNum": resp.puzzleNum});
+      self.setState({"level": 4});
+      self.loadNewBoard(resp.puzzle);
     }).catch(function(err) {
       console.log("Error loading new board");
     });
@@ -330,6 +341,7 @@ export default React.createClass({
 
     return (
       <div>
+        <SudokuTitle level={this.state.level} puzzleNum={this.state.puzzleNum}/>
         <div id="sudoku-board" {...boardProps}>
           <table style={tableStyle}>
           <tbody>

@@ -54,21 +54,13 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _greeting = __webpack_require__(159);
-
-	var _greeting2 = _interopRequireDefault(_greeting);
-
 	var _sudokuBoard = __webpack_require__(160);
 
 	var _sudokuBoard2 = _interopRequireDefault(_sudokuBoard);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	_reactDom2.default.render(_react2.default.createElement(_greeting2.default, { name: "World" }), document.getElementById('content'));
-
-	var board = [[4, null, 2, null, 3, 1, 7, 6, null], [null, 6, null, null, 8, 7, null, null, null], [null, null, null, null, 4, null, 1, null, null], [8, 9, null, null, null, 2, 6, null, 3], [3, null, 5, null, null, null, 4, null, 1], [1, null, 6, 3, null, null, null, 8, 5], [null, null, 8, null, 9, null, null, null, null], [null, null, null, 4, 2, null, null, 5, null], [null, 4, 9, 7, 5, null, 3, null, 6]];
-
-	_reactDom2.default.render(_react2.default.createElement(_sudokuBoard2.default, { board: board }), document.getElementById('sudokuboard'));
+	_reactDom2.default.render(_react2.default.createElement(_sudokuBoard2.default, null), document.getElementById('sudokuboard'));
 
 /***/ },
 /* 1 */
@@ -19725,36 +19717,7 @@
 	module.exports = __webpack_require__(3);
 
 /***/ },
-/* 159 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = _react2.default.createClass({
-	  displayName: "greeting",
-
-	  render: function render() {
-	    return _react2.default.createElement(
-	      "div",
-	      { className: "greeting" },
-	      "Hello, ",
-	      this.props.name,
-	      "?!"
-	    );
-	  }
-	});
-
-/***/ },
+/* 159 */,
 /* 160 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -19777,6 +19740,10 @@
 	var _sudokuControl = __webpack_require__(162);
 
 	var _sudokuControl2 = _interopRequireDefault(_sudokuControl);
+
+	var _sudokuTitle = __webpack_require__(163);
+
+	var _sudokuTitle2 = _interopRequireDefault(_sudokuTitle);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19832,8 +19799,10 @@
 	      "blockCells": blockCells,
 	      "freeEdit": true,
 	      "cleanBoardState": this.stringifyBoardState(boardState),
+	      "puzzleNum": 0,
+	      "level": 0,
 	      savedBoardStates: {},
-	      savedFreeEdits: []
+	      savedMetadata: []
 	    };
 	  },
 
@@ -19855,7 +19824,7 @@
 	    return newBoardState;
 	  },
 
-	  loadStringifiedBoardState: function loadStringifiedBoardState(boardState, freeEdit) {
+	  loadStringifiedBoardState: function loadStringifiedBoardState(boardState, metadata) {
 	    var newBoardState = JSON.parse(JSON.stringify(boardState));
 	    for (var y = 0; y < 9; y++) {
 	      for (var x = 0; x < 9; x++) {
@@ -19864,7 +19833,9 @@
 	    }
 	    this.setState({
 	      "boardState": newBoardState,
-	      "freeEdit": freeEdit
+	      "freeEdit": metadata["freeEdit"],
+	      "puzzleNum": metadata["puzzleNum"],
+	      "level": metadata["level"]
 	    });
 	  },
 
@@ -19901,11 +19872,16 @@
 	      savedBoardStates[num] = boardStateToSave;
 
 	      var freeEdit = newFreeEdit === undefined ? self.state.freeEdit : newFreeEdit;
-	      var savedFreeEdits = self.state.savedFreeEdits;
-	      savedFreeEdits[num] = freeEdit;
+	      var savedMetadata = self.state.savedMetadata;
+	      var metadata = {
+	        "freeEdit": self.state.freeEdit,
+	        "puzzleNum": self.state.puzzleNum,
+	        "level": self.state.level
+	      };
+	      savedMetadata[num] = metadata;
 	      self.setState({
 	        "savedBoardStates": savedBoardStates,
-	        "savedFreeEdits": savedFreeEdits,
+	        "savedMetadata": savedMetadata,
 	        "freeEdit": freeEdit
 	      });
 	    };
@@ -19919,8 +19895,8 @@
 	        console.log("No puzzle was saved to that slot yet");
 	        return;
 	      }
-	      var freeEdit = self.state.savedFreeEdits[num];
-	      var boardState = self.loadStringifiedBoardState(savedBoardState, freeEdit);
+	      var metadata = self.state.savedMetadata[num];
+	      var boardState = self.loadStringifiedBoardState(savedBoardState, metadata);
 	    };
 	  },
 
@@ -19979,8 +19955,9 @@
 	    }).then(function (response) {
 	      return response.json();
 	    }).then(function (resp) {
-	      self.loadNewBoard(resp.puzzle);
 	      self.setState({ "puzzleNum": resp.puzzleNum });
+	      self.setState({ "level": 4 });
+	      self.loadNewBoard(resp.puzzle);
 	    }).catch(function (err) {
 	      console.log("Error loading new board");
 	    });
@@ -20119,6 +20096,7 @@
 	    return _react2.default.createElement(
 	      "div",
 	      null,
+	      _react2.default.createElement(_sudokuTitle2.default, { level: this.state.level, puzzleNum: this.state.puzzleNum }),
 	      _react2.default.createElement(
 	        "div",
 	        _extends({ id: "sudoku-board" }, boardProps),
@@ -20516,6 +20494,58 @@
 
 	  onClick: function onClick() {
 	    this.props.onCallback(this.props.defaultVal);
+	  }
+	});
+
+/***/ },
+/* 163 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _react2.default.createClass({
+	  displayName: "sudoku-title",
+
+	  render: function render() {
+	    var s = "Sudoku";
+	    var level = this.props.level;
+	    var levelString = "";
+	    if (level) {
+	      switch (level) {
+	        case 1:
+	          levelString = "Easy";
+	          break;
+	        case 2:
+	          levelString = "Medium";
+	          break;
+	        case 3:
+	          levelString = "Hard";
+	          break;
+	        case 4:
+	          levelString = "Evil";
+	          break;
+	      }
+
+	      s += ": " + levelString;
+	    }
+	    if (this.props.puzzleNum) {
+	      s += " " + this.props.puzzleNum;
+	    }
+	    return _react2.default.createElement(
+	      "h2",
+	      null,
+	      s
+	    );
 	  }
 	});
 
