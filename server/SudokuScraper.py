@@ -1,5 +1,5 @@
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, SoupStrainer
 
 def ScrapeNewPuzzle(level=1):
     url = "http://show.websudoku.com/" + "?level=" + str(level)
@@ -18,7 +18,11 @@ def ScrapeNewPuzzle(level=1):
             try:
                 value = int(square.find('input').get('value'))
                 if value is not None:
-                    board[i][j] = value
+                    board[j][i] = value
             except:
                 pass
-    return board
+
+    # Find the <a> element with the appropriate title
+    href = soup.find("a", {"title":"Copy link for this puzzle"})['href']
+    puzzle_num = href.split("set_id=")[1]
+    return board, puzzle_num

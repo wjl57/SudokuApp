@@ -19980,6 +19980,7 @@
 	      return response.json();
 	    }).then(function (resp) {
 	      self.loadNewBoard(resp.puzzle);
+	      self.setState({ "puzzleNum": resp.puzzleNum });
 	    }).catch(function (err) {
 	      console.log("Error loading new board");
 	    });

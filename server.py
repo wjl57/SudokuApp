@@ -16,27 +16,12 @@ def comments_handler():
     if request.method == 'POST':
         d = request.get_json()
         level = d['level']
-        puzzle = ScrapeNewPuzzle(level)
+        puzzle, puzzle_num = ScrapeNewPuzzle(level)
 
-    return jsonify({'puzzle': puzzle})
-
-@app.route('/api/tasks', methods=['GET'])
-def get_tasks():
-    tasks = [
-        {
-            'id': 1,
-            'title': u'Buy groceries',
-            'description': u'Milk, Cheese, Pizza, Fruit, Tylenol',
-            'done': False
-        },
-        {
-            'id': 2,
-            'title': u'Learn Python',
-            'description': u'Need to find a good Python tutorial on the web',
-            'done': False
-        }
-    ]
-    return jsonify({'tasks': tasks})
+    return jsonify({
+        'puzzle': puzzle,
+        'puzzleNum': puzzle_num
+    })
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')

@@ -186,7 +186,7 @@ export default React.createClass({
 
     this.saveBoardState(0, boardState, false)();
     this.setState({
-      "boardState": boardState,
+      "boardState": boardState
     });
   },
 
@@ -204,6 +204,7 @@ export default React.createClass({
     	return response.json();
     }).then(function(resp) {
       self.loadNewBoard(resp.puzzle);
+      self.setState({"puzzleNum": resp.puzzleNum});
     }).catch(function(err) {
       console.log("Error loading new board");
     });
