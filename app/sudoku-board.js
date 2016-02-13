@@ -4,6 +4,10 @@ import React from "react";
 import SudokuCell from "./sudoku-cell";
 import SudokuControl from "./sudoku-control";
 import SudokuTitle from "./sudoku-title";
+import Dropdown from 'react-dropdown';
+
+import '../css/my-style.css';
+import '../css/dropdown-style.css';
 
 window.m;
 
@@ -57,8 +61,9 @@ export default React.createClass({
       "cleanBoardState": this.stringifyBoardState(boardState),
       "puzzleNum": 0,
       "level": 0,
-      savedBoardStates: {},
-      savedMetadata: []
+      "savedBoardStates": {},
+      "savedMetadata": [],
+      "levelSelected": { value: 1, label: 'Easy'}
     };
   },
 
@@ -221,6 +226,11 @@ export default React.createClass({
     });
   },
 
+  onlevelSelect(option) {
+    console.log('You selected ', option.label);
+    this.setState({"levelSelected": option});
+  },
+
   render: function() {
     var rows = [];
     var cellState;
@@ -339,6 +349,13 @@ export default React.createClass({
     // this.onTogglePenCallback has an extra param but it does not matter
     controls.push(<td style={controlTdStyle}><SudokuControl {...togglePenProps} /></td>);
 
+    const levelOptions = [
+      { value: 1, label: 'Easy' },
+      { value: 2, label: 'Medium' },
+      { value: 3, label: 'Hard' },
+      { value: 4, label: 'Evil' },
+    ]
+
     return (
       <div>
         <SudokuTitle level={this.state.level} puzzleNum={this.state.puzzleNum}/>
@@ -365,6 +382,7 @@ export default React.createClass({
             </tbody>
           </table>
         </div>
+        <Dropdown options={levelOptions} onChange={this.onlevelSelect} value={this.state.levelSelected} placeholder="Difficulty" />
       </div>
     );
   },

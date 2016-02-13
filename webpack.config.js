@@ -10,7 +10,7 @@ var config = {
     plugins: [
       new HtmlWebpackPlugin({
         title: 'Custom template',
-        template: 'my-index.html', // Load a custom template 
+        template: 'my-index.html', // Load a custom template
         inject: 'body' // Inject all scripts into the body
       })
     ],
@@ -22,6 +22,10 @@ var config = {
             {
                 presets:['es2015', 'react']
             }
+        },
+        {
+          test: /\.css$/,
+          loader: 'style!css'
         }]
     },
 
