@@ -19958,13 +19958,13 @@
 	        'Content-Type': 'application/json'
 	      }),
 	      body: JSON.stringify({
-	        'level': 4
+	        'level': self.state.levelSelected.value
 	      })
 	    }).then(function (response) {
 	      return response.json();
 	    }).then(function (resp) {
 	      self.setState({ "puzzleNum": resp.puzzleNum });
-	      self.setState({ "level": 4 });
+	      self.setState({ "level": self.state.levelSelected.value });
 	      self.loadNewBoard(resp.puzzle);
 	    }).catch(function (err) {
 	      console.log("Error loading new board");
