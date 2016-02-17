@@ -2,3 +2,13 @@ h2 {
     color: blue;
     /*text-align: center;*/
 }
+
+.temp-highlight {
+  background-color: orange;
+  animation: bgcolor 1s forwards;
+}
+
+@keyframes bgcolor {
+    from {background-color: orange;}
+    to {background-color: white;}
+}

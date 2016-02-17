@@ -19775,6 +19775,7 @@
 	      boardState.push([]);
 	      for (var x = 0; x < 9; x++) {
 	        blockNum = this.locToBlockNum(y, x);
+	        name = "c" + y + x + blockNum;
 	        var cellInfo = {
 	          "name": name,
 	          "y": y,
@@ -19985,7 +19986,6 @@
 	      var tds = [];
 	      for (var x = 0; x < 9; x++) {
 	        cellState = this.state.boardState[y][x];
-
 	        var cellProps = {
 	          y: y,
 	          x: x,
@@ -20017,7 +20017,7 @@
 	        tds.push(_react2.default.createElement(
 	          "td",
 	          { style: tdStyle },
-	          _react2.default.createElement(_sudokuCell2.default, cellProps)
+	          _react2.default.createElement(_sudokuCell2.default, _extends({ ref: cellProps.name }, cellProps))
 	        ));
 	      }
 
@@ -20256,6 +20256,16 @@
 	  },
 
 	  onControlCallback: function onControlCallback(candidate) {
+	    if (this.state.candidate === candidate) {
+	      for (var y = 0; y < 9; y++) {
+	        for (var x = 0; x < 9; x++) {
+	          var val = this.state.boardState[y][x].val;
+	          if (val === candidate) {
+	            this.refs[this.state.boardState[y][x].name].highlightTemporarily();
+	          }
+	        }
+	      }
+	    }
 	    this.setState({ candidate: candidate });
 	  },
 
@@ -20369,16 +20379,30 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	__webpack_require__(166);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var classNames = __webpack_require__(164);
 
 	window.g;
 	exports.default = _react2.default.createClass({
-	  displayName: "sudoku-cell",
+	  displayName: 'sudoku-cell',
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      "highlighted": false
+	    };
+	  },
 
 	  render: function render() {
 	    window.g = this;
 	    var val = this.props.val;
 	    var itemToRender;
+	    var itemClass = classNames({
+	      "temp-highlight": this.state.highlighted
+	    });
+
 	    if (val) {
 	      itemToRender = val;
 	      var itemStyle = {
@@ -20397,8 +20421,8 @@
 	        itemStyle.backgroundColor = "#C02F1D";
 	      }
 	      return _react2.default.createElement(
-	        "div",
-	        { onClick: this.onClick, style: itemStyle },
+	        'div',
+	        { className: itemClass, onClick: this.onClick, style: itemStyle },
 	        itemToRender
 	      );
 	    } else {
@@ -20418,15 +20442,15 @@
 	        var tds = [];
 	        for (var i = 0; i < 3; i++) {
 	          var candidate = 3 * j + i + 1;
-	          var item = ps && ps.has(candidate) ? candidate : " ";
+	          var item = ps && ps.has(candidate) ? candidate : ' ';
 	          tds.push(_react2.default.createElement(
-	            "td",
+	            'td',
 	            { style: tdStyle },
 	            item
 	          ));
 	        }
 	        itemToRender.push(_react2.default.createElement(
-	          "tr",
+	          'tr',
 	          { style: trStyle },
 	          tds
 	        ));
@@ -20443,13 +20467,13 @@
 	      margin: 0
 	    };
 	    return _react2.default.createElement(
-	      "div",
+	      'div',
 	      { onClick: this.onClick },
 	      _react2.default.createElement(
-	        "table",
+	        'table',
 	        { style: tableStyle },
 	        _react2.default.createElement(
-	          "tbody",
+	          'tbody',
 	          null,
 	          itemToRender
 	        )
@@ -20468,6 +20492,19 @@
 	  onClick: function onClick() {
 	    self = this;
 	    this.props.onClickCallback(self.props.y, self.props.x, self.valCallback, self.possibilityCallback);
+	    this.highlightTemporarily();
+	  },
+
+	  highlightTemporarily: function highlightTemporarily() {
+	    this.setState({
+	      "highlighted": true
+	    });
+	    var self = this;
+	    setTimeout(function () {
+	      self.setState({
+	        "highlighted": false
+	      });
+	    }, 1000);
 	  }
 	});
 
@@ -20850,7 +20887,7 @@
 
 
 	// module
-	exports.push([module.id, "h2 {\n    color: blue;\n    /*text-align: center;*/\n}\n", ""]);
+	exports.push([module.id, "h2 {\n    color: blue;\n    /*text-align: center;*/\n}\n\n.temp-highlight {\n  background-color: orange;\n  animation: bgcolor 1s forwards;\n}\n\n@keyframes bgcolor {\n    from {background-color: orange;}\n    to {background-color: white;}\n}\n", ""]);
 
 	// exports
 

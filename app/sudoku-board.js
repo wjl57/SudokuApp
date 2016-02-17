@@ -28,6 +28,7 @@ export default React.createClass({
       boardState.push([]);
       for (var x = 0; x < 9; x++) {
         blockNum = this.locToBlockNum(y, x);
+        name = "c" + y + x + blockNum;
         var cellInfo = {
           "name": name,
           "y": y,
@@ -239,7 +240,6 @@ export default React.createClass({
       var tds = [];
       for (var x = 0; x < 9; x++) {
         cellState = this.state.boardState[y][x];
-
         var cellProps = {
           y: y,
           x: x,
@@ -270,7 +270,7 @@ export default React.createClass({
 
         tds.push(
           <td style={tdStyle}>
-            <SudokuCell {...cellProps}/>
+            <SudokuCell ref={cellProps.name} {...cellProps}/>
           </td>
         );
       }
@@ -454,6 +454,16 @@ export default React.createClass({
   },
 
   onControlCallback: function(candidate) {
+    if (this.state.candidate === candidate) {
+      for (var y=0; y<9; y++) {
+        for (var x=0; x<9; x++) {
+          var val = this.state.boardState[y][x].val;
+          if (val === candidate) {
+            this.refs[this.state.boardState[y][x].name].highlightTemporarily();
+          }
+        }
+      }
+    }
     this.setState({candidate: candidate});
   },
 

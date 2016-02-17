@@ -1,12 +1,25 @@
 'use strict';
 
 import React from "react";
+import '../css/my-style.css';
+var classNames = require('classnames');
+
 window.g;
 export default React.createClass({
+  getInitialState: function() {
+    return {
+      "highlighted": false
+    };
+  },
+
   render: function() {
     window.g = this;
     var val = this.props.val;
     var itemToRender;
+    var itemClass = classNames({
+      "temp-highlight": this.state.highlighted
+    });
+
     if (val) {
       itemToRender = val;
       var itemStyle = {
@@ -25,7 +38,7 @@ export default React.createClass({
         itemStyle.backgroundColor = "#C02F1D";
       }
       return (
-        <div onClick={this.onClick} style={itemStyle}>
+        <div className={itemClass} onClick={this.onClick} style={itemStyle}>
           {itemToRender}
         </div>
       );
@@ -85,5 +98,18 @@ export default React.createClass({
     self = this;
     this.props.onClickCallback(self.props.y, self.props.x,
       self.valCallback, self.possibilityCallback);
+    this.highlightTemporarily();
+  },
+
+  highlightTemporarily: function() {
+    this.setState({
+      "highlighted": true
+    });
+    var self = this;
+    setTimeout(function() {
+      self.setState({
+        "highlighted": false
+      })
+    }, 1000);
   }
 });
