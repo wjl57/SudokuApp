@@ -214,7 +214,8 @@ export default React.createClass({
         'Content-Type': 'application/json'
       }),
       body: JSON.stringify({
-        'level': self.state.levelSelected.value
+        "level": self.state.levelSelected.value,
+        "puzzleNum": this.refs['puzzleNumInput'].value
       })
     }).then(function(response) {
     	return response.json();
@@ -383,6 +384,7 @@ export default React.createClass({
           </table>
         </div>
         <Dropdown options={levelOptions} onChange={this.onlevelSelect} value={this.state.levelSelected} placeholder="Difficulty" />
+        <input ref="puzzleNumInput" type="text" defaultValue="" />
       </div>
     );
   },

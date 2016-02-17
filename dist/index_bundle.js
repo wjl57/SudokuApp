@@ -19736,19 +19736,19 @@
 
 	var _sudokuCell2 = _interopRequireDefault(_sudokuCell);
 
-	var _sudokuControl = __webpack_require__(161);
+	var _sudokuControl = __webpack_require__(167);
 
 	var _sudokuControl2 = _interopRequireDefault(_sudokuControl);
 
-	var _sudokuTitle = __webpack_require__(162);
+	var _sudokuTitle = __webpack_require__(168);
 
 	var _sudokuTitle2 = _interopRequireDefault(_sudokuTitle);
 
-	var _reactDropdown = __webpack_require__(163);
+	var _reactDropdown = __webpack_require__(169);
 
 	var _reactDropdown2 = _interopRequireDefault(_reactDropdown);
 
-	__webpack_require__(166);
+	__webpack_require__(161);
 
 	__webpack_require__(170);
 
@@ -19959,7 +19959,8 @@
 	        'Content-Type': 'application/json'
 	      }),
 	      body: JSON.stringify({
-	        'level': self.state.levelSelected.value
+	        "level": self.state.levelSelected.value,
+	        "puzzleNum": this.refs['puzzleNumInput'].value
 	      })
 	    }).then(function (response) {
 	      return response.json();
@@ -20188,7 +20189,8 @@
 	          )
 	        )
 	      ),
-	      _react2.default.createElement(_reactDropdown2.default, { options: levelOptions, onChange: this.onlevelSelect, value: this.state.levelSelected, placeholder: "Difficulty" })
+	      _react2.default.createElement(_reactDropdown2.default, { options: levelOptions, onChange: this.onlevelSelect, value: this.state.levelSelected, placeholder: "Difficulty" }),
+	      _react2.default.createElement("input", { ref: "puzzleNumInput", type: "text", defaultValue: "" })
 	    );
 	  },
 
@@ -20379,11 +20381,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	__webpack_require__(166);
+	__webpack_require__(161);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var classNames = __webpack_require__(164);
+	var classNames = __webpack_require__(165);
 
 	window.g;
 	exports.default = _react2.default.createClass({
@@ -20512,357 +20514,13 @@
 /* 161 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = _react2.default.createClass({
-	  displayName: "sudoku-control",
-
-	  render: function render() {
-	    var currentVal = this.props.currentVal;
-	    var controlStyle = {
-	      height: "100%",
-	      display: "flex",
-	      alignItems: "center",
-	      justifyContent: "center",
-	      border: "solid thin"
-	    };
-	    if (this.props.defaultVal === currentVal) {
-	      controlStyle.backgroundColor = this.props.color;
-	    }
-	    return _react2.default.createElement(
-	      "div",
-	      { style: controlStyle, onClick: this.onClick },
-	      this.props.text
-	    );
-	  },
-
-	  onClick: function onClick() {
-	    this.props.onCallback(this.props.defaultVal);
-	  }
-	});
-
-/***/ },
-/* 162 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = _react2.default.createClass({
-	  displayName: "sudoku-title",
-
-	  render: function render() {
-	    var s = "Sudoku";
-	    var level = this.props.level;
-	    var levelString = "";
-	    if (level) {
-	      switch (level) {
-	        case 1:
-	          levelString = "Easy";
-	          break;
-	        case 2:
-	          levelString = "Medium";
-	          break;
-	        case 3:
-	          levelString = "Hard";
-	          break;
-	        case 4:
-	          levelString = "Evil";
-	          break;
-	      }
-
-	      s += ": " + levelString;
-	    }
-	    if (this.props.puzzleNum) {
-	      s += " " + this.props.puzzleNum;
-	    }
-	    return _react2.default.createElement(
-	      "h2",
-	      null,
-	      s
-	    );
-	  }
-	});
-
-/***/ },
-/* 163 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
-	var _interopRequire = function _interopRequire(obj) {
-	  return obj && obj.__esModule ? obj["default"] : obj;
-	};
-
-	var _createClass = function () {
-	  function defineProperties(target, props) {
-	    for (var key in props) {
-	      var prop = props[key];prop.configurable = true;if (prop.value) prop.writable = true;
-	    }Object.defineProperties(target, props);
-	  }return function (Constructor, protoProps, staticProps) {
-	    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
-	  };
-	}();
-
-	var _get = function get(object, property, receiver) {
-	  var desc = Object.getOwnPropertyDescriptor(object, property);if (desc === undefined) {
-	    var parent = Object.getPrototypeOf(object);if (parent === null) {
-	      return undefined;
-	    } else {
-	      return get(parent, property, receiver);
-	    }
-	  } else if ("value" in desc && desc.writable) {
-	    return desc.value;
-	  } else {
-	    var getter = desc.get;if (getter === undefined) {
-	      return undefined;
-	    }return getter.call(receiver);
-	  }
-	};
-
-	var _inherits = function _inherits(subClass, superClass) {
-	  if (typeof superClass !== "function" && superClass !== null) {
-	    throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
-	  }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) subClass.__proto__ = superClass;
-	};
-
-	var _classCallCheck = function _classCallCheck(instance, Constructor) {
-	  if (!(instance instanceof Constructor)) {
-	    throw new TypeError("Cannot call a class as a function");
-	  }
-	};
-
-	var React = _interopRequire(__webpack_require__(1));
-
-	var ReactDOM = _interopRequire(__webpack_require__(158));
-
-	var classNames = _interopRequire(__webpack_require__(164));
-
-	var Dropdown = function (_React$Component) {
-	  function Dropdown(props) {
-	    _classCallCheck(this, Dropdown);
-
-	    _get(Object.getPrototypeOf(Dropdown.prototype), "constructor", this).call(this, props);
-	    this.state = {
-	      selected: props.value || { label: props.placeholder || "Select...", value: "" },
-	      isOpen: false
-	    };
-	    this.mounted = true;
-	    this.handleDocumentClick = this.handleDocumentClick.bind(this);
-	  }
-
-	  _inherits(Dropdown, _React$Component);
-
-	  _createClass(Dropdown, {
-	    componentWillReceiveProps: {
-	      value: function componentWillReceiveProps(newProps) {
-	        if (newProps.value && newProps.value !== this.state.selected) {
-	          this.setState({ selected: newProps.value });
-	        }
-	      }
-	    },
-	    componentDidMount: {
-	      value: function componentDidMount() {
-	        document.addEventListener("click", this.handleDocumentClick, false);
-	      }
-	    },
-	    componentWillUnmount: {
-	      value: function componentWillUnmount() {
-	        this.mounted = false;
-	        document.removeEventListener("click", this.handleDocumentClick, false);
-	      }
-	    },
-	    handleMouseDown: {
-	      value: function handleMouseDown(event) {
-
-	        if (event.type == "mousedown" && event.button !== 0) {
-	          return;
-	        }event.stopPropagation();
-	        event.preventDefault();
-
-	        this.setState({
-	          isOpen: !this.state.isOpen
-	        });
-	      }
-	    },
-	    setValue: {
-	      value: function setValue(option) {
-	        var newState = {
-	          selected: option,
-	          isOpen: false
-	        };
-	        this.fireChangeEvent(newState);
-	        this.setState(newState);
-	      }
-	    },
-	    fireChangeEvent: {
-	      value: function fireChangeEvent(newState) {
-	        if (newState.selected !== this.state.selected && this.props.onChange) {
-	          this.props.onChange(newState.selected);
-	        }
-	      }
-	    },
-	    renderOption: {
-	      value: function renderOption(option) {
-	        var optionClass = classNames({
-	          "Dropdown-option": true,
-	          "is-selected": option == this.state.selected
-	        });
-
-	        return React.createElement("div", { key: option.value, className: optionClass, onMouseDown: this.setValue.bind(this, option), onClick: this.setValue.bind(this, option) }, option.label);
-	      }
-	    },
-	    buildMenu: {
-	      value: function buildMenu() {
-	        var _this = this;
-
-	        var ops = this.props.options.map(function (option) {
-	          if (option.type == "group") {
-	            var groupTitle = React.createElement("div", { className: "title" }, option.name);
-	            var _options = option.items.map(function (item) {
-	              return _this.renderOption(item);
-	            });
-
-	            return React.createElement("div", { className: "group", key: option.name }, groupTitle, _options);
-	          } else {
-	            return _this.renderOption(option);
-	          }
-	        });
-
-	        return ops.length ? ops : React.createElement("div", { className: "Dropdown-noresults" }, "No options found");
-	      }
-	    },
-	    handleDocumentClick: {
-	      value: function handleDocumentClick(event) {
-	        if (this.mounted) {
-	          if (!ReactDOM.findDOMNode(this).contains(event.target)) {
-	            this.setState({ isOpen: false });
-	          }
-	        }
-	      }
-	    },
-	    render: {
-	      value: function render() {
-	        var _props = this.props;
-	        var controlClassName = _props.controlClassName;
-	        var menuClassName = _props.menuClassName;
-
-	        var value = React.createElement("div", { className: "placeholder" }, this.state.selected.label);
-	        var menu = this.state.isOpen ? React.createElement("div", { className: menuClassName }, this.buildMenu()) : null;
-
-	        var dropdownClass = classNames({
-	          Dropdown: true,
-	          "is-open": this.state.isOpen
-	        });
-
-	        return React.createElement("div", { className: dropdownClass }, React.createElement("div", { className: controlClassName, onMouseDown: this.handleMouseDown.bind(this), onTouchEnd: this.handleMouseDown.bind(this) }, value, React.createElement("span", { className: "Dropdown-arrow" })), menu);
-	      }
-	    }
-	  });
-
-	  return Dropdown;
-	}(React.Component);
-
-	Dropdown.defaultProps = { controlClassName: "Dropdown-control", menuClassName: "Dropdown-menu" };
-	module.exports = Dropdown;
-
-/***/ },
-/* 164 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
-	/*!
-	  Copyright (c) 2016 Jed Watson.
-	  Licensed under the MIT License (MIT), see
-	  http://jedwatson.github.io/classnames
-	*/
-	/* global define */
-
-	(function () {
-		'use strict';
-
-		var hasOwn = {}.hasOwnProperty;
-
-		function classNames() {
-			var classes = [];
-
-			for (var i = 0; i < arguments.length; i++) {
-				var arg = arguments[i];
-				if (!arg) continue;
-
-				var argType = typeof arg === 'undefined' ? 'undefined' : _typeof(arg);
-
-				if (argType === 'string' || argType === 'number') {
-					classes.push(arg);
-				} else if (Array.isArray(arg)) {
-					classes.push(classNames.apply(null, arg));
-				} else if (argType === 'object') {
-					for (var key in arg) {
-						if (hasOwn.call(arg, key) && arg[key]) {
-							classes.push(key);
-						}
-					}
-				}
-			}
-
-			return classes.join(' ');
-		}
-
-		if (typeof module !== 'undefined' && module.exports) {
-			module.exports = classNames;
-		} else if ("function" === 'function' && _typeof(__webpack_require__(165)) === 'object' && __webpack_require__(165)) {
-			// register as 'classnames', consistent with npm package name
-			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
-				return classNames;
-			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-		} else {
-			window.classNames = classNames;
-		}
-	})();
-
-/***/ },
-/* 165 */
-/***/ function(module, exports) {
-
-	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
-
-	/* WEBPACK VAR INJECTION */}.call(exports, {}))
-
-/***/ },
-/* 166 */
-/***/ function(module, exports, __webpack_require__) {
-
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(167);
+	var content = __webpack_require__(162);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(169)(content, {});
+	var update = __webpack_require__(164)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -20879,10 +20537,10 @@
 	}
 
 /***/ },
-/* 167 */
+/* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(168)();
+	exports = module.exports = __webpack_require__(163)();
 	// imports
 
 
@@ -20893,7 +20551,7 @@
 
 
 /***/ },
-/* 168 */
+/* 163 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -20948,7 +20606,7 @@
 	};
 
 /***/ },
-/* 169 */
+/* 164 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -21202,6 +20860,350 @@
 
 
 /***/ },
+/* 165 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	/*!
+	  Copyright (c) 2016 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
+	/* global define */
+
+	(function () {
+		'use strict';
+
+		var hasOwn = {}.hasOwnProperty;
+
+		function classNames() {
+			var classes = [];
+
+			for (var i = 0; i < arguments.length; i++) {
+				var arg = arguments[i];
+				if (!arg) continue;
+
+				var argType = typeof arg === 'undefined' ? 'undefined' : _typeof(arg);
+
+				if (argType === 'string' || argType === 'number') {
+					classes.push(arg);
+				} else if (Array.isArray(arg)) {
+					classes.push(classNames.apply(null, arg));
+				} else if (argType === 'object') {
+					for (var key in arg) {
+						if (hasOwn.call(arg, key) && arg[key]) {
+							classes.push(key);
+						}
+					}
+				}
+			}
+
+			return classes.join(' ');
+		}
+
+		if (typeof module !== 'undefined' && module.exports) {
+			module.exports = classNames;
+		} else if ("function" === 'function' && _typeof(__webpack_require__(166)) === 'object' && __webpack_require__(166)) {
+			// register as 'classnames', consistent with npm package name
+			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return classNames;
+			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else {
+			window.classNames = classNames;
+		}
+	})();
+
+/***/ },
+/* 166 */
+/***/ function(module, exports) {
+
+	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, {}))
+
+/***/ },
+/* 167 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _react2.default.createClass({
+	  displayName: "sudoku-control",
+
+	  render: function render() {
+	    var currentVal = this.props.currentVal;
+	    var controlStyle = {
+	      height: "100%",
+	      display: "flex",
+	      alignItems: "center",
+	      justifyContent: "center",
+	      border: "solid thin"
+	    };
+	    if (this.props.defaultVal === currentVal) {
+	      controlStyle.backgroundColor = this.props.color;
+	    }
+	    return _react2.default.createElement(
+	      "div",
+	      { style: controlStyle, onClick: this.onClick },
+	      this.props.text
+	    );
+	  },
+
+	  onClick: function onClick() {
+	    this.props.onCallback(this.props.defaultVal);
+	  }
+	});
+
+/***/ },
+/* 168 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _react2.default.createClass({
+	  displayName: "sudoku-title",
+
+	  render: function render() {
+	    var s = "Sudoku";
+	    var level = this.props.level;
+	    var levelString = "";
+	    if (level) {
+	      switch (level) {
+	        case 1:
+	          levelString = "Easy";
+	          break;
+	        case 2:
+	          levelString = "Medium";
+	          break;
+	        case 3:
+	          levelString = "Hard";
+	          break;
+	        case 4:
+	          levelString = "Evil";
+	          break;
+	      }
+
+	      s += ": " + levelString;
+	    }
+	    if (this.props.puzzleNum) {
+	      s += " " + this.props.puzzleNum;
+	    }
+	    return _react2.default.createElement(
+	      "h2",
+	      null,
+	      s
+	    );
+	  }
+	});
+
+/***/ },
+/* 169 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	var _interopRequire = function _interopRequire(obj) {
+	  return obj && obj.__esModule ? obj["default"] : obj;
+	};
+
+	var _createClass = function () {
+	  function defineProperties(target, props) {
+	    for (var key in props) {
+	      var prop = props[key];prop.configurable = true;if (prop.value) prop.writable = true;
+	    }Object.defineProperties(target, props);
+	  }return function (Constructor, protoProps, staticProps) {
+	    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+	  };
+	}();
+
+	var _get = function get(object, property, receiver) {
+	  var desc = Object.getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+	    var parent = Object.getPrototypeOf(object);if (parent === null) {
+	      return undefined;
+	    } else {
+	      return get(parent, property, receiver);
+	    }
+	  } else if ("value" in desc && desc.writable) {
+	    return desc.value;
+	  } else {
+	    var getter = desc.get;if (getter === undefined) {
+	      return undefined;
+	    }return getter.call(receiver);
+	  }
+	};
+
+	var _inherits = function _inherits(subClass, superClass) {
+	  if (typeof superClass !== "function" && superClass !== null) {
+	    throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
+	  }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) subClass.__proto__ = superClass;
+	};
+
+	var _classCallCheck = function _classCallCheck(instance, Constructor) {
+	  if (!(instance instanceof Constructor)) {
+	    throw new TypeError("Cannot call a class as a function");
+	  }
+	};
+
+	var React = _interopRequire(__webpack_require__(1));
+
+	var ReactDOM = _interopRequire(__webpack_require__(158));
+
+	var classNames = _interopRequire(__webpack_require__(165));
+
+	var Dropdown = function (_React$Component) {
+	  function Dropdown(props) {
+	    _classCallCheck(this, Dropdown);
+
+	    _get(Object.getPrototypeOf(Dropdown.prototype), "constructor", this).call(this, props);
+	    this.state = {
+	      selected: props.value || { label: props.placeholder || "Select...", value: "" },
+	      isOpen: false
+	    };
+	    this.mounted = true;
+	    this.handleDocumentClick = this.handleDocumentClick.bind(this);
+	  }
+
+	  _inherits(Dropdown, _React$Component);
+
+	  _createClass(Dropdown, {
+	    componentWillReceiveProps: {
+	      value: function componentWillReceiveProps(newProps) {
+	        if (newProps.value && newProps.value !== this.state.selected) {
+	          this.setState({ selected: newProps.value });
+	        }
+	      }
+	    },
+	    componentDidMount: {
+	      value: function componentDidMount() {
+	        document.addEventListener("click", this.handleDocumentClick, false);
+	      }
+	    },
+	    componentWillUnmount: {
+	      value: function componentWillUnmount() {
+	        this.mounted = false;
+	        document.removeEventListener("click", this.handleDocumentClick, false);
+	      }
+	    },
+	    handleMouseDown: {
+	      value: function handleMouseDown(event) {
+
+	        if (event.type == "mousedown" && event.button !== 0) {
+	          return;
+	        }event.stopPropagation();
+	        event.preventDefault();
+
+	        this.setState({
+	          isOpen: !this.state.isOpen
+	        });
+	      }
+	    },
+	    setValue: {
+	      value: function setValue(option) {
+	        var newState = {
+	          selected: option,
+	          isOpen: false
+	        };
+	        this.fireChangeEvent(newState);
+	        this.setState(newState);
+	      }
+	    },
+	    fireChangeEvent: {
+	      value: function fireChangeEvent(newState) {
+	        if (newState.selected !== this.state.selected && this.props.onChange) {
+	          this.props.onChange(newState.selected);
+	        }
+	      }
+	    },
+	    renderOption: {
+	      value: function renderOption(option) {
+	        var optionClass = classNames({
+	          "Dropdown-option": true,
+	          "is-selected": option == this.state.selected
+	        });
+
+	        return React.createElement("div", { key: option.value, className: optionClass, onMouseDown: this.setValue.bind(this, option), onClick: this.setValue.bind(this, option) }, option.label);
+	      }
+	    },
+	    buildMenu: {
+	      value: function buildMenu() {
+	        var _this = this;
+
+	        var ops = this.props.options.map(function (option) {
+	          if (option.type == "group") {
+	            var groupTitle = React.createElement("div", { className: "title" }, option.name);
+	            var _options = option.items.map(function (item) {
+	              return _this.renderOption(item);
+	            });
+
+	            return React.createElement("div", { className: "group", key: option.name }, groupTitle, _options);
+	          } else {
+	            return _this.renderOption(option);
+	          }
+	        });
+
+	        return ops.length ? ops : React.createElement("div", { className: "Dropdown-noresults" }, "No options found");
+	      }
+	    },
+	    handleDocumentClick: {
+	      value: function handleDocumentClick(event) {
+	        if (this.mounted) {
+	          if (!ReactDOM.findDOMNode(this).contains(event.target)) {
+	            this.setState({ isOpen: false });
+	          }
+	        }
+	      }
+	    },
+	    render: {
+	      value: function render() {
+	        var _props = this.props;
+	        var controlClassName = _props.controlClassName;
+	        var menuClassName = _props.menuClassName;
+
+	        var value = React.createElement("div", { className: "placeholder" }, this.state.selected.label);
+	        var menu = this.state.isOpen ? React.createElement("div", { className: menuClassName }, this.buildMenu()) : null;
+
+	        var dropdownClass = classNames({
+	          Dropdown: true,
+	          "is-open": this.state.isOpen
+	        });
+
+	        return React.createElement("div", { className: dropdownClass }, React.createElement("div", { className: controlClassName, onMouseDown: this.handleMouseDown.bind(this), onTouchEnd: this.handleMouseDown.bind(this) }, value, React.createElement("span", { className: "Dropdown-arrow" })), menu);
+	      }
+	    }
+	  });
+
+	  return Dropdown;
+	}(React.Component);
+
+	Dropdown.defaultProps = { controlClassName: "Dropdown-control", menuClassName: "Dropdown-menu" };
+	module.exports = Dropdown;
+
+/***/ },
 /* 170 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -21211,7 +21213,7 @@
 	var content = __webpack_require__(171);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(169)(content, {});
+	var update = __webpack_require__(164)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -21231,7 +21233,7 @@
 /* 171 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(168)();
+	exports = module.exports = __webpack_require__(163)();
 	// imports
 
 

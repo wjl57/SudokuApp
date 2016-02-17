@@ -16,7 +16,8 @@ def comments_handler():
     if request.method == 'POST':
         d = request.get_json()
         level = d['level']
-        puzzle, puzzle_num = ScrapeNewPuzzle(level)
+        puzzle_requested = d['puzzleNum']
+        puzzle, puzzle_num = ScrapeNewPuzzle(level, puzzle_requested)
 
     return jsonify({
         'puzzle': puzzle,

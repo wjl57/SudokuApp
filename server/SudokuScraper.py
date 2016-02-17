@@ -1,8 +1,11 @@
 import requests
 from bs4 import BeautifulSoup, SoupStrainer
 
-def ScrapeNewPuzzle(level=1):
+def ScrapeNewPuzzle(level=1, puzzle_num=None):
     url = "http://show.websudoku.com/" + "?level=" + str(level)
+    if puzzle_num is not None:
+        url += "&set_id=" + str(puzzle_num)
+
     response = requests.get(url)
     html = response.content
 
