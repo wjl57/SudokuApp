@@ -254,7 +254,8 @@ export default React.createClass({
   isBoardValid: function() {
     for (var y=0; y<9; y++) {
       for (var x=0; x<9; x++) {
-        if (this.state.boardState[y][x].invalid === false) {
+        if (this.state.boardState[y][x].invalid) {
+          console.log(y + " " + x + this.state.boardState[y][x].invalid);
           return false;
         }
       }
