@@ -19869,7 +19869,7 @@
 
 	  restartPuzzle: function restartPuzzle() {
 	    console.log("Restarting puzzle");
-	    this.loadBoardState(0)();
+	    this.loadSavedBoardState(0)();
 	  },
 
 	  saveBoardState: function saveBoardState(num, newBoardState, newFreeEdit) {
@@ -19896,7 +19896,7 @@
 	    };
 	  },
 
-	  loadBoardState: function loadBoardState(num) {
+	  loadSavedBoardState: function loadSavedBoardState(num) {
 	    self = this;
 	    return function () {
 	      var savedBoardState = self.state.savedBoardStates[num];
@@ -19970,6 +19970,72 @@
 	      self.loadNewBoard(resp.puzzle);
 	    }).catch(function (err) {
 	      console.log("Error loading new board");
+	    });
+	  },
+
+	  getBoard: function getBoard() {
+	    var board = [];
+	    for (var y = 0; y < 9; y++) {
+	      board.push([]);
+	      for (var x = 0; x < 9; x++) {
+	        board[y].push(self.state.boardState[y][x].val);
+	      }
+	    }
+	    return board;
+	  },
+
+	  loadBoard: function loadBoard(board) {
+	    var newBoardState = this.state.boardState;
+	    for (var y = 0; y < 9; y++) {
+	      for (var x = 0; x < 9; x++) {
+	        newBoardState[y][x].val = board[y][x];
+	      }
+	    }
+	    this.setState({
+	      "boardState": newBoardState
+	    });
+	  },
+
+	  isBoardValid: function isBoardValid() {
+	    for (var y = 0; y < 9; y++) {
+	      for (var x = 0; x < 9; x++) {
+	        if (this.state.boardState[y][x].invalid === false) {
+	          return false;
+	        }
+	      }
+	    }
+	    return true;
+	  },
+
+	  solvePuzzle: function solvePuzzle() {
+	    self = this;
+	    console.log("Here");
+	    if (!self.isBoardValid()) {
+	      console.log("Invalid board. Won't solve");
+	      return;
+	    }
+	    console.log("Here too");
+	    fetch('/api/sudoku/solvePuzzle', {
+	      method: 'post',
+	      headers: new Headers({
+	        'Content-Type': 'application/json'
+	      }),
+	      body: JSON.stringify({
+	        "board": self.getBoard()
+	      })
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (resp) {
+	      var success = resp.success;
+	      if (!success) {
+	        console.log("Couldn't solve puzzle");
+	        return;
+	      }
+	      var board = resp.board;
+	      self.loadBoard(board);
+	      console.log(resp);
+	    }).catch(function (err) {
+	      console.log("Error solving puzzle");
 	    });
 	  },
 
@@ -20128,49 +20194,67 @@
 	        )
 	      ),
 	      _react2.default.createElement(
-	        "button",
-	        { onClick: this.generateNewPuzzle },
-	        "New Puzzle"
+	        "div",
+	        null,
+	        _react2.default.createElement(
+	          "button",
+	          { onClick: this.generateNewPuzzle },
+	          "New Puzzle"
+	        ),
+	        _react2.default.createElement(
+	          "button",
+	          { onClick: this.calcPossibilities },
+	          "Calculate Possibilities"
+	        ),
+	        _react2.default.createElement(
+	          "button",
+	          { onClick: this.clearBoard },
+	          "Clear Board"
+	        ),
+	        _react2.default.createElement(
+	          "button",
+	          { onClick: this.startPuzzle },
+	          "Start"
+	        ),
+	        _react2.default.createElement(
+	          "button",
+	          { onClick: this.restartPuzzle },
+	          "Restart"
+	        ),
+	        _react2.default.createElement(
+	          "button",
+	          { onClick: this.solvePuzzle },
+	          "Solve"
+	        ),
+	        _react2.default.createElement(
+	          "button",
+	          { onClick: this.solvePuzzle },
+	          "Solve Step"
+	        )
 	      ),
 	      _react2.default.createElement(
-	        "button",
-	        { onClick: this.calcPossibilities },
-	        "Calculate Possibilities"
-	      ),
-	      _react2.default.createElement(
-	        "button",
-	        { onClick: this.clearBoard },
-	        "Clear Board"
-	      ),
-	      _react2.default.createElement(
-	        "button",
-	        { onClick: this.startPuzzle },
-	        "Start"
-	      ),
-	      _react2.default.createElement(
-	        "button",
-	        { onClick: this.restartPuzzle },
-	        "Restart"
-	      ),
-	      _react2.default.createElement(
-	        "button",
-	        { onClick: this.saveBoardState(1) },
-	        "Save #1"
-	      ),
-	      _react2.default.createElement(
-	        "button",
-	        { onClick: this.saveBoardState(2) },
-	        "Save #2"
-	      ),
-	      _react2.default.createElement(
-	        "button",
-	        { onClick: this.loadBoardState(1) },
-	        "Load #1"
-	      ),
-	      _react2.default.createElement(
-	        "button",
-	        { onClick: this.loadBoardState(2) },
-	        "Load #2"
+	        "div",
+	        null,
+	        _react2.default.createElement(
+	          "button",
+	          { onClick: this.saveBoardState(1) },
+	          "Save #1"
+	        ),
+	        _react2.default.createElement(
+	          "button",
+	          { onClick: this.saveBoardState(2) },
+	          "Save #2"
+	        ),
+	        _react2.default.createElement(
+	          "button",
+	          { onClick: this.loadSavedBoardState(1) },
+	          "Load #1"
+	        ),
+	        _react2.default.createElement(
+	          "button",
+	          { onClick: this.loadSavedBoardState(2) },
+	          "Load #2"
+	        )
 	      ),
 	      _react2.default.createElement(
 	        "div",
@@ -20506,7 +20590,7 @@
 	      self.setState({
 	        "highlighted": false
 	      });
-	    }, 1000);
+	    }, 700);
 	  }
 	});
 
@@ -20545,7 +20629,7 @@
 
 
 	// module
-	exports.push([module.id, "h2 {\n    color: blue;\n    /*text-align: center;*/\n}\n\n.temp-highlight {\n  background-color: orange;\n  animation: bgcolor 1s forwards;\n}\n\n@keyframes bgcolor {\n    from {background-color: orange;}\n    to {background-color: white;}\n}\n", ""]);
+	exports.push([module.id, "h2 {\n    color: blue;\n    /*text-align: center;*/\n}\n\n.temp-highlight {\n  background-color: orange;\n  animation: bgcolor 0.7s forwards;\n}\n\n@keyframes bgcolor {\n    from {background-color: orange;}\n    to {background-color: white;}\n}\n", ""]);
 
 	// exports
 

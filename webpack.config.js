@@ -9,7 +9,7 @@ var config = {
     },
     plugins: [
       new HtmlWebpackPlugin({
-        title: 'Custom template',
+        title: 'Play Sudoku',
         template: 'my-index.html', // Load a custom template
         inject: 'body' // Inject all scripts into the body
       })

@@ -122,7 +122,7 @@ export default React.createClass({
 
   restartPuzzle: function() {
     console.log("Restarting puzzle");
-    this.loadBoardState(0)();
+    this.loadSavedBoardState(0)();
   },
 
   saveBoardState: function(num, newBoardState, newFreeEdit) {
@@ -151,7 +151,7 @@ export default React.createClass({
     };
   },
 
-  loadBoardState: function(num) {
+  loadSavedBoardState: function(num) {
     self = this;
     return function() {
       var savedBoardState = self.state.savedBoardStates[num];
@@ -225,6 +225,72 @@ export default React.createClass({
       self.loadNewBoard(resp.puzzle);
     }).catch(function(err) {
       console.log("Error loading new board");
+    });
+  },
+
+  getBoard: function() {
+    var board = [];
+    for (var y=0; y<9; y++) {
+      board.push([]);
+      for (var x=0; x<9; x++) {
+        board[y].push(self.state.boardState[y][x].val);
+      }
+    }
+    return board;
+  },
+
+  loadBoard: function(board) {
+    var newBoardState = this.state.boardState;
+    for (var y=0; y<9; y++) {
+      for (var x=0; x<9; x++) {
+        newBoardState[y][x].val = board[y][x];
+      }
+    }
+    this.setState({
+      "boardState": newBoardState
+    });
+  },
+
+  isBoardValid: function() {
+    for (var y=0; y<9; y++) {
+      for (var x=0; x<9; x++) {
+        if (this.state.boardState[y][x].invalid === false) {
+          return false;
+        }
+      }
+    }
+    return true;
+  },
+
+  solvePuzzle: function() {
+    self = this;
+    console.log("Here");
+    if (!self.isBoardValid()) {
+      console.log("Invalid board. Won't solve");
+      return;
+    }
+    console.log("Here too");
+    fetch('/api/sudoku/solvePuzzle', {
+    	method: 'post',
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      }),
+      body: JSON.stringify({
+        "board": self.getBoard()
+      })
+    }).then(function(response) {
+    	return response.json();
+    }).then(function(resp) {
+      var success = resp.success;
+      if (!success) {
+        console.log("Couldn't solve puzzle");
+        return;
+      }
+      var board = resp.board;
+      self.loadBoard(board);
+      console.log(resp);
+    }).catch(function(err) {
+      console.log("Error solving puzzle");
     });
   },
 
@@ -367,15 +433,21 @@ export default React.createClass({
           </tbody>
           </table>
         </div>
-        <button onClick={this.generateNewPuzzle}>New Puzzle</button>
-        <button onClick={this.calcPossibilities}>Calculate Possibilities</button>
-        <button onClick={this.clearBoard}>Clear Board</button>
-        <button onClick={this.startPuzzle}>Start</button>
-        <button onClick={this.restartPuzzle}>Restart</button>
-        <button onClick={this.saveBoardState(1)}>Save #1</button>
-        <button onClick={this.saveBoardState(2)}>Save #2</button>
-        <button onClick={this.loadBoardState(1)}>Load #1</button>
-        <button onClick={this.loadBoardState(2)}>Load #2</button>
+        <div>
+          <button onClick={this.generateNewPuzzle}>New Puzzle</button>
+          <button onClick={this.calcPossibilities}>Calculate Possibilities</button>
+          <button onClick={this.clearBoard}>Clear Board</button>
+          <button onClick={this.startPuzzle}>Start</button>
+          <button onClick={this.restartPuzzle}>Restart</button>
+          <button onClick={this.solvePuzzle}>Solve</button>
+          <button onClick={this.solvePuzzle}>Solve Step</button>
+        </div>
+        <div>
+          <button onClick={this.saveBoardState(1)}>Save #1</button>
+          <button onClick={this.saveBoardState(2)}>Save #2</button>
+          <button onClick={this.loadSavedBoardState(1)}>Load #1</button>
+          <button onClick={this.loadSavedBoardState(2)}>Load #2</button>
+        </div>
         <div>
           <table style={controlTableStyle}>
             <tbody>

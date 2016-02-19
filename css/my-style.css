@@ -5,7 +5,7 @@ h2 {
 
 .temp-highlight {
   background-color: orange;
-  animation: bgcolor 1s forwards;
+  animation: bgcolor 0.7s forwards;
 }
 
 @keyframes bgcolor {

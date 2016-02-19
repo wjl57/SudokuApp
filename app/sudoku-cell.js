@@ -110,6 +110,6 @@ export default React.createClass({
       self.setState({
         "highlighted": false
       })
-    }, 1000);
+    }, 700);
   }
 });
