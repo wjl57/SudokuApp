@@ -45,11 +45,17 @@ def solve_step():
     try:
         board = request.json['board']
         sp = SudokuPuzzle(board)
+        # Check if the puzzle has a solution
         ss = SudokuSolver(sp)
-        ss.solve_next_step()
-        log = ss.sudoku_logger.sudoku_log
+        ss.do_work()
+        # Solve the next step
+        spStep = SudokuPuzzle(board)
+        ssStep = SudokuSolver(spStep)
+        ssStep.solve_next_step()
+        log = ssStep.sudoku_logger.sudoku_log
         return jsonify({
-            'board': ss.sudoku_puzzle.get_board(),
+            'success': True,
+            'board': ssStep.sudoku_puzzle.get_board(),
             'steps_log': log
         })
     except Exception as e:

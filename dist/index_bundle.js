@@ -20008,14 +20008,42 @@
 	    return true;
 	  },
 
-	  solvePuzzle: function solvePuzzle() {
+	  solveStep: function solveStep() {
 	    self = this;
-	    console.log("Here");
 	    if (!self.isBoardValid()) {
-	      console.log("Invalid board. Won't solve");
+	      console.log("Invalid board. Won't solve step.");
 	      return;
 	    }
-	    console.log("Here too");
+	    fetch('/api/sudoku/solveStep', {
+	      method: 'post',
+	      headers: new Headers({
+	        'Content-Type': 'application/json'
+	      }),
+	      body: JSON.stringify({
+	        "board": self.getBoard()
+	      })
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (resp) {
+	      var success = resp.success;
+	      if (!success) {
+	        console.log("No solution found.");
+	        return;
+	      }
+	      var board = resp.board;
+	      self.loadBoard(board);
+	      console.log(resp);
+	    }).catch(function (err) {
+	      console.log("Error solving puzzle");
+	    });
+	  },
+
+	  solvePuzzle: function solvePuzzle() {
+	    self = this;
+	    if (!self.isBoardValid()) {
+	      console.log("Invalid board. Won't solve.");
+	      return;
+	    }
 	    fetch('/api/sudoku/solvePuzzle', {
 	      method: 'post',
 	      headers: new Headers({
@@ -20229,7 +20257,7 @@
 	        ),
 	        _react2.default.createElement(
 	          "button",
-	          { onClick: this.solvePuzzle },
+	          { onClick: this.solveStep },
 	          "Solve Step"
 	        )
 	      ),

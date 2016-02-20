@@ -263,14 +263,42 @@ export default React.createClass({
     return true;
   },
 
-  solvePuzzle: function() {
+  solveStep: function() {
     self = this;
-    console.log("Here");
     if (!self.isBoardValid()) {
-      console.log("Invalid board. Won't solve");
+      console.log("Invalid board. Won't solve step.");
       return;
     }
-    console.log("Here too");
+    fetch('/api/sudoku/solveStep', {
+      method: 'post',
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      }),
+      body: JSON.stringify({
+        "board": self.getBoard()
+      })
+    }).then(function(response) {
+      return response.json();
+    }).then(function(resp) {
+      var success = resp.success;
+      if (!success) {
+        console.log("No solution found.");
+        return;
+      }
+      var board = resp.board;
+      self.loadBoard(board);
+      console.log(resp);
+    }).catch(function(err) {
+      console.log("Error solving puzzle");
+    });
+  },
+
+  solvePuzzle: function() {
+    self = this;
+    if (!self.isBoardValid()) {
+      console.log("Invalid board. Won't solve.");
+      return;
+    }
     fetch('/api/sudoku/solvePuzzle', {
     	method: 'post',
       headers: new Headers({
@@ -441,7 +469,7 @@ export default React.createClass({
           <button onClick={this.startPuzzle}>Start</button>
           <button onClick={this.restartPuzzle}>Restart</button>
           <button onClick={this.solvePuzzle}>Solve</button>
-          <button onClick={this.solvePuzzle}>Solve Step</button>
+          <button onClick={this.solveStep}>Solve Step</button>
         </div>
         <div>
           <button onClick={this.saveBoardState(1)}>Save #1</button>
