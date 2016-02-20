@@ -19858,7 +19858,7 @@
 	    var newBoardState = this.state.boardState;
 	    for (var y = 0; y < 9; y++) {
 	      for (var x = 0; x < 9; x++) {
-	        if (newBoardState[y][x].val != null) {
+	        if (newBoardState[y][x].val !== null) {
 	          newBoardState[y][x].mutable = false;
 	        }
 	      }
@@ -20072,7 +20072,6 @@
 	    console.log('You selected ', option.label);
 	    this.setState({ "levelSelected": option });
 	  },
-
 
 	  render: function render() {
 	    var rows = [];
