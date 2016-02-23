@@ -12,6 +12,7 @@ import '../css/dropdown-style.css';
 import '../css/bootstrap.css';
 
 var classNames = require('classnames');
+var _ = require('lodash/core');
 
 window.m;
 
@@ -386,19 +387,23 @@ export default React.createClass({
       rows.push(<tr style={trStyle}>{tds}</tr>);
     }
 
-    var boardProps = {
+    var containerProps = {
       style: {
         outline: "none",
         fontFamily: "Roboto Mono"
-      }
-    }
-
-    var containerProps = {
+      },
       tabIndex: 1,
       onKeyDown: this.handleKeyDown
     }
 
-    var tableStyle = {
+    var centerStyle = {
+      marginLeft: "auto",
+      marginRight: "auto",
+      textAlign: "center",
+      width: "100%"
+    }
+
+    var tableStyle = _.extend({
       borderCollapse: "collapse",
       width: "81vmin",
       maxWidth: "540px",
@@ -407,9 +412,10 @@ export default React.createClass({
       maxHeight: "540px",
       minHeight: "460px",
       tableLayout: "fixed",
-      verticalAlign: "middle",
-    }
-    var controlTableStyle = {
+      verticalAlign: "middle"
+    }, centerStyle);
+
+    var controlTableStyle = _.extend({
       borderCollapse: "collapse",
       width: "75vmin",
       maxWidth: "450px",
@@ -422,7 +428,8 @@ export default React.createClass({
       fontFamily: "Roboto Mono",
       border: "solid medium",
       padding: 0
-    }
+    }, centerStyle);
+
     var controlTrStyle = {
       height: "100%",
       margin: 0,
@@ -465,14 +472,14 @@ export default React.createClass({
     return (
       <div className="container" {...containerProps}>
         <div className="row">
-          <div className="col-sm-6">
+          <div className="col-sm-7">
             <SudokuTitle level={this.state.level} puzzleNum={this.state.puzzleNum}/>
           </div>
-          <div className="col-sm-6"></div>
+          <div className="col-sm-5"></div>
         </div>
         <div className="row">
-          <div className="col-sm-6">
-            <div id="sudoku-board" {...boardProps}>
+          <div className="col-sm-7">
+            <div id="sudoku-board">
               <table style={tableStyle}>
               <tbody>
                 {rows}
@@ -481,7 +488,14 @@ export default React.createClass({
             </div>
           </div>
           <div className="col-sm-1"></div>
-          <div className="col-sm-5">
+          <div className="col-sm-4">
+            <div className="row">
+              <div className="col-sm-12">
+                <button onClick={this.calcPossibilities}>Calculate Possibilities</button>
+                <button onClick={this.solvePuzzle}>Solve</button>
+                <button onClick={this.solveStep}>Solve Step</button>
+              </div>
+            </div>
             <div className="row">
               <div className="col-sm-12">
                 <button onClick={this.generateNewPuzzle}>New Puzzle</button>
@@ -513,24 +527,16 @@ export default React.createClass({
             </div>
           </div>
         </div>
+        <br />
         <div className="row">
-          <div className="col-sm-6">
-            <button onClick={this.calcPossibilities}>Calculate Possibilities</button>
-            <button onClick={this.solvePuzzle}>Solve</button>
-            <button onClick={this.solveStep}>Solve Step</button>
-          </div>
-          <div className="col-sm-6">
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-sm-6">
+          <div className="col-sm-7">
             <table style={controlTableStyle}>
               <tbody>
                 <tr style={controlTrStyle}>{controls}</tr>
               </tbody>
             </table>
           </div>
-          <div className="col-sm-6">
+          <div className="col-sm-5">
           </div>
         </div>
       </div>
