@@ -8,6 +8,10 @@ import Dropdown from 'react-dropdown';
 
 import '../css/my-style.css';
 import '../css/dropdown-style.css';
+// import '../css/bootstrap-theme.css';
+import '../css/bootstrap.css';
+
+var classNames = require('classnames');
 
 window.m;
 
@@ -286,6 +290,9 @@ export default React.createClass({
         return;
       }
       var board = resp.board;
+      self.setState({
+        "currentStep": resp.steps_log[1]
+      });
       self.loadBoard(board);
       console.log(resp);
     }).catch(function(err) {
@@ -383,10 +390,14 @@ export default React.createClass({
       style: {
         outline: "none",
         fontFamily: "Roboto Mono"
-      },
+      }
+    }
+
+    var containerProps = {
       tabIndex: 1,
       onKeyDown: this.handleKeyDown
     }
+
     var tableStyle = {
       borderCollapse: "collapse",
       width: "81vmin",
@@ -396,8 +407,8 @@ export default React.createClass({
       maxHeight: "540px",
       minHeight: "460px",
       tableLayout: "fixed",
-      verticalAlign: "middle"
-    };
+      verticalAlign: "middle",
+    }
     var controlTableStyle = {
       borderCollapse: "collapse",
       width: "75vmin",
@@ -410,9 +421,8 @@ export default React.createClass({
       verticalAlign: "middle",
       fontFamily: "Roboto Mono",
       border: "solid medium",
-      margin: 0,
       padding: 0
-    };
+    }
     var controlTrStyle = {
       height: "100%",
       margin: 0,
@@ -453,39 +463,76 @@ export default React.createClass({
     ]
 
     return (
-      <div>
-        <SudokuTitle level={this.state.level} puzzleNum={this.state.puzzleNum}/>
-        <div id="sudoku-board" {...boardProps}>
-          <table style={tableStyle}>
-          <tbody>
-            {rows}
-          </tbody>
-          </table>
+      <div className="container" {...containerProps}>
+        <div className="row">
+          <div className="col-sm-6">
+            <SudokuTitle level={this.state.level} puzzleNum={this.state.puzzleNum}/>
+          </div>
+          <div className="col-sm-6"></div>
         </div>
-        <div>
-          <button onClick={this.generateNewPuzzle}>New Puzzle</button>
-          <button onClick={this.calcPossibilities}>Calculate Possibilities</button>
-          <button onClick={this.clearBoard}>Clear Board</button>
-          <button onClick={this.startPuzzle}>Start</button>
-          <button onClick={this.restartPuzzle}>Restart</button>
-          <button onClick={this.solvePuzzle}>Solve</button>
-          <button onClick={this.solveStep}>Solve Step</button>
+        <div className="row">
+          <div className="col-sm-6">
+            <div id="sudoku-board" {...boardProps}>
+              <table style={tableStyle}>
+              <tbody>
+                {rows}
+              </tbody>
+              </table>
+            </div>
+          </div>
+          <div className="col-sm-1"></div>
+          <div className="col-sm-5">
+            <div className="row">
+              <div className="col-sm-12">
+                <button onClick={this.generateNewPuzzle}>New Puzzle</button>
+                <button onClick={this.clearBoard}>Clear Board</button>
+                <button onClick={this.startPuzzle}>Start</button>
+                <button onClick={this.restartPuzzle}>Restart</button>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-sm-12">
+                <button onClick={this.saveBoardState(1)}>Save #1</button>
+                <button onClick={this.saveBoardState(2)}>Save #2</button>
+                <button onClick={this.loadSavedBoardState(1)}>Load #1</button>
+                <button onClick={this.loadSavedBoardState(2)}>Load #2</button>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-sm-4">
+                <Dropdown options={levelOptions} onChange={this.onlevelSelect} value={this.state.levelSelected} placeholder="Difficulty" />
+              </div>
+              <div className="col-sm-8">
+                <input ref="puzzleNumInput" type="text" defaultValue="" />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-sm-12">
+                <textarea readOnly value={this.state.currentStep != null ? this.state.currentStep.description : "sample"}></textarea>
+              </div>
+            </div>
+          </div>
         </div>
-        <div>
-          <button onClick={this.saveBoardState(1)}>Save #1</button>
-          <button onClick={this.saveBoardState(2)}>Save #2</button>
-          <button onClick={this.loadSavedBoardState(1)}>Load #1</button>
-          <button onClick={this.loadSavedBoardState(2)}>Load #2</button>
+        <div className="row">
+          <div className="col-sm-6">
+            <button onClick={this.calcPossibilities}>Calculate Possibilities</button>
+            <button onClick={this.solvePuzzle}>Solve</button>
+            <button onClick={this.solveStep}>Solve Step</button>
+          </div>
+          <div className="col-sm-6">
+          </div>
         </div>
-        <div>
-          <table style={controlTableStyle}>
-            <tbody>
-              <tr style={controlTrStyle}>{controls}</tr>
-            </tbody>
-          </table>
+        <div className="row">
+          <div className="col-sm-6">
+            <table style={controlTableStyle}>
+              <tbody>
+                <tr style={controlTrStyle}>{controls}</tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="col-sm-6">
+          </div>
         </div>
-        <Dropdown options={levelOptions} onChange={this.onlevelSelect} value={this.state.levelSelected} placeholder="Difficulty" />
-        <input ref="puzzleNumInput" type="text" defaultValue="" />
       </div>
     );
   },
