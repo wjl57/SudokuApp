@@ -20442,10 +20442,15 @@
 	    console.log("KEY" + key);
 	    if (key == 65) {
 	      this.onTogglePenCallback();
-	    }
-	    if (48 < key && key <= 57) {
+	    } else if (48 < key && key <= 57) {
 	      var candidate = key - 48;
 	      this.onControlCallback(candidate);
+	    } else if (key == 83) {
+	      this.solveStep();
+	    } else if (key == 67) {
+	      this.calcPossibilities();
+	    } else if (key == 78) {
+	      this.generateNewPuzzle();
 	    }
 	  },
 
