@@ -213,6 +213,7 @@ export default React.createClass({
 
   generateNewPuzzle: function() {
     self = this;
+    console.log("Generating a puzzle");
     fetch('/api/newPuzzle', {
     	method: 'post',
       headers: new Headers({
@@ -360,10 +361,10 @@ export default React.createClass({
 
         var tdStyle = {
           position: "relative",
-          width: "9vmin",
-          maxWidth: "18px",
-          height: "9vmin",
-          maxHeight: "18px",
+          width: "8vmin",
+          maxWidth: "16px",
+          height: "8vmin",
+          maxHeight: "16px",
           textAlign: "center",
           fontSize: "1em",
           borderLeft: (x % 3 == 0) ? "solid medium" : "solid thin",
@@ -405,11 +406,11 @@ export default React.createClass({
 
     var tableStyle = _.extend({
       borderCollapse: "collapse",
-      width: "81vmin",
-      maxWidth: "540px",
+      width: "72vmin",
+      maxWidth: "480px",
       minWidth: "460px",
-      height: "81vmin",
-      maxHeight: "540px",
+      height: "72vmin",
+      maxHeight: "480px",
       minHeight: "460px",
       tableLayout: "fixed",
       verticalAlign: "middle"
@@ -469,8 +470,10 @@ export default React.createClass({
       { value: 4, label: 'Evil' },
     ]
 
+    var sidebarClass = classNames('sidebar', 'col-sm-4');
+
     return (
-      <div className="container" {...containerProps}>
+      <div className="container-fluid" {...containerProps}>
         <div className="row">
           <div className="col-sm-7">
             <SudokuTitle level={this.state.level} puzzleNum={this.state.puzzleNum}/>
@@ -486,9 +489,17 @@ export default React.createClass({
               </tbody>
               </table>
             </div>
+            <br/>
+            <div id="sudoku-controls">
+              <table style={controlTableStyle}>
+                <tbody>
+                  <tr style={controlTrStyle}>{controls}</tr>
+                </tbody>
+              </table>
+            </div>
           </div>
           <div className="col-sm-1"></div>
-          <div className="col-sm-4">
+          <div className={sidebarClass}>
             <div className="row">
               <div className="col-sm-12">
                 <button onClick={this.calcPossibilities}>Calculate Possibilities</button>
@@ -522,23 +533,12 @@ export default React.createClass({
             </div>
             <div className="row">
               <div className="col-sm-12">
-                <textarea readOnly value={this.state.currentStep != null ? this.state.currentStep.description : "sample"}></textarea>
+                <textarea readOnly style={{width: "100%"}} value={this.state.currentStep != null ? this.state.currentStep.description : "sample"}></textarea>
               </div>
             </div>
           </div>
         </div>
         <br />
-        <div className="row">
-          <div className="col-sm-7">
-            <table style={controlTableStyle}>
-              <tbody>
-                <tr style={controlTrStyle}>{controls}</tr>
-              </tbody>
-            </table>
-          </div>
-          <div className="col-sm-5">
-          </div>
-        </div>
       </div>
     );
   },

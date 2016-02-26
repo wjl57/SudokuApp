@@ -45,7 +45,7 @@ export default React.createClass({
     } else {
       var tdStyle = {
         textAlign: "center",
-        fontSize: "0.5em",
+        fontSize: "0.6em",
         color: "#a0a0a0",
         height: "100%"
       };

@@ -19960,6 +19960,7 @@
 
 	  generateNewPuzzle: function generateNewPuzzle() {
 	    self = this;
+	    console.log("Generating a puzzle");
 	    fetch('/api/newPuzzle', {
 	      method: 'post',
 	      headers: new Headers({
@@ -20107,10 +20108,10 @@
 
 	        var tdStyle = {
 	          position: "relative",
-	          width: "9vmin",
-	          maxWidth: "18px",
-	          height: "9vmin",
-	          maxHeight: "18px",
+	          width: "8vmin",
+	          maxWidth: "16px",
+	          height: "8vmin",
+	          maxHeight: "16px",
 	          textAlign: "center",
 	          fontSize: "1em",
 	          borderLeft: x % 3 == 0 ? "solid medium" : "solid thin",
@@ -20156,11 +20157,11 @@
 
 	    var tableStyle = _.extend({
 	      borderCollapse: "collapse",
-	      width: "81vmin",
-	      maxWidth: "540px",
+	      width: "72vmin",
+	      maxWidth: "480px",
 	      minWidth: "460px",
-	      height: "81vmin",
-	      maxHeight: "540px",
+	      height: "72vmin",
+	      maxHeight: "480px",
 	      minHeight: "460px",
 	      tableLayout: "fixed",
 	      verticalAlign: "middle"
@@ -20223,9 +20224,11 @@
 
 	    var levelOptions = [{ value: 1, label: 'Easy' }, { value: 2, label: 'Medium' }, { value: 3, label: 'Hard' }, { value: 4, label: 'Evil' }];
 
+	    var sidebarClass = classNames('sidebar', 'col-sm-4');
+
 	    return _react2.default.createElement(
 	      "div",
-	      _extends({ className: "container" }, containerProps),
+	      _extends({ className: "container-fluid" }, containerProps),
 	      _react2.default.createElement(
 	        "div",
 	        { className: "row" },
@@ -20254,12 +20257,30 @@
 	                rows
 	              )
 	            )
+	          ),
+	          _react2.default.createElement("br", null),
+	          _react2.default.createElement(
+	            "div",
+	            { id: "sudoku-controls" },
+	            _react2.default.createElement(
+	              "table",
+	              { style: controlTableStyle },
+	              _react2.default.createElement(
+	                "tbody",
+	                null,
+	                _react2.default.createElement(
+	                  "tr",
+	                  { style: controlTrStyle },
+	                  controls
+	                )
+	              )
+	            )
 	          )
 	        ),
 	        _react2.default.createElement("div", { className: "col-sm-1" }),
 	        _react2.default.createElement(
 	          "div",
-	          { className: "col-sm-4" },
+	          { className: sidebarClass },
 	          _react2.default.createElement(
 	            "div",
 	            { className: "row" },
@@ -20359,34 +20380,12 @@
 	            _react2.default.createElement(
 	              "div",
 	              { className: "col-sm-12" },
-	              _react2.default.createElement("textarea", { readOnly: true, value: this.state.currentStep != null ? this.state.currentStep.description : "sample" })
+	              _react2.default.createElement("textarea", { readOnly: true, style: { width: "100%" }, value: this.state.currentStep != null ? this.state.currentStep.description : "sample" })
 	            )
 	          )
 	        )
 	      ),
-	      _react2.default.createElement("br", null),
-	      _react2.default.createElement(
-	        "div",
-	        { className: "row" },
-	        _react2.default.createElement(
-	          "div",
-	          { className: "col-sm-7" },
-	          _react2.default.createElement(
-	            "table",
-	            { style: controlTableStyle },
-	            _react2.default.createElement(
-	              "tbody",
-	              null,
-	              _react2.default.createElement(
-	                "tr",
-	                { style: controlTrStyle },
-	                controls
-	              )
-	            )
-	          )
-	        ),
-	        _react2.default.createElement("div", { className: "col-sm-5" })
-	      )
+	      _react2.default.createElement("br", null)
 	    );
 	  },
 
@@ -20631,7 +20630,7 @@
 	    } else {
 	      var tdStyle = {
 	        textAlign: "center",
-	        fontSize: "0.5em",
+	        fontSize: "0.6em",
 	        color: "#a0a0a0",
 	        height: "100%"
 	      };
@@ -20746,7 +20745,7 @@
 
 
 	// module
-	exports.push([module.id, "h2 {\n    color: blue;\n    text-align: center;\n    margin-bottom: 0;\n    padding-bottom: 0.3em;\n}\n\n.temp-highlight {\n  background-color: orange;\n  animation: bgcolor 0.7s forwards;\n}\n\n@keyframes bgcolor {\n    from {background-color: orange;}\n    to {background-color: white;}\n}\n", ""]);
+	exports.push([module.id, "h2 {\n    color: blue;\n    text-align: center;\n    margin-bottom: 0;\n    padding-bottom: 0.3em;\n}\n\n.temp-highlight {\n  background-color: orange;\n  animation: bgcolor 0.7s forwards;\n}\n\n@keyframes bgcolor {\n    from {background-color: orange;}\n    to {background-color: white;}\n}\n\n.sidebar {\n  background-color: lightblue;\n  height: 90vh;\n}\n", ""]);
 
 	// exports
 
