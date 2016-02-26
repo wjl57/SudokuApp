@@ -502,27 +502,30 @@ export default React.createClass({
                 <h4>Getting a new puzzle</h4>
                 <ol>
                   <li>Select a difficulty level from the dropdown</li>
-                  <li>Click "New Puzzle"</li>
+                  <li>Click "New Puzzle" (N)</li>
                 </ol>
                 <h4>Playing Sudoku</h4>
                 <ul>
-                  <li>To fill out a cell, select a candidate under the board or
-                    press the appropriate number key. Then click the cell</li>
+                  <li>First select a candidate from under the puzzle or press
+                    the appropriate number key</li>
+                  <li>Then click the desired cell in the puzzle</li>
                   <li>To clear the cell, click the cell again</li>
-                  <li>To note possiblities click "Pen" (A)</li>
+                  <li>To note possiblities instead, deselect "Pen" (A)</li>
                 </ul>
                 <h4>Using the solver</h4>
                 <ul>
                   <li>Click "Solve" to solve the puzzle fully</li>
                   <li>Click "Solve Step" (S) to solve a single cell</li>
+                  <li>Click "Calculate Possibilities" (C) to show all
+                    possibilities based on the current puzzle state</li>
                 </ul>
               </div>
             </div>
             <div className="row">
               <div className="col-sm-12">
-                <button onClick={this.calcPossibilities}>Calculate Possibilities</button>
                 <button onClick={this.solvePuzzle}>Solve</button>
                 <button onClick={this.solveStep}>Solve Step</button>
+                <button onClick={this.calcPossibilities}>Calculate Possibilities</button>
               </div>
             </div>
             <div className="row">

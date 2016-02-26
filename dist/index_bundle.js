@@ -20300,7 +20300,7 @@
 	                _react2.default.createElement(
 	                  "li",
 	                  null,
-	                  "Click \"New Puzzle\""
+	                  "Click \"New Puzzle\" (N)"
 	                )
 	              ),
 	              _react2.default.createElement(
@@ -20314,7 +20314,12 @@
 	                _react2.default.createElement(
 	                  "li",
 	                  null,
-	                  "To fill out a cell, select a candidate under the board or press the appropriate number key. Then click the cell"
+	                  "First select a candidate from under the puzzle or press the appropriate number key"
+	                ),
+	                _react2.default.createElement(
+	                  "li",
+	                  null,
+	                  "Then click the desired cell in the puzzle"
 	                ),
 	                _react2.default.createElement(
 	                  "li",
@@ -20324,7 +20329,7 @@
 	                _react2.default.createElement(
 	                  "li",
 	                  null,
-	                  "To note possiblities click \"Pen\" (A)"
+	                  "To note possiblities instead, deselect \"Pen\" (A)"
 	                )
 	              ),
 	              _react2.default.createElement(
@@ -20344,6 +20349,11 @@
 	                  "li",
 	                  null,
 	                  "Click \"Solve Step\" (S) to solve a single cell"
+	                ),
+	                _react2.default.createElement(
+	                  "li",
+	                  null,
+	                  "Click \"Calculate Possibilities\" (C) to show all possibilities based on the current puzzle state"
 	                )
 	              )
 	            )
@@ -20356,11 +20366,6 @@
 	              { className: "col-sm-12" },
 	              _react2.default.createElement(
 	                "button",
-	                { onClick: this.calcPossibilities },
-	                "Calculate Possibilities"
-	              ),
-	              _react2.default.createElement(
-	                "button",
 	                { onClick: this.solvePuzzle },
 	                "Solve"
 	              ),
@@ -20368,6 +20373,11 @@
 	                "button",
 	                { onClick: this.solveStep },
 	                "Solve Step"
+	              ),
+	              _react2.default.createElement(
+	                "button",
+	                { onClick: this.calcPossibilities },
+	                "Calculate Possibilities"
 	              )
 	            )
 	          ),
