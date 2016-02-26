@@ -10,6 +10,10 @@ h4 {
   padding: 0;
 }
 
+ul, ol {
+  margin: 0.5em;
+}
+
 .temp-highlight {
   background-color: orange;
   animation: bgcolor 0.7s forwards;
@@ -21,8 +25,9 @@ h4 {
 }
 
 .sudoku-sidebar {
-  background-color: #CEB5A7;
+  background-color: #EEDFCC;
   height: 100vh;
+  font-size: 0.9em;
 }
 
 .sudoku-primarybar {

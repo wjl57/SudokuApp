@@ -118,7 +118,8 @@ samp {
   font-family: monospace, monospace;
   font-size: 1em;
 }
-/*button,
+
+button,
 input,
 optgroup,
 select,
@@ -149,7 +150,9 @@ button::-moz-focus-inner,
 input::-moz-focus-inner {
   border: 0;
   padding: 0;
-}*/
+}
+
+
 input {
   line-height: normal;
 }

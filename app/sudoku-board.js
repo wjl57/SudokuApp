@@ -4,7 +4,8 @@ import React from "react";
 import SudokuCell from "./sudoku-cell";
 import SudokuControl from "./sudoku-control";
 import SudokuTitle from "./sudoku-title";
-import Dropdown from 'react-dropdown';
+import Dropdown from "react-dropdown";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 
 import '../css/my-style.css';
 import '../css/dropdown-style.css';
@@ -498,27 +499,52 @@ export default React.createClass({
           <div className={sidebarClass}>
             <div className="row">
               <div className="col-sm-12">
-                <h3>Instructions:</h3>
-                <h4>Getting a new puzzle</h4>
-                <ol>
-                  <li>Select a difficulty level from the dropdown</li>
-                  <li>Click "New Puzzle" (N)</li>
-                </ol>
-                <h4>Playing Sudoku</h4>
-                <ul>
-                  <li>First select a candidate from under the puzzle or press
-                    the appropriate number key</li>
-                  <li>Then click the desired cell in the puzzle</li>
-                  <li>To clear the cell, click the cell again</li>
-                  <li>To note possiblities instead, deselect "Pen" (A)</li>
-                </ul>
-                <h4>Using the solver</h4>
-                <ul>
-                  <li>Click "Solve" to solve the puzzle fully</li>
-                  <li>Click "Solve Step" (S) to solve a single cell</li>
-                  <li>Click "Calculate Possibilities" (C) to show all
-                    possibilities based on the current puzzle state</li>
-                </ul>
+                  <Tabs>
+                    <TabList>
+                      <Tab>Instructions</Tab>
+                      <Tab>Shortcuts</Tab>
+                      <Tab>Preferences</Tab>
+                    </TabList>
+                    <TabPanel>
+                      <h4>Getting a new puzzle</h4>
+                      <ol>
+                        <li>Select a difficulty level from the dropdown</li>
+                        <li>Click "New Puzzle"</li>
+                      </ol>
+                      <h4>Playing Sudoku</h4>
+                      <ul>
+                        <li>Select a candidate from under the puzzle</li>
+                        <li>Click the desired cell in the puzzle</li>
+                        <li>To clear the cell, click the cell again</li>
+                        <li>To note possiblities instead, deselect "Pen"</li>
+                      </ul>
+                      <h4>Using the solver</h4>
+                      <ul>
+                        <li>Input the puzzle then click "Start"</li>
+                        <li>Click "Solve" to solve the puzzle fully</li>
+                        <li>Click "Solve Step" to solve a single cell</li>
+                        <li>Click "Calculate Possibilities" to show all
+                          possibilities based on the current puzzle state</li>
+                      </ul>
+                    </TabPanel>
+                    <TabPanel>
+                      <h4>List of Keyboard shortcuts</h4>
+                      <ul>
+                        <li>New Puzzle (N)</li>
+                        <li>Toggle a candidate (# keys)</li>
+                        <li>Highlight a candidate (double press # keys)</li>
+                        <li>Toggle "Pen" (A)</li>
+                        <li>Solve Step (S)</li>
+                        <li>Calculate Possibilities (C)</li>
+                      </ul>
+                    </TabPanel>
+                    <TabPanel>
+                      <p>Princess Peach related info</p>
+                    </TabPanel>
+                    <TabPanel>
+                      <p>Yoshi related info</p>
+                    </TabPanel>
+                  </Tabs>
               </div>
             </div>
             <div className="row">
