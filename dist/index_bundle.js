@@ -20145,7 +20145,8 @@
 	        fontFamily: "Roboto Mono"
 	      },
 	      tabIndex: 1,
-	      onKeyDown: this.handleKeyDown
+	      onKeyDown: this.handleKeyDown,
+	      className: classNames('sudoku-primarybar', 'col-sm-8')
 	    };
 
 	    var centerStyle = {
@@ -20224,27 +20225,19 @@
 
 	    var levelOptions = [{ value: 1, label: 'Easy' }, { value: 2, label: 'Medium' }, { value: 3, label: 'Hard' }, { value: 4, label: 'Evil' }];
 
-	    var sidebarClass = classNames('sidebar', 'col-sm-4');
+	    var mainSudokuClass = classNames('sudoku-main', 'col-sm-8');
+	    var sidebarClass = classNames('sudoku-sidebar', 'col-sm-4');
 
 	    return _react2.default.createElement(
 	      "div",
-	      _extends({ className: "container-fluid" }, containerProps),
+	      { className: "container-fluid" },
 	      _react2.default.createElement(
 	        "div",
 	        { className: "row" },
 	        _react2.default.createElement(
 	          "div",
-	          { className: "col-sm-7" },
-	          _react2.default.createElement(_sudokuTitle2.default, { level: this.state.level, puzzleNum: this.state.puzzleNum })
-	        ),
-	        _react2.default.createElement("div", { className: "col-sm-5" })
-	      ),
-	      _react2.default.createElement(
-	        "div",
-	        { className: "row" },
-	        _react2.default.createElement(
-	          "div",
-	          { className: "col-sm-7" },
+	          containerProps,
+	          _react2.default.createElement(_sudokuTitle2.default, { level: this.state.level, puzzleNum: this.state.puzzleNum }),
 	          _react2.default.createElement(
 	            "div",
 	            { id: "sudoku-board" },
@@ -20277,10 +20270,84 @@
 	            )
 	          )
 	        ),
-	        _react2.default.createElement("div", { className: "col-sm-1" }),
 	        _react2.default.createElement(
 	          "div",
 	          { className: sidebarClass },
+	          _react2.default.createElement(
+	            "div",
+	            { className: "row" },
+	            _react2.default.createElement(
+	              "div",
+	              { className: "col-sm-12" },
+	              _react2.default.createElement(
+	                "h3",
+	                null,
+	                "Instructions:"
+	              ),
+	              _react2.default.createElement(
+	                "h4",
+	                null,
+	                "Getting a new puzzle"
+	              ),
+	              _react2.default.createElement(
+	                "ol",
+	                null,
+	                _react2.default.createElement(
+	                  "li",
+	                  null,
+	                  "Select a difficulty level from the dropdown"
+	                ),
+	                _react2.default.createElement(
+	                  "li",
+	                  null,
+	                  "Click \"New Puzzle\""
+	                )
+	              ),
+	              _react2.default.createElement(
+	                "h4",
+	                null,
+	                "Playing Sudoku"
+	              ),
+	              _react2.default.createElement(
+	                "ul",
+	                null,
+	                _react2.default.createElement(
+	                  "li",
+	                  null,
+	                  "To fill out a cell, select a candidate under the board or press the appropriate number key. Then click the cell"
+	                ),
+	                _react2.default.createElement(
+	                  "li",
+	                  null,
+	                  "To clear the cell, click the cell again"
+	                ),
+	                _react2.default.createElement(
+	                  "li",
+	                  null,
+	                  "To note possiblities click \"Pen\" (A)"
+	                )
+	              ),
+	              _react2.default.createElement(
+	                "h4",
+	                null,
+	                "Using the solver"
+	              ),
+	              _react2.default.createElement(
+	                "ul",
+	                null,
+	                _react2.default.createElement(
+	                  "li",
+	                  null,
+	                  "Click \"Solve\" to solve the puzzle fully"
+	                ),
+	                _react2.default.createElement(
+	                  "li",
+	                  null,
+	                  "Click \"Solve Step\" (S) to solve a single cell"
+	                )
+	              )
+	            )
+	          ),
 	          _react2.default.createElement(
 	            "div",
 	            { className: "row" },
@@ -20384,8 +20451,7 @@
 	            )
 	          )
 	        )
-	      ),
-	      _react2.default.createElement("br", null)
+	      )
 	    );
 	  },
 
@@ -20745,7 +20811,7 @@
 
 
 	// module
-	exports.push([module.id, "h2 {\n    color: blue;\n    text-align: center;\n    margin-bottom: 0;\n    padding-bottom: 0.3em;\n}\n\n.temp-highlight {\n  background-color: orange;\n  animation: bgcolor 0.7s forwards;\n}\n\n@keyframes bgcolor {\n    from {background-color: orange;}\n    to {background-color: white;}\n}\n\n.sidebar {\n  background-color: lightblue;\n  height: 90vh;\n}\n", ""]);
+	exports.push([module.id, "h2 {\n    color: blue;\n    text-align: center;\n    margin-bottom: 0;\n    padding-bottom: 0.3em;\n}\n\nh4 {\n  margin: 0;\n  padding: 0;\n}\n\n.temp-highlight {\n  background-color: orange;\n  animation: bgcolor 0.7s forwards;\n}\n\n@keyframes bgcolor {\n    from {background-color: orange;}\n    to {background-color:\t#FEFEFA;}\n}\n\n.sudoku-sidebar {\n  background-color: #CEB5A7;\n  height: 100vh;\n}\n\n.sudoku-primarybar {\n  background-color: #FEFEFA;\n  height: 100vh;\n}\n\n/*.sudoku-primary {\n  background-color: #F1F2EB;\n  height: 100vh;\n}*/\n", ""]);
 
 	// exports
 

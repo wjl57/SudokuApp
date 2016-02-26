@@ -5,6 +5,11 @@ h2 {
     padding-bottom: 0.3em;
 }
 
+h4 {
+  margin: 0;
+  padding: 0;
+}
+
 .temp-highlight {
   background-color: orange;
   animation: bgcolor 0.7s forwards;
@@ -12,10 +17,20 @@ h2 {
 
 @keyframes bgcolor {
     from {background-color: orange;}
-    to {background-color: white;}
+    to {background-color:	#FEFEFA;}
 }
 
-.sidebar {
-  background-color: lightblue;
-  height: 90vh;
+.sudoku-sidebar {
+  background-color: #CEB5A7;
+  height: 100vh;
 }
+
+.sudoku-primarybar {
+  background-color: #FEFEFA;
+  height: 100vh;
+}
+
+/*.sudoku-primary {
+  background-color: #F1F2EB;
+  height: 100vh;
+}*/

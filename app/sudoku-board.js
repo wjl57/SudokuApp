@@ -394,7 +394,8 @@ export default React.createClass({
         fontFamily: "Roboto Mono"
       },
       tabIndex: 1,
-      onKeyDown: this.handleKeyDown
+      onKeyDown: this.handleKeyDown,
+      className: classNames('sudoku-primarybar', 'col-sm-8')
     }
 
     var centerStyle = {
@@ -470,18 +471,14 @@ export default React.createClass({
       { value: 4, label: 'Evil' },
     ]
 
-    var sidebarClass = classNames('sidebar', 'col-sm-4');
+    var mainSudokuClass = classNames('sudoku-main', 'col-sm-8');
+    var sidebarClass = classNames('sudoku-sidebar', 'col-sm-4');
 
     return (
-      <div className="container-fluid" {...containerProps}>
+      <div className="container-fluid">
         <div className="row">
-          <div className="col-sm-7">
+          <div {...containerProps}>
             <SudokuTitle level={this.state.level} puzzleNum={this.state.puzzleNum}/>
-          </div>
-          <div className="col-sm-5"></div>
-        </div>
-        <div className="row">
-          <div className="col-sm-7">
             <div id="sudoku-board">
               <table style={tableStyle}>
               <tbody>
@@ -498,8 +495,29 @@ export default React.createClass({
               </table>
             </div>
           </div>
-          <div className="col-sm-1"></div>
           <div className={sidebarClass}>
+            <div className="row">
+              <div className="col-sm-12">
+                <h3>Instructions:</h3>
+                <h4>Getting a new puzzle</h4>
+                <ol>
+                  <li>Select a difficulty level from the dropdown</li>
+                  <li>Click "New Puzzle"</li>
+                </ol>
+                <h4>Playing Sudoku</h4>
+                <ul>
+                  <li>To fill out a cell, select a candidate under the board or
+                    press the appropriate number key. Then click the cell</li>
+                  <li>To clear the cell, click the cell again</li>
+                  <li>To note possiblities click "Pen" (A)</li>
+                </ul>
+                <h4>Using the solver</h4>
+                <ul>
+                  <li>Click "Solve" to solve the puzzle fully</li>
+                  <li>Click "Solve Step" (S) to solve a single cell</li>
+                </ul>
+              </div>
+            </div>
             <div className="row">
               <div className="col-sm-12">
                 <button onClick={this.calcPossibilities}>Calculate Possibilities</button>
@@ -538,7 +556,6 @@ export default React.createClass({
             </div>
           </div>
         </div>
-        <br />
       </div>
     );
   },
