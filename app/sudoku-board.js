@@ -488,7 +488,7 @@ export default React.createClass({
               </table>
             </div>
             <br/>
-            <div id="sudoku-controls">
+            <div id="sudoku-candidates">
               <table style={controlTableStyle}>
                 <tbody>
                   <tr style={controlTrStyle}>{controls}</tr>
@@ -547,40 +547,42 @@ export default React.createClass({
                   </Tabs>
               </div>
             </div>
-            <div className="row">
-              <div className="col-sm-12">
-                <button onClick={this.solvePuzzle}>Solve</button>
-                <button onClick={this.solveStep}>Solve Step</button>
-                <button onClick={this.calcPossibilities}>Calculate Possibilities</button>
+            <div id="sudoku-controls">
+              <div className="row">
+                <div className="col-sm-12">
+                  <button onClick={this.solvePuzzle}>Solve</button>
+                  <button onClick={this.solveStep}>Solve Step</button>
+                  <button onClick={this.calcPossibilities}>Calculate Possibilities</button>
+                </div>
               </div>
-            </div>
-            <div className="row">
-              <div className="col-sm-12">
-                <button onClick={this.generateNewPuzzle}>New Puzzle</button>
-                <button onClick={this.clearBoard}>Clear Board</button>
-                <button onClick={this.startPuzzle}>Start</button>
-                <button onClick={this.restartPuzzle}>Restart</button>
+              <div className="row">
+                <div className="col-sm-12">
+                  <button onClick={this.generateNewPuzzle}>New Puzzle</button>
+                  <button onClick={this.clearBoard}>Clear Board</button>
+                  <button onClick={this.startPuzzle}>Start</button>
+                  <button onClick={this.restartPuzzle}>Restart</button>
+                </div>
               </div>
-            </div>
-            <div className="row">
-              <div className="col-sm-12">
-                <button onClick={this.saveBoardState(1)}>Save #1</button>
-                <button onClick={this.saveBoardState(2)}>Save #2</button>
-                <button onClick={this.loadSavedBoardState(1)}>Load #1</button>
-                <button onClick={this.loadSavedBoardState(2)}>Load #2</button>
+              <div className="row">
+                <div className="col-sm-12">
+                  <button onClick={this.saveBoardState(1)}>Save #1</button>
+                  <button onClick={this.saveBoardState(2)}>Save #2</button>
+                  <button onClick={this.loadSavedBoardState(1)}>Load #1</button>
+                  <button onClick={this.loadSavedBoardState(2)}>Load #2</button>
+                </div>
               </div>
-            </div>
-            <div className="row">
-              <div className="col-sm-4">
-                <Dropdown options={levelOptions} onChange={this.onlevelSelect} value={this.state.levelSelected} placeholder="Difficulty" />
+              <div className="row">
+                <div className="col-sm-4">
+                  <Dropdown options={levelOptions} onChange={this.onlevelSelect} value={this.state.levelSelected} placeholder="Difficulty" />
+                </div>
+                <div className="col-sm-8">
+                  <input ref="puzzleNumInput" type="text" defaultValue="" />
+                </div>
               </div>
-              <div className="col-sm-8">
-                <input ref="puzzleNumInput" type="text" defaultValue="" />
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-sm-12">
-                <textarea readOnly style={{width: "100%"}} value={this.state.currentStep != null ? this.state.currentStep.description : "sample"}></textarea>
+              <div className="row">
+                <div className="col-sm-12">
+                  <textarea readOnly style={{width: "100%"}} value={this.state.currentStep != null ? this.state.currentStep.description : "sample"}></textarea>
+                </div>
               </div>
             </div>
           </div>

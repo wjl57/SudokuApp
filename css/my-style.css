@@ -26,16 +26,11 @@ ul, ol {
 
 .sudoku-sidebar {
   background-color: #EEDFCC;
-  height: 100vh;
+  height: 150vh;
   font-size: 0.9em;
 }
 
 .sudoku-primarybar {
   background-color: #FEFEFA;
-  height: 100vh;
+  height: 150vh;
 }
-
-/*.sudoku-primary {
-  background-color: #F1F2EB;
-  height: 100vh;
-}*/

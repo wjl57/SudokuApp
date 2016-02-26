@@ -20256,7 +20256,7 @@
 	          _react2.default.createElement("br", null),
 	          _react2.default.createElement(
 	            "div",
-	            { id: "sudoku-controls" },
+	            { id: "sudoku-candidates" },
 	            _react2.default.createElement(
 	              "table",
 	              { style: controlTableStyle },
@@ -20450,104 +20450,108 @@
 	          ),
 	          _react2.default.createElement(
 	            "div",
-	            { className: "row" },
+	            { id: "sudoku-controls" },
 	            _react2.default.createElement(
 	              "div",
-	              { className: "col-sm-12" },
+	              { className: "row" },
 	              _react2.default.createElement(
-	                "button",
-	                { onClick: this.solvePuzzle },
-	                "Solve"
-	              ),
-	              _react2.default.createElement(
-	                "button",
-	                { onClick: this.solveStep },
-	                "Solve Step"
-	              ),
-	              _react2.default.createElement(
-	                "button",
-	                { onClick: this.calcPossibilities },
-	                "Calculate Possibilities"
+	                "div",
+	                { className: "col-sm-12" },
+	                _react2.default.createElement(
+	                  "button",
+	                  { onClick: this.solvePuzzle },
+	                  "Solve"
+	                ),
+	                _react2.default.createElement(
+	                  "button",
+	                  { onClick: this.solveStep },
+	                  "Solve Step"
+	                ),
+	                _react2.default.createElement(
+	                  "button",
+	                  { onClick: this.calcPossibilities },
+	                  "Calculate Possibilities"
+	                )
 	              )
-	            )
-	          ),
-	          _react2.default.createElement(
-	            "div",
-	            { className: "row" },
-	            _react2.default.createElement(
-	              "div",
-	              { className: "col-sm-12" },
-	              _react2.default.createElement(
-	                "button",
-	                { onClick: this.generateNewPuzzle },
-	                "New Puzzle"
-	              ),
-	              _react2.default.createElement(
-	                "button",
-	                { onClick: this.clearBoard },
-	                "Clear Board"
-	              ),
-	              _react2.default.createElement(
-	                "button",
-	                { onClick: this.startPuzzle },
-	                "Start"
-	              ),
-	              _react2.default.createElement(
-	                "button",
-	                { onClick: this.restartPuzzle },
-	                "Restart"
-	              )
-	            )
-	          ),
-	          _react2.default.createElement(
-	            "div",
-	            { className: "row" },
-	            _react2.default.createElement(
-	              "div",
-	              { className: "col-sm-12" },
-	              _react2.default.createElement(
-	                "button",
-	                { onClick: this.saveBoardState(1) },
-	                "Save #1"
-	              ),
-	              _react2.default.createElement(
-	                "button",
-	                { onClick: this.saveBoardState(2) },
-	                "Save #2"
-	              ),
-	              _react2.default.createElement(
-	                "button",
-	                { onClick: this.loadSavedBoardState(1) },
-	                "Load #1"
-	              ),
-	              _react2.default.createElement(
-	                "button",
-	                { onClick: this.loadSavedBoardState(2) },
-	                "Load #2"
-	              )
-	            )
-	          ),
-	          _react2.default.createElement(
-	            "div",
-	            { className: "row" },
-	            _react2.default.createElement(
-	              "div",
-	              { className: "col-sm-4" },
-	              _react2.default.createElement(_reactDropdown2.default, { options: levelOptions, onChange: this.onlevelSelect, value: this.state.levelSelected, placeholder: "Difficulty" })
 	            ),
 	            _react2.default.createElement(
 	              "div",
-	              { className: "col-sm-8" },
-	              _react2.default.createElement("input", { ref: "puzzleNumInput", type: "text", defaultValue: "" })
-	            )
-	          ),
-	          _react2.default.createElement(
-	            "div",
-	            { className: "row" },
+	              { className: "row" },
+	              _react2.default.createElement(
+	                "div",
+	                { className: "col-sm-12" },
+	                _react2.default.createElement(
+	                  "button",
+	                  { onClick: this.generateNewPuzzle },
+	                  "New Puzzle"
+	                ),
+	                _react2.default.createElement(
+	                  "button",
+	                  { onClick: this.clearBoard },
+	                  "Clear Board"
+	                ),
+	                _react2.default.createElement(
+	                  "button",
+	                  { onClick: this.startPuzzle },
+	                  "Start"
+	                ),
+	                _react2.default.createElement(
+	                  "button",
+	                  { onClick: this.restartPuzzle },
+	                  "Restart"
+	                )
+	              )
+	            ),
 	            _react2.default.createElement(
 	              "div",
-	              { className: "col-sm-12" },
-	              _react2.default.createElement("textarea", { readOnly: true, style: { width: "100%" }, value: this.state.currentStep != null ? this.state.currentStep.description : "sample" })
+	              { className: "row" },
+	              _react2.default.createElement(
+	                "div",
+	                { className: "col-sm-12" },
+	                _react2.default.createElement(
+	                  "button",
+	                  { onClick: this.saveBoardState(1) },
+	                  "Save #1"
+	                ),
+	                _react2.default.createElement(
+	                  "button",
+	                  { onClick: this.saveBoardState(2) },
+	                  "Save #2"
+	                ),
+	                _react2.default.createElement(
+	                  "button",
+	                  { onClick: this.loadSavedBoardState(1) },
+	                  "Load #1"
+	                ),
+	                _react2.default.createElement(
+	                  "button",
+	                  { onClick: this.loadSavedBoardState(2) },
+	                  "Load #2"
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              "div",
+	              { className: "row" },
+	              _react2.default.createElement(
+	                "div",
+	                { className: "col-sm-4" },
+	                _react2.default.createElement(_reactDropdown2.default, { options: levelOptions, onChange: this.onlevelSelect, value: this.state.levelSelected, placeholder: "Difficulty" })
+	              ),
+	              _react2.default.createElement(
+	                "div",
+	                { className: "col-sm-8" },
+	                _react2.default.createElement("input", { ref: "puzzleNumInput", type: "text", defaultValue: "" })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              "div",
+	              { className: "row" },
+	              _react2.default.createElement(
+	                "div",
+	                { className: "col-sm-12" },
+	                _react2.default.createElement("textarea", { readOnly: true, style: { width: "100%" }, value: this.state.currentStep != null ? this.state.currentStep.description : "sample" })
+	              )
 	            )
 	          )
 	        )
@@ -20911,7 +20915,7 @@
 
 
 	// module
-	exports.push([module.id, "h2 {\n    color: blue;\n    text-align: center;\n    margin-bottom: 0;\n    padding-bottom: 0.3em;\n}\n\nh4 {\n  margin: 0;\n  padding: 0;\n}\n\nul, ol {\n  margin: 0.5em;\n}\n\n.temp-highlight {\n  background-color: orange;\n  animation: bgcolor 0.7s forwards;\n}\n\n@keyframes bgcolor {\n    from {background-color: orange;}\n    to {background-color:\t#FEFEFA;}\n}\n\n.sudoku-sidebar {\n  background-color: #EEDFCC;\n  height: 100vh;\n  font-size: 0.9em;\n}\n\n.sudoku-primarybar {\n  background-color: #FEFEFA;\n  height: 100vh;\n}\n\n/*.sudoku-primary {\n  background-color: #F1F2EB;\n  height: 100vh;\n}*/\n", ""]);
+	exports.push([module.id, "h2 {\n    color: blue;\n    text-align: center;\n    margin-bottom: 0;\n    padding-bottom: 0.3em;\n}\n\nh4 {\n  margin: 0;\n  padding: 0;\n}\n\nul, ol {\n  margin: 0.5em;\n}\n\n.temp-highlight {\n  background-color: orange;\n  animation: bgcolor 0.7s forwards;\n}\n\n@keyframes bgcolor {\n    from {background-color: orange;}\n    to {background-color:\t#FEFEFA;}\n}\n\n.sudoku-sidebar {\n  background-color: #EEDFCC;\n  height: 150vh;\n  font-size: 0.9em;\n}\n\n.sudoku-primarybar {\n  background-color: #FEFEFA;\n  height: 150vh;\n}\n", ""]);
 
 	// exports
 
