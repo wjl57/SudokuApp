@@ -19746,24 +19746,33 @@
 
 	var _sudokuTitle2 = _interopRequireDefault(_sudokuTitle);
 
-	var _reactDropdown = __webpack_require__(169);
+	var _sudokuPreference = __webpack_require__(169);
+
+	var _sudokuPreference2 = _interopRequireDefault(_sudokuPreference);
+
+	var _sudokuStepsLog = __webpack_require__(170);
+
+	var _sudokuStepsLog2 = _interopRequireDefault(_sudokuStepsLog);
+
+	var _reactDropdown = __webpack_require__(171);
 
 	var _reactDropdown2 = _interopRequireDefault(_reactDropdown);
 
-	var _reactTabs = __webpack_require__(193);
+	var _reactTabs = __webpack_require__(172);
 
 	__webpack_require__(161);
 
-	__webpack_require__(170);
+	__webpack_require__(181);
 
-	__webpack_require__(189);
+	__webpack_require__(183);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var classNames = __webpack_require__(165);
-	var _ = __webpack_require__(191);
+	var _ = __webpack_require__(185);
 
 	window.m;
+	window.g;
 
 	exports.default = _react2.default.createClass({
 	  displayName: "sudoku-board",
@@ -19820,7 +19829,10 @@
 	      "level": 0,
 	      "savedBoardStates": {},
 	      "savedMetadata": [],
-	      "levelSelected": { value: 1, label: 'Easy' }
+	      "levelSelected": { value: 1, label: 'Easy' },
+	      "preferences": {
+	        "highlightingEnabled": true
+	      }
 	    };
 	  },
 
@@ -20006,6 +20018,18 @@
 	    });
 	  },
 
+	  loadPossibilities: function loadPossibilities(possibilities) {
+	    var newBoardState = this.state.boardState;
+	    for (var y = 0; y < 9; y++) {
+	      for (var x = 0; x < 9; x++) {
+	        newBoardState[y][x].possibilities = new Set(possibilities[y][x]);
+	      }
+	    }
+	    this.setState({
+	      "boardState": newBoardState
+	    });
+	  },
+
 	  isBoardValid: function isBoardValid() {
 	    for (var y = 0; y < 9; y++) {
 	      for (var x = 0; x < 9; x++) {
@@ -20041,10 +20065,51 @@
 	        return;
 	      }
 	      var board = resp.board;
+	      var lastStep = resp.steps_log[resp.steps_log.length - 1];
+	      var possibilities = JSON.parse(lastStep.possibilities);
 	      self.setState({
-	        "currentStep": resp.steps_log[1]
+	        "currentStep": lastStep,
+	        "stepsLog": resp.steps_log
 	      });
 	      self.loadBoard(board);
+	      self.loadPossibilities(possibilities);
+	      console.log(resp);
+	    }).catch(function (err) {
+	      console.log("Error solving puzzle");
+	    });
+	  },
+
+	  solveCell: function solveCell() {
+	    self = this;
+	    if (!self.isBoardValid()) {
+	      console.log("Invalid board. Won't solve cell.");
+	      return;
+	    }
+	    fetch('/api/sudoku/solveCell', {
+	      method: 'post',
+	      headers: new Headers({
+	        'Content-Type': 'application/json'
+	      }),
+	      body: JSON.stringify({
+	        "board": self.getBoard()
+	      })
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (resp) {
+	      var success = resp.success;
+	      if (!success) {
+	        console.log("No solution found.");
+	        return;
+	      }
+	      var board = resp.board;
+	      var lastStep = resp.steps_log[resp.steps_log.length - 1];
+	      var possibilities = JSON.parse(lastStep.possibilities);
+	      self.setState({
+	        "currentStep": lastStep,
+	        "stepsLog": resp.steps_log
+	      });
+	      self.loadBoard(board);
+	      self.loadPossibilities(possibilities);
 	      console.log(resp);
 	    }).catch(function (err) {
 	      console.log("Error solving puzzle");
@@ -20074,6 +20139,12 @@
 	        return;
 	      }
 	      var board = resp.board;
+	      var lastStep = resp.steps_log[resp.steps_log.length - 1];
+	      var possibilities = JSON.parse(lastStep.possibilities);
+	      self.setState({
+	        "currentStep": lastStep,
+	        "stepsLog": resp.steps_log
+	      });
 	      self.loadBoard(board);
 	      console.log(resp);
 	    }).catch(function (err) {
@@ -20105,7 +20176,8 @@
 	          invalid: cellState.invalid,
 	          possibilityCallback: this.possibilityCallback,
 	          valCallback: this.valCallback,
-	          onClickCallback: this.onClickCallback
+	          onClickCallback: this.onClickCallback,
+	          highlightingEnabled: this.state.preferences.highlightingEnabled
 	        };
 
 	        var tdStyle = {
@@ -20116,8 +20188,8 @@
 	          maxHeight: "16px",
 	          textAlign: "center",
 	          fontSize: "1em",
-	          borderLeft: x % 3 == 0 ? "solid medium" : "solid thin",
-	          borderRight: x % 3 == 2 ? "solid medium" : "solid thin",
+	          borderLeft: x % 3 === 0 ? "solid medium" : "solid thin",
+	          borderRight: x % 3 === 2 ? "solid medium" : "solid thin",
 	          padding: 0,
 	          margin: 0
 	        };
@@ -20430,20 +20502,11 @@
 	                _react2.default.createElement(
 	                  _reactTabs.TabPanel,
 	                  null,
-	                  _react2.default.createElement(
-	                    "p",
-	                    null,
-	                    "Princess Peach related info"
-	                  )
-	                ),
-	                _react2.default.createElement(
-	                  _reactTabs.TabPanel,
-	                  null,
-	                  _react2.default.createElement(
-	                    "p",
-	                    null,
-	                    "Yoshi related info"
-	                  )
+	                  _react2.default.createElement(_sudokuPreference2.default, {
+	                    isChecked: !this.state.preferences["highlightingEnabled"],
+	                    onTogglePreference: this.togglePreference("highlightingEnabled"),
+	                    preferenceText: "Pen and paper mode"
+	                  })
 	                )
 	              )
 	            )
@@ -20464,8 +20527,8 @@
 	                ),
 	                _react2.default.createElement(
 	                  "button",
-	                  { onClick: this.solveStep },
-	                  "Solve Step"
+	                  { onClick: this.solveCell },
+	                  "Solve Cell"
 	                ),
 	                _react2.default.createElement(
 	                  "button",
@@ -20550,7 +20613,10 @@
 	              _react2.default.createElement(
 	                "div",
 	                { className: "col-sm-12" },
-	                _react2.default.createElement("textarea", { readOnly: true, style: { width: "100%" }, value: this.state.currentStep != null ? this.state.currentStep.description : "sample" })
+	                _react2.default.createElement("textarea", { readOnly: true,
+	                  style: { width: "100%" },
+	                  value: this.state.currentStep != null ? this.state.currentStep.description : "sample" }),
+	                _react2.default.createElement(_sudokuStepsLog2.default, { stepsLog: this.state.stepsLog })
 	              )
 	            )
 	          )
@@ -20606,6 +20672,17 @@
 	    }
 	  },
 
+	  togglePreference: function togglePreference(preferenceName) {
+	    var self = this;
+	    return function () {
+	      var newPreferences = self.state.preferences;
+	      newPreferences[preferenceName] = !newPreferences[preferenceName];
+	      self.setState({
+	        "preferences": newPreferences
+	      });
+	    };
+	  },
+
 	  handleKeyDown: function handleKeyDown(e) {
 	    var key = e.which;
 	    console.log("KEY" + key);
@@ -20615,7 +20692,7 @@
 	      var candidate = key - 48;
 	      this.onControlCallback(candidate);
 	    } else if (key == 83) {
-	      this.solveStep();
+	      this.solveCell();
 	    } else if (key == 67) {
 	      this.calcPossibilities();
 	    } else if (key == 78) {
@@ -20772,7 +20849,7 @@
 	    var val = this.props.val;
 	    var itemToRender;
 	    var itemClass = classNames({
-	      "temp-highlight": this.state.highlighted
+	      "temp-highlight": this.props.highlightingEnabled && this.state.highlighted
 	    });
 
 	    if (val) {
@@ -20789,7 +20866,7 @@
 	      } else {
 	        itemStyle.fontWeight = "bold";
 	      }
-	      if (this.props.invalid) {
+	      if (this.props.highlightingEnabled && this.props.invalid) {
 	        itemStyle.backgroundColor = "#C02F1D";
 	      }
 	      return _react2.default.createElement(
@@ -21393,6 +21470,83 @@
 /* 169 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _react2.default.createClass({
+	  displayName: "sudoku-preference",
+
+	  render: function render() {
+	    return _react2.default.createElement(
+	      "label",
+	      null,
+	      _react2.default.createElement("input", {
+	        type: "checkbox",
+	        checked: this.props.isChcked,
+	        onChange: this.onToggle
+	      }),
+	      this.props.preferenceText
+	    );
+	  },
+
+	  onToggle: function onToggle() {
+	    this.props.onTogglePreference();
+	  }
+	});
+
+/***/ },
+/* 170 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	__webpack_require__(161);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _react2.default.createClass({
+	  displayName: 'sudoku-steps-log',
+
+
+	  render: function render() {
+	    var stepsLog = this.props.stepsLog;
+	    if (!stepsLog) return _react2.default.createElement('div', null);
+	    var stationComponents = this.props.stepsLog.map(function (step) {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        step.description
+	      );
+	    });
+	    return _react2.default.createElement(
+	      'div',
+	      null,
+	      stationComponents
+	    );
+	  }
+	});
+
+/***/ },
+/* 171 */
+/***/ function(module, exports, __webpack_require__) {
+
 	"use strict";
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -21574,13 +21728,723 @@
 	module.exports = Dropdown;
 
 /***/ },
-/* 170 */
+/* 172 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	module.exports = {
+	  Tabs: __webpack_require__(173),
+	  TabList: __webpack_require__(178),
+	  Tab: __webpack_require__(177),
+	  TabPanel: __webpack_require__(180)
+	};
+
+/***/ },
+/* 173 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	function _interopRequireDefault(obj) {
+	  return obj && obj.__esModule ? obj : { 'default': obj };
+	}
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(158);
+
+	var _classnames = __webpack_require__(165);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	var _jsStylesheet = __webpack_require__(174);
+
+	var _jsStylesheet2 = _interopRequireDefault(_jsStylesheet);
+
+	var _helpersUuid = __webpack_require__(175);
+
+	var _helpersUuid2 = _interopRequireDefault(_helpersUuid);
+
+	var _helpersChildrenPropType = __webpack_require__(176);
+
+	var _helpersChildrenPropType2 = _interopRequireDefault(_helpersChildrenPropType);
+
+	// Determine if a node from event.target is a Tab element
+	function isTabNode(node) {
+	  return node.nodeName === 'LI' && node.getAttribute('role') === 'tab';
+	}
+
+	// Determine if a tab node is disabled
+	function isTabDisabled(node) {
+	  return node.getAttribute('aria-disabled') === 'true';
+	}
+
+	var useDefaultStyles = true;
+
+	module.exports = _react2['default'].createClass({
+	  displayName: 'Tabs',
+
+	  propTypes: {
+	    className: _react.PropTypes.string,
+	    selectedIndex: _react.PropTypes.number,
+	    onSelect: _react.PropTypes.func,
+	    focus: _react.PropTypes.bool,
+	    children: _helpersChildrenPropType2['default'],
+	    forceRenderTabPanel: _react.PropTypes.bool
+	  },
+
+	  childContextTypes: {
+	    forceRenderTabPanel: _react.PropTypes.bool
+	  },
+
+	  statics: {
+	    setUseDefaultStyles: function setUseDefaultStyles(use) {
+	      useDefaultStyles = use;
+	    }
+	  },
+
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      selectedIndex: -1,
+	      focus: false,
+	      forceRenderTabPanel: false
+	    };
+	  },
+
+	  getInitialState: function getInitialState() {
+	    return this.copyPropsToState(this.props);
+	  },
+
+	  getChildContext: function getChildContext() {
+	    return {
+	      forceRenderTabPanel: this.props.forceRenderTabPanel
+	    };
+	  },
+
+	  componentDidMount: function componentDidMount() {
+	    if (useDefaultStyles) {
+	      (0, _jsStylesheet2['default'])(__webpack_require__(179));
+	    }
+	  },
+
+	  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
+	    this.setState(this.copyPropsToState(newProps));
+	  },
+
+	  handleClick: function handleClick(e) {
+	    var node = e.target;
+	    do {
+	      if (isTabNode(node)) {
+	        if (isTabDisabled(node)) {
+	          return;
+	        }
+
+	        var index = [].slice.call(node.parentNode.children).indexOf(node);
+	        this.setSelected(index);
+	        return;
+	      }
+	    } while ((node = node.parentNode) !== null);
+	  },
+
+	  handleKeyDown: function handleKeyDown(e) {
+	    if (isTabNode(e.target)) {
+	      var index = this.state.selectedIndex;
+	      var preventDefault = false;
+
+	      // Select next tab to the left
+	      if (e.keyCode === 37 || e.keyCode === 38) {
+	        index = this.getPrevTab(index);
+	        preventDefault = true;
+	      }
+	      // Select next tab to the right
+	      /* eslint brace-style:0 */
+	      else if (e.keyCode === 39 || e.keyCode === 40) {
+	          index = this.getNextTab(index);
+	          preventDefault = true;
+	        }
+
+	      // This prevents scrollbars from moving around
+	      if (preventDefault) {
+	        e.preventDefault();
+	      }
+
+	      this.setSelected(index, true);
+	    }
+	  },
+
+	  setSelected: function setSelected(index, focus) {
+	    // Don't do anything if nothing has changed
+	    if (index === this.state.selectedIndex) return;
+	    // Check index boundary
+	    if (index < 0 || index >= this.getTabsCount()) return;
+
+	    // Keep reference to last index for event handler
+	    var last = this.state.selectedIndex;
+
+	    // Update selected index
+	    this.setState({ selectedIndex: index, focus: focus === true });
+
+	    // Call change event handler
+	    if (typeof this.props.onSelect === 'function') {
+	      this.props.onSelect(index, last);
+	    }
+	  },
+
+	  getNextTab: function getNextTab(index) {
+	    var count = this.getTabsCount();
+
+	    // Look for non-disabled tab from index to the last tab on the right
+	    for (var i = index + 1; i < count; i++) {
+	      var tab = this.getTab(i);
+	      if (!isTabDisabled((0, _reactDom.findDOMNode)(tab))) {
+	        return i;
+	      }
+	    }
+
+	    // If no tab found, continue searching from first on left to index
+	    for (var i = 0; i < index; i++) {
+	      var tab = this.getTab(i);
+	      if (!isTabDisabled((0, _reactDom.findDOMNode)(tab))) {
+	        return i;
+	      }
+	    }
+
+	    // No tabs are disabled, return index
+	    return index;
+	  },
+
+	  getPrevTab: function getPrevTab(index) {
+	    var i = index;
+
+	    // Look for non-disabled tab from index to first tab on the left
+	    while (i--) {
+	      var tab = this.getTab(i);
+	      if (!isTabDisabled((0, _reactDom.findDOMNode)(tab))) {
+	        return i;
+	      }
+	    }
+
+	    // If no tab found, continue searching from last tab on right to index
+	    i = this.getTabsCount();
+	    while (i-- > index) {
+	      var tab = this.getTab(i);
+	      if (!isTabDisabled((0, _reactDom.findDOMNode)(tab))) {
+	        return i;
+	      }
+	    }
+
+	    // No tabs are disabled, return index
+	    return index;
+	  },
+
+	  getTabsCount: function getTabsCount() {
+	    return this.props.children && this.props.children[0] ? _react2['default'].Children.count(this.props.children[0].props.children) : 0;
+	  },
+
+	  getPanelsCount: function getPanelsCount() {
+	    return _react2['default'].Children.count(this.props.children.slice(1));
+	  },
+
+	  getTabList: function getTabList() {
+	    return this.refs.tablist;
+	  },
+
+	  getTab: function getTab(index) {
+	    return this.refs['tabs-' + index];
+	  },
+
+	  getPanel: function getPanel(index) {
+	    return this.refs['panels-' + index];
+	  },
+
+	  getChildren: function getChildren() {
+	    var index = 0;
+	    var count = 0;
+	    var children = this.props.children;
+	    var state = this.state;
+	    var tabIds = this.tabIds = this.tabIds || [];
+	    var panelIds = this.panelIds = this.panelIds || [];
+	    var diff = this.tabIds.length - this.getTabsCount();
+
+	    // Add ids if new tabs have been added
+	    // Don't bother removing ids, just keep them in case they are added again
+	    // This is more efficient, and keeps the uuid counter under control
+	    while (diff++ < 0) {
+	      tabIds.push((0, _helpersUuid2['default'])());
+	      panelIds.push((0, _helpersUuid2['default'])());
+	    }
+
+	    // Map children to dynamically setup refs
+	    return _react2['default'].Children.map(children, function (child) {
+	      // null happens when conditionally rendering TabPanel/Tab
+	      // see https://github.com/rackt/react-tabs/issues/37
+	      if (child === null) {
+	        return null;
+	      }
+
+	      var result = null;
+
+	      // Clone TabList and Tab components to have refs
+	      if (count++ === 0) {
+	        // TODO try setting the uuid in the "constructor" for `Tab`/`TabPanel`
+	        result = (0, _react.cloneElement)(child, {
+	          ref: 'tablist',
+	          children: _react2['default'].Children.map(child.props.children, function (tab) {
+	            // null happens when conditionally rendering TabPanel/Tab
+	            // see https://github.com/rackt/react-tabs/issues/37
+	            if (tab === null) {
+	              return null;
+	            }
+
+	            var ref = 'tabs-' + index;
+	            var id = tabIds[index];
+	            var panelId = panelIds[index];
+	            var selected = state.selectedIndex === index;
+	            var focus = selected && state.focus;
+
+	            index++;
+
+	            return (0, _react.cloneElement)(tab, {
+	              ref: ref,
+	              id: id,
+	              panelId: panelId,
+	              selected: selected,
+	              focus: focus
+	            });
+	          })
+	        });
+
+	        // Reset index for panels
+	        index = 0;
+	      }
+	      // Clone TabPanel components to have refs
+	      else {
+	          var ref = 'panels-' + index;
+	          var id = panelIds[index];
+	          var tabId = tabIds[index];
+	          var selected = state.selectedIndex === index;
+
+	          index++;
+
+	          result = (0, _react.cloneElement)(child, {
+	            ref: ref,
+	            id: id,
+	            tabId: tabId,
+	            selected: selected
+	          });
+	        }
+
+	      return result;
+	    });
+	  },
+
+	  render: function render() {
+	    var _this = this;
+
+	    // This fixes an issue with focus management.
+	    //
+	    // Ultimately, when focus is true, and an input has focus,
+	    // and any change on that input causes a state change/re-render,
+	    // focus gets sent back to the active tab, and input loses focus.
+	    //
+	    // Since the focus state only needs to be remembered
+	    // for the current render, we can reset it once the
+	    // render has happened.
+	    //
+	    // Don't use setState, because we don't want to re-render.
+	    //
+	    // See https://github.com/rackt/react-tabs/pull/7
+	    if (this.state.focus) {
+	      setTimeout(function () {
+	        _this.state.focus = false;
+	      }, 0);
+	    }
+
+	    return _react2['default'].createElement('div', {
+	      className: (0, _classnames2['default'])('ReactTabs', 'react-tabs', this.props.className),
+	      onClick: this.handleClick,
+	      onKeyDown: this.handleKeyDown
+	    }, this.getChildren());
+	  },
+
+	  // This is an anti-pattern, so sue me
+	  copyPropsToState: function copyPropsToState(props) {
+	    var selectedIndex = props.selectedIndex;
+
+	    // If no selectedIndex prop was supplied, then try
+	    // preserving the existing selectedIndex from state.
+	    // If the state has not selectedIndex, default
+	    // to the first tab in the TabList.
+	    //
+	    // TODO: Need automation testing around this
+	    // Manual testing can be done using examples/focus
+	    // See 'should preserve selectedIndex when typing' in specs/Tabs.spec.js
+	    if (selectedIndex === -1) {
+	      if (this.state && this.state.selectedIndex) {
+	        selectedIndex = this.state.selectedIndex;
+	      } else {
+	        selectedIndex = 0;
+	      }
+	    }
+
+	    return {
+	      selectedIndex: selectedIndex,
+	      focus: props.focus
+	    };
+	  }
+	});
+
+/***/ },
+/* 174 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	!function () {
+	  function jss(blocks) {
+	    var css = [];
+	    for (var block in blocks) {
+	      css.push(createStyleBlock(block, blocks[block]));
+	    }injectCSS(css);
+	  }
+
+	  function createStyleBlock(selector, rules) {
+	    return selector + ' {\n' + parseRules(rules) + '\n}';
+	  }
+
+	  function parseRules(rules) {
+	    var css = [];
+	    for (var rule in rules) {
+	      css.push('  ' + rule + ': ' + rules[rule] + ';');
+	    }return css.join('\n');
+	  }
+
+	  function injectCSS(css) {
+	    var style = document.getElementById('jss-styles');
+	    if (!style) {
+	      style = document.createElement('style');
+	      style.setAttribute('id', 'jss-styles');
+	      var head = document.getElementsByTagName('head')[0];
+	      head.insertBefore(style, head.firstChild);
+	    }
+	    var node = document.createTextNode(css.join('\n\n'));
+	    style.appendChild(node);
+	  }
+
+	  if (( false ? 'undefined' : _typeof(exports)) === 'object') module.exports = jss;else window.jss = jss;
+	}();
+
+/***/ },
+/* 175 */
+/***/ function(module, exports) {
+
+	// Get a universally unique identifier
+	'use strict';
+
+	var count = 0;
+	module.exports = function uuid() {
+	  return 'react-tabs-' + count++;
+	};
+
+/***/ },
+/* 176 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	function _interopRequireDefault(obj) {
+	  return obj && obj.__esModule ? obj : { 'default': obj };
+	}
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _componentsTab = __webpack_require__(177);
+
+	var _componentsTab2 = _interopRequireDefault(_componentsTab);
+
+	var _componentsTabList = __webpack_require__(178);
+
+	var _componentsTabList2 = _interopRequireDefault(_componentsTabList);
+
+	module.exports = function childrenPropTypes(props, propName) {
+	  var error = undefined;
+	  var tabsCount = 0;
+	  var panelsCount = 0;
+	  var children = props[propName];
+
+	  _react2['default'].Children.forEach(children, function (child) {
+	    // null happens when conditionally rendering TabPanel/Tab
+	    // see https://github.com/rackt/react-tabs/issues/37
+	    if (child === null) {
+	      return;
+	    }
+
+	    if (child.type === _componentsTabList2['default']) {
+	      _react2['default'].Children.forEach(child.props.children, function (c) {
+	        // null happens when conditionally rendering TabPanel/Tab
+	        // see https://github.com/rackt/react-tabs/issues/37
+	        if (c === null) {
+	          return;
+	        }
+
+	        if (c.type === _componentsTab2['default']) {
+	          tabsCount++;
+	        } else {
+	          error = new Error('Expected `Tab` but found `' + (c.type.displayName || c.type) + '`');
+	        }
+	      });
+	    } else if (child.type.displayName === 'TabPanel') {
+	      panelsCount++;
+	    } else {
+	      error = new Error('Expected `TabList` or `TabPanel` but found `' + (child.type.displayName || child.type) + '`');
+	    }
+	  });
+
+	  if (tabsCount !== panelsCount) {
+	    error = new Error('There should be an equal number of `Tabs` and `TabPanels`. ' + 'Received ' + tabsCount + ' `Tabs` and ' + panelsCount + ' `TabPanels`.');
+	  }
+
+	  return error;
+	};
+
+/***/ },
+/* 177 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	function _interopRequireDefault(obj) {
+	  return obj && obj.__esModule ? obj : { 'default': obj };
+	}
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(158);
+
+	var _classnames = __webpack_require__(165);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	function syncNodeAttributes(node, props) {
+	  if (props.selected) {
+	    node.setAttribute('tabindex', 0);
+	    node.setAttribute('selected', 'selected');
+	    if (props.focus) {
+	      node.focus();
+	    }
+	  } else {
+	    node.removeAttribute('tabindex');
+	    node.removeAttribute('selected');
+	  }
+	}
+
+	module.exports = _react2['default'].createClass({
+	  displayName: 'Tab',
+
+	  propTypes: {
+	    className: _react.PropTypes.string,
+	    id: _react.PropTypes.string,
+	    selected: _react.PropTypes.bool,
+	    disabled: _react.PropTypes.bool,
+	    panelId: _react.PropTypes.string,
+	    children: _react.PropTypes.oneOfType([_react.PropTypes.array, _react.PropTypes.object, _react.PropTypes.string])
+	  },
+
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      focus: false,
+	      selected: false,
+	      id: null,
+	      panelId: null
+	    };
+	  },
+
+	  componentDidMount: function componentDidMount() {
+	    syncNodeAttributes((0, _reactDom.findDOMNode)(this), this.props);
+	  },
+
+	  componentDidUpdate: function componentDidUpdate() {
+	    syncNodeAttributes((0, _reactDom.findDOMNode)(this), this.props);
+	  },
+
+	  render: function render() {
+	    return _react2['default'].createElement('li', {
+	      className: (0, _classnames2['default'])('ReactTabs__Tab', this.props.className, {
+	        'ReactTabs__Tab--selected': this.props.selected,
+	        'ReactTabs__Tab--disabled': this.props.disabled
+	      }),
+	      role: 'tab',
+	      id: this.props.id,
+	      'aria-selected': this.props.selected ? 'true' : 'false',
+	      'aria-expanded': this.props.selected ? 'true' : 'false',
+	      'aria-disabled': this.props.disabled ? 'true' : 'false',
+	      'aria-controls': this.props.panelId
+	    }, this.props.children);
+	  }
+	});
+
+/***/ },
+/* 178 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	function _interopRequireDefault(obj) {
+	  return obj && obj.__esModule ? obj : { 'default': obj };
+	}
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _classnames = __webpack_require__(165);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	module.exports = _react2['default'].createClass({
+	  displayName: 'TabList',
+
+	  propTypes: {
+	    className: _react.PropTypes.string,
+	    children: _react.PropTypes.oneOfType([_react.PropTypes.object, _react.PropTypes.array])
+	  },
+
+	  render: function render() {
+	    return _react2['default'].createElement('ul', {
+	      className: (0, _classnames2['default'])('ReactTabs__TabList', this.props.className),
+	      role: 'tablist'
+	    }, this.props.children);
+	  }
+	});
+
+/***/ },
+/* 179 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	module.exports = {
+	  '.react-tabs [role=tablist]': {
+	    'border-bottom': '1px solid #aaa',
+	    'margin': '0 0 10px',
+	    'padding': '0'
+	  },
+
+	  '.react-tabs [role=tab]': {
+	    'display': 'inline-block',
+	    'border': '1px solid transparent',
+	    'border-bottom': 'none',
+	    'bottom': '-1px',
+	    'position': 'relative',
+	    'list-style': 'none',
+	    'padding': '6px 12px',
+	    'cursor': 'pointer'
+	  },
+
+	  '.react-tabs [role=tab][aria-selected=true]': {
+	    'background': '#fff',
+	    'border-color': '#aaa',
+	    'color': 'black',
+	    'border-radius': '5px 5px 0 0',
+	    '-moz-border-radius': '5px 5px 0 0',
+	    '-webkit-border-radius': '5px 5px 0 0'
+	  },
+
+	  '.react-tabs [role=tab][aria-disabled=true]': {
+	    'color': 'GrayText',
+	    'cursor': 'default'
+	  },
+
+	  '.react-tabs [role=tab]:focus': {
+	    'box-shadow': '0 0 5px hsl(208, 99%, 50%)',
+	    'border-color': 'hsl(208, 99%, 50%)',
+	    'outline': 'none'
+	  },
+
+	  '.react-tabs [role=tab]:focus:after': {
+	    'content': '""',
+	    'position': 'absolute',
+	    'height': '5px',
+	    'left': '-4px',
+	    'right': '-4px',
+	    'bottom': '-5px',
+	    'background': '#fff'
+	  }
+	};
+
+/***/ },
+/* 180 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	function _interopRequireDefault(obj) {
+	  return obj && obj.__esModule ? obj : { 'default': obj };
+	}
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _classnames = __webpack_require__(165);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	module.exports = _react2['default'].createClass({
+	  displayName: 'TabPanel',
+
+	  propTypes: {
+	    className: _react.PropTypes.string,
+	    selected: _react.PropTypes.bool,
+	    id: _react.PropTypes.string,
+	    tabId: _react.PropTypes.string,
+	    children: _react.PropTypes.oneOfType([_react.PropTypes.array, _react.PropTypes.object, _react.PropTypes.string])
+	  },
+
+	  contextTypes: {
+	    forceRenderTabPanel: _react.PropTypes.bool
+	  },
+
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      selected: false,
+	      id: null,
+	      tabId: null
+	    };
+	  },
+
+	  render: function render() {
+	    var children = this.context.forceRenderTabPanel || this.props.selected ? this.props.children : null;
+
+	    return _react2['default'].createElement('div', {
+	      className: (0, _classnames2['default'])('ReactTabs__TabPanel', this.props.className, {
+	        'ReactTabs__TabPanel--selected': this.props.selected
+	      }),
+	      role: 'tabpanel',
+	      id: this.props.id,
+	      'aria-labelledby': this.props.tabId,
+	      style: { display: this.props.selected ? null : 'none' }
+	    }, children);
+	  }
+	});
+
+/***/ },
+/* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(171);
+	var content = __webpack_require__(182);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(164)(content, {});
@@ -21600,7 +22464,7 @@
 	}
 
 /***/ },
-/* 171 */
+/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(163)();
@@ -21614,30 +22478,13 @@
 
 
 /***/ },
-/* 172 */,
-/* 173 */,
-/* 174 */,
-/* 175 */,
-/* 176 */,
-/* 177 */,
-/* 178 */,
-/* 179 */,
-/* 180 */,
-/* 181 */,
-/* 182 */,
-/* 183 */,
-/* 184 */,
-/* 185 */,
-/* 186 */,
-/* 187 */,
-/* 188 */,
-/* 189 */
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(190);
+	var content = __webpack_require__(184);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(164)(content, {});
@@ -21657,7 +22504,7 @@
 	}
 
 /***/ },
-/* 190 */
+/* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(163)();
@@ -21671,7 +22518,7 @@
 
 
 /***/ },
-/* 191 */
+/* 185 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {'use strict';var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj;}; /**
@@ -23947,10 +24794,10 @@
 	if(moduleExports){(freeModule.exports=lodash)._=lodash;} // Export for CommonJS support.
 	freeExports._=lodash;}else { // Export to the global object.
 	root._=lodash;}}).call(undefined);
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(192)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(186)(module), (function() { return this; }())))
 
 /***/ },
-/* 192 */
+/* 186 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23965,716 +24812,6 @@
 		}
 		return module;
 	};
-
-/***/ },
-/* 193 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	module.exports = {
-	  Tabs: __webpack_require__(194),
-	  TabList: __webpack_require__(199),
-	  Tab: __webpack_require__(198),
-	  TabPanel: __webpack_require__(201)
-	};
-
-/***/ },
-/* 194 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	function _interopRequireDefault(obj) {
-	  return obj && obj.__esModule ? obj : { 'default': obj };
-	}
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactDom = __webpack_require__(158);
-
-	var _classnames = __webpack_require__(165);
-
-	var _classnames2 = _interopRequireDefault(_classnames);
-
-	var _jsStylesheet = __webpack_require__(195);
-
-	var _jsStylesheet2 = _interopRequireDefault(_jsStylesheet);
-
-	var _helpersUuid = __webpack_require__(196);
-
-	var _helpersUuid2 = _interopRequireDefault(_helpersUuid);
-
-	var _helpersChildrenPropType = __webpack_require__(197);
-
-	var _helpersChildrenPropType2 = _interopRequireDefault(_helpersChildrenPropType);
-
-	// Determine if a node from event.target is a Tab element
-	function isTabNode(node) {
-	  return node.nodeName === 'LI' && node.getAttribute('role') === 'tab';
-	}
-
-	// Determine if a tab node is disabled
-	function isTabDisabled(node) {
-	  return node.getAttribute('aria-disabled') === 'true';
-	}
-
-	var useDefaultStyles = true;
-
-	module.exports = _react2['default'].createClass({
-	  displayName: 'Tabs',
-
-	  propTypes: {
-	    className: _react.PropTypes.string,
-	    selectedIndex: _react.PropTypes.number,
-	    onSelect: _react.PropTypes.func,
-	    focus: _react.PropTypes.bool,
-	    children: _helpersChildrenPropType2['default'],
-	    forceRenderTabPanel: _react.PropTypes.bool
-	  },
-
-	  childContextTypes: {
-	    forceRenderTabPanel: _react.PropTypes.bool
-	  },
-
-	  statics: {
-	    setUseDefaultStyles: function setUseDefaultStyles(use) {
-	      useDefaultStyles = use;
-	    }
-	  },
-
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      selectedIndex: -1,
-	      focus: false,
-	      forceRenderTabPanel: false
-	    };
-	  },
-
-	  getInitialState: function getInitialState() {
-	    return this.copyPropsToState(this.props);
-	  },
-
-	  getChildContext: function getChildContext() {
-	    return {
-	      forceRenderTabPanel: this.props.forceRenderTabPanel
-	    };
-	  },
-
-	  componentDidMount: function componentDidMount() {
-	    if (useDefaultStyles) {
-	      (0, _jsStylesheet2['default'])(__webpack_require__(200));
-	    }
-	  },
-
-	  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
-	    this.setState(this.copyPropsToState(newProps));
-	  },
-
-	  handleClick: function handleClick(e) {
-	    var node = e.target;
-	    do {
-	      if (isTabNode(node)) {
-	        if (isTabDisabled(node)) {
-	          return;
-	        }
-
-	        var index = [].slice.call(node.parentNode.children).indexOf(node);
-	        this.setSelected(index);
-	        return;
-	      }
-	    } while ((node = node.parentNode) !== null);
-	  },
-
-	  handleKeyDown: function handleKeyDown(e) {
-	    if (isTabNode(e.target)) {
-	      var index = this.state.selectedIndex;
-	      var preventDefault = false;
-
-	      // Select next tab to the left
-	      if (e.keyCode === 37 || e.keyCode === 38) {
-	        index = this.getPrevTab(index);
-	        preventDefault = true;
-	      }
-	      // Select next tab to the right
-	      /* eslint brace-style:0 */
-	      else if (e.keyCode === 39 || e.keyCode === 40) {
-	          index = this.getNextTab(index);
-	          preventDefault = true;
-	        }
-
-	      // This prevents scrollbars from moving around
-	      if (preventDefault) {
-	        e.preventDefault();
-	      }
-
-	      this.setSelected(index, true);
-	    }
-	  },
-
-	  setSelected: function setSelected(index, focus) {
-	    // Don't do anything if nothing has changed
-	    if (index === this.state.selectedIndex) return;
-	    // Check index boundary
-	    if (index < 0 || index >= this.getTabsCount()) return;
-
-	    // Keep reference to last index for event handler
-	    var last = this.state.selectedIndex;
-
-	    // Update selected index
-	    this.setState({ selectedIndex: index, focus: focus === true });
-
-	    // Call change event handler
-	    if (typeof this.props.onSelect === 'function') {
-	      this.props.onSelect(index, last);
-	    }
-	  },
-
-	  getNextTab: function getNextTab(index) {
-	    var count = this.getTabsCount();
-
-	    // Look for non-disabled tab from index to the last tab on the right
-	    for (var i = index + 1; i < count; i++) {
-	      var tab = this.getTab(i);
-	      if (!isTabDisabled((0, _reactDom.findDOMNode)(tab))) {
-	        return i;
-	      }
-	    }
-
-	    // If no tab found, continue searching from first on left to index
-	    for (var i = 0; i < index; i++) {
-	      var tab = this.getTab(i);
-	      if (!isTabDisabled((0, _reactDom.findDOMNode)(tab))) {
-	        return i;
-	      }
-	    }
-
-	    // No tabs are disabled, return index
-	    return index;
-	  },
-
-	  getPrevTab: function getPrevTab(index) {
-	    var i = index;
-
-	    // Look for non-disabled tab from index to first tab on the left
-	    while (i--) {
-	      var tab = this.getTab(i);
-	      if (!isTabDisabled((0, _reactDom.findDOMNode)(tab))) {
-	        return i;
-	      }
-	    }
-
-	    // If no tab found, continue searching from last tab on right to index
-	    i = this.getTabsCount();
-	    while (i-- > index) {
-	      var tab = this.getTab(i);
-	      if (!isTabDisabled((0, _reactDom.findDOMNode)(tab))) {
-	        return i;
-	      }
-	    }
-
-	    // No tabs are disabled, return index
-	    return index;
-	  },
-
-	  getTabsCount: function getTabsCount() {
-	    return this.props.children && this.props.children[0] ? _react2['default'].Children.count(this.props.children[0].props.children) : 0;
-	  },
-
-	  getPanelsCount: function getPanelsCount() {
-	    return _react2['default'].Children.count(this.props.children.slice(1));
-	  },
-
-	  getTabList: function getTabList() {
-	    return this.refs.tablist;
-	  },
-
-	  getTab: function getTab(index) {
-	    return this.refs['tabs-' + index];
-	  },
-
-	  getPanel: function getPanel(index) {
-	    return this.refs['panels-' + index];
-	  },
-
-	  getChildren: function getChildren() {
-	    var index = 0;
-	    var count = 0;
-	    var children = this.props.children;
-	    var state = this.state;
-	    var tabIds = this.tabIds = this.tabIds || [];
-	    var panelIds = this.panelIds = this.panelIds || [];
-	    var diff = this.tabIds.length - this.getTabsCount();
-
-	    // Add ids if new tabs have been added
-	    // Don't bother removing ids, just keep them in case they are added again
-	    // This is more efficient, and keeps the uuid counter under control
-	    while (diff++ < 0) {
-	      tabIds.push((0, _helpersUuid2['default'])());
-	      panelIds.push((0, _helpersUuid2['default'])());
-	    }
-
-	    // Map children to dynamically setup refs
-	    return _react2['default'].Children.map(children, function (child) {
-	      // null happens when conditionally rendering TabPanel/Tab
-	      // see https://github.com/rackt/react-tabs/issues/37
-	      if (child === null) {
-	        return null;
-	      }
-
-	      var result = null;
-
-	      // Clone TabList and Tab components to have refs
-	      if (count++ === 0) {
-	        // TODO try setting the uuid in the "constructor" for `Tab`/`TabPanel`
-	        result = (0, _react.cloneElement)(child, {
-	          ref: 'tablist',
-	          children: _react2['default'].Children.map(child.props.children, function (tab) {
-	            // null happens when conditionally rendering TabPanel/Tab
-	            // see https://github.com/rackt/react-tabs/issues/37
-	            if (tab === null) {
-	              return null;
-	            }
-
-	            var ref = 'tabs-' + index;
-	            var id = tabIds[index];
-	            var panelId = panelIds[index];
-	            var selected = state.selectedIndex === index;
-	            var focus = selected && state.focus;
-
-	            index++;
-
-	            return (0, _react.cloneElement)(tab, {
-	              ref: ref,
-	              id: id,
-	              panelId: panelId,
-	              selected: selected,
-	              focus: focus
-	            });
-	          })
-	        });
-
-	        // Reset index for panels
-	        index = 0;
-	      }
-	      // Clone TabPanel components to have refs
-	      else {
-	          var ref = 'panels-' + index;
-	          var id = panelIds[index];
-	          var tabId = tabIds[index];
-	          var selected = state.selectedIndex === index;
-
-	          index++;
-
-	          result = (0, _react.cloneElement)(child, {
-	            ref: ref,
-	            id: id,
-	            tabId: tabId,
-	            selected: selected
-	          });
-	        }
-
-	      return result;
-	    });
-	  },
-
-	  render: function render() {
-	    var _this = this;
-
-	    // This fixes an issue with focus management.
-	    //
-	    // Ultimately, when focus is true, and an input has focus,
-	    // and any change on that input causes a state change/re-render,
-	    // focus gets sent back to the active tab, and input loses focus.
-	    //
-	    // Since the focus state only needs to be remembered
-	    // for the current render, we can reset it once the
-	    // render has happened.
-	    //
-	    // Don't use setState, because we don't want to re-render.
-	    //
-	    // See https://github.com/rackt/react-tabs/pull/7
-	    if (this.state.focus) {
-	      setTimeout(function () {
-	        _this.state.focus = false;
-	      }, 0);
-	    }
-
-	    return _react2['default'].createElement('div', {
-	      className: (0, _classnames2['default'])('ReactTabs', 'react-tabs', this.props.className),
-	      onClick: this.handleClick,
-	      onKeyDown: this.handleKeyDown
-	    }, this.getChildren());
-	  },
-
-	  // This is an anti-pattern, so sue me
-	  copyPropsToState: function copyPropsToState(props) {
-	    var selectedIndex = props.selectedIndex;
-
-	    // If no selectedIndex prop was supplied, then try
-	    // preserving the existing selectedIndex from state.
-	    // If the state has not selectedIndex, default
-	    // to the first tab in the TabList.
-	    //
-	    // TODO: Need automation testing around this
-	    // Manual testing can be done using examples/focus
-	    // See 'should preserve selectedIndex when typing' in specs/Tabs.spec.js
-	    if (selectedIndex === -1) {
-	      if (this.state && this.state.selectedIndex) {
-	        selectedIndex = this.state.selectedIndex;
-	      } else {
-	        selectedIndex = 0;
-	      }
-	    }
-
-	    return {
-	      selectedIndex: selectedIndex,
-	      focus: props.focus
-	    };
-	  }
-	});
-
-/***/ },
-/* 195 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
-	!function () {
-	  function jss(blocks) {
-	    var css = [];
-	    for (var block in blocks) {
-	      css.push(createStyleBlock(block, blocks[block]));
-	    }injectCSS(css);
-	  }
-
-	  function createStyleBlock(selector, rules) {
-	    return selector + ' {\n' + parseRules(rules) + '\n}';
-	  }
-
-	  function parseRules(rules) {
-	    var css = [];
-	    for (var rule in rules) {
-	      css.push('  ' + rule + ': ' + rules[rule] + ';');
-	    }return css.join('\n');
-	  }
-
-	  function injectCSS(css) {
-	    var style = document.getElementById('jss-styles');
-	    if (!style) {
-	      style = document.createElement('style');
-	      style.setAttribute('id', 'jss-styles');
-	      var head = document.getElementsByTagName('head')[0];
-	      head.insertBefore(style, head.firstChild);
-	    }
-	    var node = document.createTextNode(css.join('\n\n'));
-	    style.appendChild(node);
-	  }
-
-	  if (( false ? 'undefined' : _typeof(exports)) === 'object') module.exports = jss;else window.jss = jss;
-	}();
-
-/***/ },
-/* 196 */
-/***/ function(module, exports) {
-
-	// Get a universally unique identifier
-	'use strict';
-
-	var count = 0;
-	module.exports = function uuid() {
-	  return 'react-tabs-' + count++;
-	};
-
-/***/ },
-/* 197 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	function _interopRequireDefault(obj) {
-	  return obj && obj.__esModule ? obj : { 'default': obj };
-	}
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _componentsTab = __webpack_require__(198);
-
-	var _componentsTab2 = _interopRequireDefault(_componentsTab);
-
-	var _componentsTabList = __webpack_require__(199);
-
-	var _componentsTabList2 = _interopRequireDefault(_componentsTabList);
-
-	module.exports = function childrenPropTypes(props, propName) {
-	  var error = undefined;
-	  var tabsCount = 0;
-	  var panelsCount = 0;
-	  var children = props[propName];
-
-	  _react2['default'].Children.forEach(children, function (child) {
-	    // null happens when conditionally rendering TabPanel/Tab
-	    // see https://github.com/rackt/react-tabs/issues/37
-	    if (child === null) {
-	      return;
-	    }
-
-	    if (child.type === _componentsTabList2['default']) {
-	      _react2['default'].Children.forEach(child.props.children, function (c) {
-	        // null happens when conditionally rendering TabPanel/Tab
-	        // see https://github.com/rackt/react-tabs/issues/37
-	        if (c === null) {
-	          return;
-	        }
-
-	        if (c.type === _componentsTab2['default']) {
-	          tabsCount++;
-	        } else {
-	          error = new Error('Expected `Tab` but found `' + (c.type.displayName || c.type) + '`');
-	        }
-	      });
-	    } else if (child.type.displayName === 'TabPanel') {
-	      panelsCount++;
-	    } else {
-	      error = new Error('Expected `TabList` or `TabPanel` but found `' + (child.type.displayName || child.type) + '`');
-	    }
-	  });
-
-	  if (tabsCount !== panelsCount) {
-	    error = new Error('There should be an equal number of `Tabs` and `TabPanels`. ' + 'Received ' + tabsCount + ' `Tabs` and ' + panelsCount + ' `TabPanels`.');
-	  }
-
-	  return error;
-	};
-
-/***/ },
-/* 198 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	function _interopRequireDefault(obj) {
-	  return obj && obj.__esModule ? obj : { 'default': obj };
-	}
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactDom = __webpack_require__(158);
-
-	var _classnames = __webpack_require__(165);
-
-	var _classnames2 = _interopRequireDefault(_classnames);
-
-	function syncNodeAttributes(node, props) {
-	  if (props.selected) {
-	    node.setAttribute('tabindex', 0);
-	    node.setAttribute('selected', 'selected');
-	    if (props.focus) {
-	      node.focus();
-	    }
-	  } else {
-	    node.removeAttribute('tabindex');
-	    node.removeAttribute('selected');
-	  }
-	}
-
-	module.exports = _react2['default'].createClass({
-	  displayName: 'Tab',
-
-	  propTypes: {
-	    className: _react.PropTypes.string,
-	    id: _react.PropTypes.string,
-	    selected: _react.PropTypes.bool,
-	    disabled: _react.PropTypes.bool,
-	    panelId: _react.PropTypes.string,
-	    children: _react.PropTypes.oneOfType([_react.PropTypes.array, _react.PropTypes.object, _react.PropTypes.string])
-	  },
-
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      focus: false,
-	      selected: false,
-	      id: null,
-	      panelId: null
-	    };
-	  },
-
-	  componentDidMount: function componentDidMount() {
-	    syncNodeAttributes((0, _reactDom.findDOMNode)(this), this.props);
-	  },
-
-	  componentDidUpdate: function componentDidUpdate() {
-	    syncNodeAttributes((0, _reactDom.findDOMNode)(this), this.props);
-	  },
-
-	  render: function render() {
-	    return _react2['default'].createElement('li', {
-	      className: (0, _classnames2['default'])('ReactTabs__Tab', this.props.className, {
-	        'ReactTabs__Tab--selected': this.props.selected,
-	        'ReactTabs__Tab--disabled': this.props.disabled
-	      }),
-	      role: 'tab',
-	      id: this.props.id,
-	      'aria-selected': this.props.selected ? 'true' : 'false',
-	      'aria-expanded': this.props.selected ? 'true' : 'false',
-	      'aria-disabled': this.props.disabled ? 'true' : 'false',
-	      'aria-controls': this.props.panelId
-	    }, this.props.children);
-	  }
-	});
-
-/***/ },
-/* 199 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	function _interopRequireDefault(obj) {
-	  return obj && obj.__esModule ? obj : { 'default': obj };
-	}
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _classnames = __webpack_require__(165);
-
-	var _classnames2 = _interopRequireDefault(_classnames);
-
-	module.exports = _react2['default'].createClass({
-	  displayName: 'TabList',
-
-	  propTypes: {
-	    className: _react.PropTypes.string,
-	    children: _react.PropTypes.oneOfType([_react.PropTypes.object, _react.PropTypes.array])
-	  },
-
-	  render: function render() {
-	    return _react2['default'].createElement('ul', {
-	      className: (0, _classnames2['default'])('ReactTabs__TabList', this.props.className),
-	      role: 'tablist'
-	    }, this.props.children);
-	  }
-	});
-
-/***/ },
-/* 200 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	module.exports = {
-	  '.react-tabs [role=tablist]': {
-	    'border-bottom': '1px solid #aaa',
-	    'margin': '0 0 10px',
-	    'padding': '0'
-	  },
-
-	  '.react-tabs [role=tab]': {
-	    'display': 'inline-block',
-	    'border': '1px solid transparent',
-	    'border-bottom': 'none',
-	    'bottom': '-1px',
-	    'position': 'relative',
-	    'list-style': 'none',
-	    'padding': '6px 12px',
-	    'cursor': 'pointer'
-	  },
-
-	  '.react-tabs [role=tab][aria-selected=true]': {
-	    'background': '#fff',
-	    'border-color': '#aaa',
-	    'color': 'black',
-	    'border-radius': '5px 5px 0 0',
-	    '-moz-border-radius': '5px 5px 0 0',
-	    '-webkit-border-radius': '5px 5px 0 0'
-	  },
-
-	  '.react-tabs [role=tab][aria-disabled=true]': {
-	    'color': 'GrayText',
-	    'cursor': 'default'
-	  },
-
-	  '.react-tabs [role=tab]:focus': {
-	    'box-shadow': '0 0 5px hsl(208, 99%, 50%)',
-	    'border-color': 'hsl(208, 99%, 50%)',
-	    'outline': 'none'
-	  },
-
-	  '.react-tabs [role=tab]:focus:after': {
-	    'content': '""',
-	    'position': 'absolute',
-	    'height': '5px',
-	    'left': '-4px',
-	    'right': '-4px',
-	    'bottom': '-5px',
-	    'background': '#fff'
-	  }
-	};
-
-/***/ },
-/* 201 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	function _interopRequireDefault(obj) {
-	  return obj && obj.__esModule ? obj : { 'default': obj };
-	}
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _classnames = __webpack_require__(165);
-
-	var _classnames2 = _interopRequireDefault(_classnames);
-
-	module.exports = _react2['default'].createClass({
-	  displayName: 'TabPanel',
-
-	  propTypes: {
-	    className: _react.PropTypes.string,
-	    selected: _react.PropTypes.bool,
-	    id: _react.PropTypes.string,
-	    tabId: _react.PropTypes.string,
-	    children: _react.PropTypes.oneOfType([_react.PropTypes.array, _react.PropTypes.object, _react.PropTypes.string])
-	  },
-
-	  contextTypes: {
-	    forceRenderTabPanel: _react.PropTypes.bool
-	  },
-
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      selected: false,
-	      id: null,
-	      tabId: null
-	    };
-	  },
-
-	  render: function render() {
-	    var children = this.context.forceRenderTabPanel || this.props.selected ? this.props.children : null;
-
-	    return _react2['default'].createElement('div', {
-	      className: (0, _classnames2['default'])('ReactTabs__TabPanel', this.props.className, {
-	        'ReactTabs__TabPanel--selected': this.props.selected
-	      }),
-	      role: 'tabpanel',
-	      id: this.props.id,
-	      'aria-labelledby': this.props.tabId,
-	      style: { display: this.props.selected ? null : 'none' }
-	    }, children);
-	  }
-	});
 
 /***/ }
 /******/ ]);

@@ -64,6 +64,29 @@ def solve_step():
             'success': False
         })
 
+@app.route('/api/sudoku/solveCell', methods=['POST'])
+def solve_cell():
+    try:
+        board = request.json['board']
+        sp = SudokuPuzzle(board)
+        # Check if the puzzle has a solution
+        ss = SudokuSolver(sp)
+        ss.do_work()
+        # Solve the next cell
+        spStep = SudokuPuzzle(board)
+        ssStep = SudokuSolver(spStep)
+        ssStep.solve_cell()
+        log = ssStep.sudoku_logger.sudoku_log
+        return jsonify({
+            'success': True,
+            'board': ssStep.sudoku_puzzle.get_board(),
+            'steps_log': log
+        })
+    except Exception as e:
+        print(e)
+        return jsonify({
+            'success': False
+        })
 
 @app.route('/api/sudoku/solvePuzzle', methods=['POST'])
 def solve_puzzle():

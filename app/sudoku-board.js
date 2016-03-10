@@ -4,6 +4,9 @@ import React from "react";
 import SudokuCell from "./sudoku-cell";
 import SudokuControl from "./sudoku-control";
 import SudokuTitle from "./sudoku-title";
+import SudokuPreference from "./sudoku-preference";
+import SudokuStepsLog from "./sudoku-steps-log"
+
 import Dropdown from "react-dropdown";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 
@@ -16,6 +19,7 @@ var classNames = require('classnames');
 var _ = require('lodash/core');
 
 window.m;
+window.g;
 
 export default React.createClass({
   getInitialState: function() {
@@ -70,7 +74,10 @@ export default React.createClass({
       "level": 0,
       "savedBoardStates": {},
       "savedMetadata": [],
-      "levelSelected": { value: 1, label: 'Easy'}
+      "levelSelected": { value: 1, label: 'Easy'},
+      "preferences": {
+        "highlightingEnabled": true
+      }
     };
   },
 
@@ -258,6 +265,18 @@ export default React.createClass({
     });
   },
 
+  loadPossibilities: function(possibilities) {
+    var newBoardState = this.state.boardState;
+    for (var y=0; y<9; y++) {
+      for (var x=0; x<9; x++) {
+        newBoardState[y][x].possibilities = new Set(possibilities[y][x]);
+      }
+    }
+    this.setState({
+      "boardState": newBoardState
+    });
+  },
+
   isBoardValid: function() {
     for (var y=0; y<9; y++) {
       for (var x=0; x<9; x++) {
@@ -293,10 +312,51 @@ export default React.createClass({
         return;
       }
       var board = resp.board;
+      var lastStep = resp.steps_log[resp.steps_log.length - 1];
+      var possibilities = JSON.parse(lastStep.possibilities);
       self.setState({
-        "currentStep": resp.steps_log[1]
+        "currentStep": lastStep,
+        "stepsLog": resp.steps_log
       });
       self.loadBoard(board);
+      self.loadPossibilities(possibilities);
+      console.log(resp);
+    }).catch(function(err) {
+      console.log("Error solving puzzle");
+    });
+  },
+
+  solveCell: function() {
+    self = this;
+    if (!self.isBoardValid()) {
+      console.log("Invalid board. Won't solve cell.");
+      return;
+    }
+    fetch('/api/sudoku/solveCell', {
+      method: 'post',
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      }),
+      body: JSON.stringify({
+        "board": self.getBoard()
+      })
+    }).then(function(response) {
+      return response.json();
+    }).then(function(resp) {
+      var success = resp.success;
+      if (!success) {
+        console.log("No solution found.");
+        return;
+      }
+      var board = resp.board;
+      var lastStep = resp.steps_log[resp.steps_log.length - 1];
+      var possibilities = JSON.parse(lastStep.possibilities);
+      self.setState({
+        "currentStep": lastStep,
+        "stepsLog": resp.steps_log
+      });
+      self.loadBoard(board);
+      self.loadPossibilities(possibilities);
       console.log(resp);
     }).catch(function(err) {
       console.log("Error solving puzzle");
@@ -326,6 +386,12 @@ export default React.createClass({
         return;
       }
       var board = resp.board;
+      var lastStep = resp.steps_log[resp.steps_log.length - 1];
+      var possibilities = JSON.parse(lastStep.possibilities);
+      self.setState({
+        "currentStep": lastStep,
+        "stepsLog": resp.steps_log
+      });
       self.loadBoard(board);
       console.log(resp);
     }).catch(function(err) {
@@ -357,7 +423,8 @@ export default React.createClass({
           invalid: cellState.invalid,
           possibilityCallback: this.possibilityCallback,
           valCallback: this.valCallback,
-          onClickCallback: this.onClickCallback
+          onClickCallback: this.onClickCallback,
+          highlightingEnabled: this.state.preferences.highlightingEnabled
         };
 
         var tdStyle = {
@@ -368,8 +435,8 @@ export default React.createClass({
           maxHeight: "16px",
           textAlign: "center",
           fontSize: "1em",
-          borderLeft: (x % 3 == 0) ? "solid medium" : "solid thin",
-          borderRight: (x % 3 == 2) ? "solid medium" : "solid thin",
+          borderLeft: (x % 3 === 0) ? "solid medium" : "solid thin",
+          borderRight: (x % 3 === 2) ? "solid medium" : "solid thin",
           padding: 0,
           margin: 0
         };
@@ -539,10 +606,12 @@ export default React.createClass({
                       </ul>
                     </TabPanel>
                     <TabPanel>
-                      <p>Princess Peach related info</p>
-                    </TabPanel>
-                    <TabPanel>
-                      <p>Yoshi related info</p>
+                      <SudokuPreference
+                        isChecked={!this.state.preferences["highlightingEnabled"]}
+                        onTogglePreference={this.togglePreference("highlightingEnabled")}
+                        preferenceText={"Pen and paper mode"}
+                      />
+
                     </TabPanel>
                   </Tabs>
               </div>
@@ -551,7 +620,7 @@ export default React.createClass({
               <div className="row">
                 <div className="col-sm-12">
                   <button onClick={this.solvePuzzle}>Solve</button>
-                  <button onClick={this.solveStep}>Solve Step</button>
+                  <button onClick={this.solveCell}>Solve Cell</button>
                   <button onClick={this.calcPossibilities}>Calculate Possibilities</button>
                 </div>
               </div>
@@ -581,7 +650,11 @@ export default React.createClass({
               </div>
               <div className="row">
                 <div className="col-sm-12">
-                  <textarea readOnly style={{width: "100%"}} value={this.state.currentStep != null ? this.state.currentStep.description : "sample"}></textarea>
+                  <textarea readOnly
+                    style={{width: "100%"}}
+                    value={this.state.currentStep != null ? this.state.currentStep.description : "sample"}>
+                  </textarea>
+                  <SudokuStepsLog stepsLog={this.state.stepsLog} />
                 </div>
               </div>
             </div>
@@ -640,6 +713,17 @@ export default React.createClass({
     }
   },
 
+  togglePreference: function(preferenceName) {
+    var self = this;
+    return function() {
+      var newPreferences = self.state.preferences;
+      newPreferences[preferenceName] = !newPreferences[preferenceName];
+      self.setState({
+        "preferences": newPreferences
+      });
+    }
+  },
+
   handleKeyDown: function(e) {
     var key = e.which;
     console.log("KEY" + key);
@@ -651,7 +735,7 @@ export default React.createClass({
       this.onControlCallback(candidate);
     }
     else if (key == 83) {
-      this.solveStep();
+      this.solveCell();
     }
     else if (key == 67) {
       this.calcPossibilities();

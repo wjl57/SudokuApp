@@ -759,7 +759,7 @@ class SudokuPuzzle:
         for (offset_pair, vals) in naked_offset_pairs:
             updated_cells = self.eliminate_possibilities_from_row(y, vals, offset_pair)
             if updated_cells:
-                description = "Naked Pair Row : In row " + str(y) + ", " + str(vals) \
+                description = "Naked Pair Row: In row " + str(y) + ", " + str(vals) \
                               + " are the only candidates for cells with x-offsets of " + str(offset_pair) \
                               + ".\nEliminating those candidates from all other cells in the row."
                 return SudokuStep(None, updated_cells, description)
@@ -778,7 +778,7 @@ class SudokuPuzzle:
         for (offset_pair, vals) in naked_offset_pairs:
             updated_cells = self.eliminate_possibilities_from_col(x, vals, offset_pair)
             if updated_cells:
-                description = "Naked Pair Col : In col " + str(x) + ", " + str(vals) \
+                description = "Naked Pair Col: In col " + str(x) + ", " + str(vals) \
                               + " are the only candidates for cells with y-offsets of " + str(offset_pair) \
                               + ".\nEliminating those candidates from all other cells in the col."
                 return SudokuStep(None, updated_cells, description)
@@ -798,7 +798,7 @@ class SudokuPuzzle:
             updated_cells = self.eliminate_other_possibilities_from_other_cells_in_block(
                 block_num, vals, offset_pair)
             if updated_cells:
-                description = "Naked Pair Block : In block " + str(block_num) + ", " + str(vals) \
+                description = "Naked Pair Block: In block " + str(block_num) + ", " + str(vals) \
                               + " are the only candidates for cells with block-cell-offsets of " + str(offset_pair) \
                               + ".\nEliminating those candidates from all other cells in the block."
                 return SudokuStep(None, updated_cells, description)

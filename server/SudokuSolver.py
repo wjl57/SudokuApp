@@ -198,15 +198,23 @@ class SudokuSolver(Machine):
         return self.validate_filled_cell(ss.filled_cell, ss.updated_cells)
 
     def log_initial_puzzle(self):
-        self.sudoku_logger.log_step("Starting Sudoku Solver", None, None, self.sudoku_puzzle.get_board(),
+        self.sudoku_logger.log_step("Prior to Solving", None, None, self.sudoku_puzzle.get_board(),
                                     self.sudoku_puzzle.get_possibilities(), "New puzzle...")
 
     def do_work(self):
         while not self.sudoku_puzzle.num_filled == 81:
-            self.solve_next_step()
+            self.perform_step()
             self.assert_possibilities_are_non_empty()
         print('#########################################################################################')
         self.sudoku_logger.print_log()
+
+    def solve_cell(self):
+        num_filled = self.sudoku_puzzle.num_filled
+        print(num_filled)
+        while self.sudoku_puzzle.num_filled == num_filled:
+            print(self.sudoku_puzzle.num_filled)
+            self.perform_step()
+            self.assert_possibilities_are_non_empty()
 
     def solve_next_step(self):
         self.just_solved_step = False

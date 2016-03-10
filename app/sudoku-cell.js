@@ -17,7 +17,7 @@ export default React.createClass({
     var val = this.props.val;
     var itemToRender;
     var itemClass = classNames({
-      "temp-highlight": this.state.highlighted
+      "temp-highlight": this.props.highlightingEnabled && this.state.highlighted
     });
 
     if (val) {
@@ -34,7 +34,7 @@ export default React.createClass({
       } else {
         itemStyle.fontWeight = "bold";
       }
-      if (this.props.invalid) {
+      if (this.props.highlightingEnabled && this.props.invalid) {
         itemStyle.backgroundColor = "#C02F1D";
       }
       return (
