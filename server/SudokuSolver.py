@@ -206,13 +206,11 @@ class SudokuSolver(Machine):
             self.perform_step()
             self.assert_possibilities_are_non_empty()
         print('#########################################################################################')
-        self.sudoku_logger.print_log()
+        # self.sudoku_logger.print_log()
 
     def solve_cell(self):
         num_filled = self.sudoku_puzzle.num_filled
-        print(num_filled)
         while self.sudoku_puzzle.num_filled == num_filled:
-            print(self.sudoku_puzzle.num_filled)
             self.perform_step()
             self.assert_possibilities_are_non_empty()
 

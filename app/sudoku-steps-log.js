@@ -10,8 +10,8 @@ export default React.createClass({
     if (!stepsLog)
       return <div></div>;
     var stationComponents = this.props.stepsLog.map(function(step) {
-        return <div>{step.description}</div>;
+        return <li>{step.description}</li>;
     });
-    return (<div>{stationComponents}</div>);
+    return (<ul>{stationComponents}</ul>);
   },
 });

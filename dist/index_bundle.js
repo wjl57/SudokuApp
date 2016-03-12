@@ -20054,7 +20054,8 @@
 	        'Content-Type': 'application/json'
 	      }),
 	      body: JSON.stringify({
-	        "board": self.getBoard()
+	        "board": self.getBoard(),
+	        "puzzleName": "L" + self.state.level + "P" + self.state.puzzleNum
 	      })
 	    }).then(function (response) {
 	      return response.json();
@@ -20091,7 +20092,8 @@
 	        'Content-Type': 'application/json'
 	      }),
 	      body: JSON.stringify({
-	        "board": self.getBoard()
+	        "board": self.getBoard(),
+	        "puzzleName": "L" + self.state.level + "P" + self.state.puzzleNum
 	      })
 	    }).then(function (response) {
 	      return response.json();
@@ -20128,7 +20130,8 @@
 	        'Content-Type': 'application/json'
 	      }),
 	      body: JSON.stringify({
-	        "board": self.getBoard()
+	        "board": self.getBoard(),
+	        "puzzleName": "L" + self.state.level + "P" + self.state.puzzleNum
 	      })
 	    }).then(function (response) {
 	      return response.json();
@@ -21530,13 +21533,13 @@
 	    if (!stepsLog) return _react2.default.createElement('div', null);
 	    var stationComponents = this.props.stepsLog.map(function (step) {
 	      return _react2.default.createElement(
-	        'div',
+	        'li',
 	        null,
 	        step.description
 	      );
 	    });
 	    return _react2.default.createElement(
-	      'div',
+	      'ul',
 	      null,
 	      stationComponents
 	    );

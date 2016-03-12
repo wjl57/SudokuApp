@@ -301,7 +301,8 @@ export default React.createClass({
         'Content-Type': 'application/json'
       }),
       body: JSON.stringify({
-        "board": self.getBoard()
+        "board": self.getBoard(),
+        "puzzleName": "L" + self.state.level + "P" + self.state.puzzleNum
       })
     }).then(function(response) {
       return response.json();
@@ -338,7 +339,8 @@ export default React.createClass({
         'Content-Type': 'application/json'
       }),
       body: JSON.stringify({
-        "board": self.getBoard()
+        "board": self.getBoard(),
+        "puzzleName": "L" + self.state.level + "P" + self.state.puzzleNum
       })
     }).then(function(response) {
       return response.json();
@@ -375,7 +377,8 @@ export default React.createClass({
         'Content-Type': 'application/json'
       }),
       body: JSON.stringify({
-        "board": self.getBoard()
+        "board": self.getBoard(),
+        "puzzleName": "L" + self.state.level + "P" + self.state.puzzleNum
       })
     }).then(function(response) {
     	return response.json();
