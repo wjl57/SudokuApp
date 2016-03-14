@@ -29,8 +29,8 @@ app.add_url_rule('/', 'root', lambda: app.send_static_file('index.html'))
 app.json_encoder = MyJSONEncoder
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 
-# cache = hermes.Hermes(hermes.backend.redis.Backend, ttl=600, host='localhost', db=1)
-cache = hermes.Hermes(hermes.backend.dict.Backend)
+cache = hermes.Hermes(hermes.backend.redis.Backend, ttl=600, host='localhost', db=1)
+# cache = hermes.Hermes(hermes.backend.dict.Backend)
 
 @app.route('/api/newPuzzle', methods=['POST'])
 def generate_puzzle():
